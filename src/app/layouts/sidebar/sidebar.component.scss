@@ -1,0 +1,52 @@
+.scroller {
+    overflow-y: scroll;
+  }
+  
+  /* width */
+  ::-webkit-scrollbar {
+    width: 5px;
+    
+
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: rgba(192, 192, 192,0.7);
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: rgba(97, 97, 97,0.4);
+    border-radius: 5px ;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(97, 97, 97,0.8);
+  }
+.main-sidebar{
+    overflow-y: scroll;
+}
+.main-sidebar span{
+    font-weight: 600;
+    font-size: 14px;
+    font-family: "Nunito";
+}
+.fsideIcons{
+    width: 26px!important;
+    height: 26px!important;
+    text-align: center;
+
+}
+.dropped:before{
+    content: "\f068"!important
+}
+.main-sidebar{
+  transition: cubic-bezier(1s);
+}
+.active2 a {
+  background-color:rgba(227, 237, 252, 0.514)!important;
+}
+.active2 .fsideIcons {
+  color: rgba(68, 87, 255, 0.842)!important;
+}
