@@ -1,0 +1,70 @@
+
+// darkmode toggle btn
+.darkmode-toggle-wrapper {
+   
+	.tgl {
+		display: none;
+		& + .tgl-btn {
+			background: darken(#fff, 80%);
+            border-radius: 2em;
+            border-width: .1em;
+            border-color: rgba(66, 65, 65, 0.644);
+            border-style: solid;
+            border-color: #777777;
+			padding: 5px;
+			transition: all 0.4s ease;
+			outline: 0;
+			display: block;
+			width: 3.65em;
+			height: 1.8em;
+			position: relative;
+			cursor: pointer;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+			&::before,
+			&::after {
+				position: relative;
+				display: block;
+				content: "";
+				height: 100%;
+			}
+			&::before {
+				display: none;
+				width: 50%;
+			}
+			&::after {
+				left: 0;
+				border-radius: 50%;
+				background: #fff!important;
+				width: unset;
+				aspect-ratio: 1/1;
+				transition: all 0.2s ease;
+			}
+		}
+		&:checked + .tgl-btn {
+			background: #f0f0f0!important;
+			&:after {
+				transform: translateX(150%);
+				background: darken(#fff, 80%)!important;
+			}
+		}
+	}
+	.icon {
+		width: 16px;
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		color: var(--text-invert);
+		&_sun {
+            width: 14px;
+			left: 10%;
+            color: black;
+		}
+		&_moon {
+			right: 10%;
+            color: #fff;
+		}
+	}
+}

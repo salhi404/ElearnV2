@@ -76,10 +76,10 @@ export class NavbarComponent implements OnInit {
   toggeleSideBarShow(){
     console.log("toggeleSideBar trigger");
     
-    this.events.chngSideBarEvent(2);
+    this.events.chngLayoutEvent(2);
   }
   toggeleSideBarMini(){
-    this.events.chngSideBarEvent(3);
+    this.events.chngLayoutEvent(3);
   }
   toggeleDD(index:number){
     switch (index) {

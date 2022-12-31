@@ -1,4 +1,4 @@
-<div [ngClass]="{'sidebar-mini':showMiniSideBar&&!isTabletMode}">
+<div [ngClass]="{'sidebar-mini':showMiniSideBar&&!isTabletMode,'dark':DarkTheme,'dark-sidebar':DarkTheme,'theme-black':DarkTheme}" >
   <div id="app" >
     <div class="main-wrapper main-wrapper-1">
         <app-navbar></app-navbar>
@@ -623,8 +623,8 @@
             </div>
           </div>
         </section>
-        <div class="settingSidebar">
-          <a href="javascript:void(0)" class="settingPanelToggle"> <i class="fa fa-spin fa-cog"></i>
+        <div [ngClass]="{'showSettingPanel':showSettingPanel}" class="settingSidebar" style="display: none;">
+          <a (click)="showSettingPanel=!showSettingPanel" class="settingPanelToggle pointer "> <i style="color: white;" class="fa fa-spin fa-cog fIcon"></i>
           </a>
           <div class="settingSidebar-body ps-container ps-theme-default">
             <div class=" fade show active">

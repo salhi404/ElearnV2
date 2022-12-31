@@ -4,13 +4,17 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class EventsService {
-  public sideBarEvent = new BehaviorSubject(-1);
-  currentSideBarEvent = this.sideBarEvent.asObservable();
+  public SIDEBARTAB=2;
+  public SIDEBARMINI=3;
+  public DARKTHEMELIGHT=4;
+  public DARKTHEMEDARK=5;
+  public layoutEvent = new BehaviorSubject(-1);
+  currentLayoutEvent = this.layoutEvent.asObservable();
   public loggingEvent = new BehaviorSubject(-1);
   loggingStatusEvent = this.loggingEvent.asObservable();
   constructor() { }
-  chngSideBarEvent(state: number) {
-    this.sideBarEvent.next(state)
+  chngLayoutEvent(state: number) {
+    this.layoutEvent.next(state)
   }
   changeLoggingState(state: number) {
     this.loggingEvent.next(state)

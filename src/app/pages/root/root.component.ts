@@ -8,14 +8,23 @@ import { Subscription } from 'rxjs';
 })
 export class RootComponent implements OnInit {
   constructor(private events:EventsService,) { }
+  showSettingPanel:boolean=false
   subscription: Subscription = new Subscription;
   showMiniSideBar:boolean=false;
   isTabletMode:boolean=false;
+  DarkTheme:boolean=false;
   ngOnInit(): void {
-    this.subscription =this.events.currentSideBarEvent.subscribe(state =>{
-      if (state==3) {
-          console.log("logging change recieed in roooot state==3 "+state);
+    this.subscription =this.events.currentLayoutEvent.subscribe(state =>{
+      switch (state) {
+        case this.events.SIDEBARMINI:
           this.showMiniSideBar=!this.showMiniSideBar;
+        break;
+        case this.events.DARKTHEMELIGHT:
+          this.DarkTheme=false;
+        break;
+        case this.events.DARKTHEMEDARK:
+          this.DarkTheme=true;
+        break;
       }
     } )
   }

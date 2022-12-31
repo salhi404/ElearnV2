@@ -27,7 +27,7 @@ export class SidebarComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
-    this.subscription =this.events.currentSideBarEvent.subscribe(state =>{
+    this.subscription =this.events.currentLayoutEvent.subscribe(state =>{
      
       if (state==2) {
           console.log("logging change recieed in sidebar "+state);
