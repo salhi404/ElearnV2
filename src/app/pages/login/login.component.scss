@@ -6,3 +6,46 @@
 .LoginBtn span {
     display: inline-block;
 }
+$button-transition-timing: 100ms;
+.buttonhome {
+    border-radius: 8px !important;
+    font-weight: 900;
+}
+
+.buttonhome *{
+    color: #fff;
+}
+
+.button-arrow {
+  
+  .arrow-icon {
+    overflow: visible;
+    margin-left: 3px;
+    width: 8px;
+  }
+  
+  .arrow-head {
+    transform: translateX(-5px);
+    transition: transform $button-transition-timing ease-in-out;
+  }
+  
+  .arrow-body {
+    opacity: 0;
+    transform: scaleX(1);
+    left: 15px;
+    position: relative;
+    transition: transform $button-transition-timing ease-in-out, opacity $button-transition-timing ease-in-out;
+  }
+  
+  &:hover {
+    .arrow-head {
+      transform: translateX(-12px);
+    }
+    
+    .arrow-body {
+      opacity: 1;
+      transform: scaleX(2.5);
+    }
+  }
+  
+}
