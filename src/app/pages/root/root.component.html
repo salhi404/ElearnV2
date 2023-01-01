@@ -1,7 +1,7 @@
 <div [ngClass]="{'sidebar-mini':showMiniSideBar&&!isTabletMode,'dark':DarkTheme,'dark-sidebar':DarkTheme,'theme-black':DarkTheme}" >
   <div id="app" >
     <div class="main-wrapper main-wrapper-1">
-        <app-navbar></app-navbar>
+      <app-navbar [logged]="isLoggedIn" [user]="user" ></app-navbar>
       <app-sidebar></app-sidebar>
       <!-- Main Content -->
       <div class="main-content">
@@ -715,13 +715,7 @@
           </div>
         </div>
       </div>
-      <footer class="main-footer">
-        <div class="footer-left">
-          <a href="templateshub.net">Templateshub</a>
-        </div>
-        <div class="footer-right">
-        </div>
-      </footer>
+      <app-footer></app-footer>
     </div>
   </div>
 </div>

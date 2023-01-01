@@ -4,17 +4,22 @@
       <span class="d-sm-none d-lg-inline-block"></span>
     </a>
     <div [ngClass]="{'show':showuserDD}" class="dropdown-menu dropdown-menu-right pullDown">
-      <div class="dropdown-title">Hello Sarah Smith</div>
+      <div class="dropdown-title">Hello {{username}}</div>
       <a href="profile.html" class="dropdown-item has-icon"> 
         <i class="far fa-user"></i> Profile
-      </a> <a href="timeline.html" class="dropdown-item has-icon"> <i class="fas fa-bolt"></i>
+      </a> 
+      <a href="timeline.html" class="dropdown-item has-icon "> 
+        <i class="fas fa-bolt"></i>
         Activities
       </a> <a href="#" class="dropdown-item has-icon"> <i class="fas fa-cog"></i>
         Settings
       </a>
       <div class="dropdown-divider"></div>
-      <a href="auth-login.html" class="dropdown-item has-icon text-danger"> <i class="fas fa-sign-out-alt"></i>
-        Logout
+      <a (click)="logOut()"  class="dropdown-item has-icon text-danger pointer"> 
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Logout</span>
+        <app-spinner style="float: right;" *ngIf="loading" [type]="4" [size]="2"></app-spinner>
       </a>
+      
     </div>
   </li>

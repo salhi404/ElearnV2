@@ -1,6 +1,7 @@
-import { Component, HostListener, Inject, OnInit } from '@angular/core';
+import { Component, HostListener, Inject, OnInit,Input } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { EventsService } from 'src/app/services/events.service';
+import { User } from 'src/app/Interfaces/user';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -10,6 +11,8 @@ export class NavbarComponent implements OnInit {
   @HostListener('document:keydown.escape', ['$event']) onKeydownHandler(event: KeyboardEvent) {
     console.log(event);
 }
+@Input() logged:boolean=false;
+@Input() user:User=null as any;
   showuserDD:boolean=false;
   showNntDD:boolean=false;
   showMsgDD:boolean=false;
@@ -22,6 +25,8 @@ export class NavbarComponent implements OnInit {
     ngOnInit(): void {
       this.chkScreenMode();
       this.elem = document.documentElement;
+      console.log(this.user);
+      
   }
   @HostListener('document:fullscreenchange', ['$event'])
      @HostListener('document:webkitfullscreenchange', ['$event'])

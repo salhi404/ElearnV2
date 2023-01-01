@@ -10,7 +10,7 @@ export class MsgDDComponent implements OnInit {
   @HostListener('document:click', ['$event'])
   clickout(event:any) {
     if(this.eRef.nativeElement.contains(event.target)) {
-      console.log("clicked inside");
+      //console.log("clicked inside");
     } else {
       this.showMsgDD=false;
       

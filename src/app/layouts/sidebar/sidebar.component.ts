@@ -12,7 +12,7 @@ export class SidebarComponent implements OnInit {
     if(this.eRef.nativeElement.contains(event.target)) {
      // console.log("clicked inside");
     } else {
-     console.log("clicked outside");
+     //console.log("clicked outside");
      if(!this.blockOutside)
      this.sideBarShow=false;
     }

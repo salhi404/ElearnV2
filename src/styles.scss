@@ -5403,7 +5403,7 @@ h6 .badge {
 }
 
 .dropdown-item.has-icon i {
-    margin-top: -1px;
+    margin-top: 2px; //editted
     font-size: 13px
 }
 
@@ -17962,7 +17962,6 @@ textarea.form-control.is-valid {
 }
 
 .invalid-feedback {
-    display: none;
     width: 100%;
     margin-top: .25rem;
     font-size: 80%;

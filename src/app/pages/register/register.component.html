@@ -1,0 +1,136 @@
+<div id="app">
+    <section class="section">
+      <div class="container mt-5">
+        <div class="row">
+          <div class="col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 col-xl-6 offset-xl-3">
+            <div class="card card-primary">
+              <div class="card-header">
+                <h4>Register</h4>
+              </div>
+              <div class="card-body">
+                <form 
+                  name="form" 
+                  (ngSubmit)="f.form.valid && onSubmit()" 
+                  #f="ngForm"
+                  novalidate>
+                  <!--<div class="row">
+                    <div class="form-group col-6">
+                      <label for="frist_name">First Name</label>
+                      <input id="frist_name" type="text" class="form-control" name="frist_name" autofocus>
+                    </div>
+                    <div class="form-group col-6">
+                      <label for="last_name">Last Name</label>
+                      <input id="last_name" type="text" class="form-control" name="last_name">
+                    </div>
+                  </div>-->
+                  <div class="form-group">
+                    <label for="username">Username</label>
+                    <input 
+                      class="form-control"
+                      [(ngModel)]="form.username"
+                      required
+                      minlength="3"
+                      maxlength="20"
+                      #username="ngModel"
+                      placeholder="Username" 
+                      type="text" 
+                      name="username" 
+                      id="username" 
+                      autocomplete="off"
+                    >
+                    <div class="invalid-feedback show"  *ngIf="username.errors && f.submitted">
+                      <div *ngIf="username.errors['required']">Username is required</div>
+                    <div *ngIf="username.errors['minlength']">
+                      Username must be at least 3 characters
+                    </div>
+                    <div *ngIf="username.errors['maxlength']">
+                      Username must be at most 20 characters
+                    </div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="email">Email</label>
+                    <input 
+                      class="form-control"
+                      placeholder="Email" 
+                      type="email" 
+                      id="email" 
+                      class="form-control"
+                      name="email"
+                      [(ngModel)]="form.email"
+                      required
+                      email
+                      #email="ngModel"
+                    >
+                    <div class="invalid-feedback" *ngIf="email.errors && f.submitted">
+                      <div *ngIf="email.errors['required']">Email is required</div>
+                      <div *ngIf="email.errors['email']">
+                        Email must be a valid email address
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form-group col-12">
+                      <label for="password" class="d-block">Password</label>
+                      <input 
+                        class="form-control" 
+                        placeholder="Password" 
+                        type="password" 
+                        name="password" 
+                        id="password" 
+                        [(ngModel)]="form.password"
+                        required
+                        minlength="6"
+                        #password="ngModel"
+                       >
+                       <div class="invalid-feedback"  *ngIf="password.errors && f.submitted">
+                        <div *ngIf="password.errors['required']">Password is required</div>
+                        <div *ngIf="password.errors['minlength']">
+                          Password must be at least 6 characters
+                        </div>
+                       </div>
+                    </div>
+                    <!--<div class="form-group col-6">
+                      <label for="password2" class="d-block">Password Confirmation</label>
+                      <input id="password2" type="password" class="form-control" name="password-confirm">
+                    </div>-->
+                  </div>
+                  <div class="form-group">
+                    <div class="custom-control custom-checkbox">
+                      <input 
+                        type="checkbox" 
+                        name="agree" 
+                        class="custom-control-input" 
+                        id="agree"
+                        [(ngModel)]="form.agree"
+                        required
+                        #agree="ngModel"
+                      >
+                      <label class="custom-control-label" for="agree">I agree with the terms and conditions</label>
+                    </div>
+                    <div class="invalid-feedback"  *ngIf="agree.errors && f.submitted">
+                      <div *ngIf="agree.errors['required']">you need to agree with the terms and conditions</div>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <button class=" registerBtn btn btn-primary btn-lg btn-block" >
+                      <span>Register</span>
+                      <span class="mx-2"></span>
+                      <app-spinner *ngIf="loading" [type]="1"></app-spinner>
+                    </button>
+                    <div class="invalid-feedback" *ngIf="f.submitted && isSignUpFailed">
+                      Signup failed!<br />{{ errorMessage }}
+                  </div>
+                  </div>
+                </form>
+                <div class="my-2 text-muted text-center">
+                  Already Registered? <a routerLink="/login">Login</a>
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>

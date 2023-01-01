@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { LoginComponent } from './pages/login/login.component';
+import { RegisterComponent } from './pages/register/register.component';
 import { RootComponent } from './pages/root/root.component';
 
 const routes: Routes = [
@@ -20,9 +22,9 @@ const routes: Routes = [
       }
   ]*/
 },
-  //{path: 'log_in', component: LoginComponent},
- // {path: 'sign_up', component: RegisterComponent},
-  //{path: '', redirectTo: '/home', pathMatch: 'full'},
+{path: 'login', component: LoginComponent},
+{path: 'signup', component: RegisterComponent},
+//{path: '', redirectTo: '/home', pathMatch: 'full'},
 
 ];
 

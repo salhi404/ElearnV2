@@ -32,8 +32,12 @@
     </ul>
   </div>
   <ul class="navbar-nav navbar-right">
-    <app-msg-dd></app-msg-dd>
-    <app-ntf-dd></app-ntf-dd>
-    <app-user-dd></app-user-dd>
+    <app-msg-dd *ngIf="logged" ></app-msg-dd>
+    <app-ntf-dd *ngIf="logged" ></app-ntf-dd>
+    <app-user-dd *ngIf="logged" [username]="user.username" ></app-user-dd>
+    <a routerLink="/login" class="btn btn-icon icon-left btn-primary" *ngIf="!logged" >
+      <i class="far fa-user"></i>
+      <span>login</span>
+    </a>
   </ul>
 </nav>
