@@ -1,4 +1,5 @@
 import { Component, OnInit,ElementRef, HostListener } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { EventsService } from 'src/app/services/events.service';
 @Component({
@@ -24,6 +25,7 @@ export class SidebarComponent implements OnInit {
   constructor(
     private eRef: ElementRef,
     private events:EventsService,
+    public router: Router
     ) { }
 
   ngOnInit(): void {

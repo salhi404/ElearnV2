@@ -2,6 +2,8 @@ import { Component, OnInit,ElementRef, HostListener,Input } from '@angular/core'
 import { StorageService } from 'src/app/_services/storage.service';
 import { AuthService } from 'src/app/_services/auth.service';
 import { EventsService } from 'src/app/services/events.service';
+import {  Router, NavigationExtras } from '@angular/router';
+
 @Component({
   selector: 'app-user-dd',
   templateUrl: './user-dd.component.html',
@@ -25,6 +27,7 @@ export class UserDDComponent implements OnInit {
     private storageService: StorageService,
     private authService: AuthService,
     private events:EventsService,
+    private router: Router,
     ) { }
   logOut(){
     this.loading=true;
@@ -35,6 +38,7 @@ export class UserDDComponent implements OnInit {
         this.storageService.clean();
         this.events.changeLoggingState(2);
         this.loading=false;
+        this.router.navigate(['']);
       },
       error: err => {
         console.log("errrrrrrr :"+err);

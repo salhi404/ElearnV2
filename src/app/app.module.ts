@@ -16,6 +16,8 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { FooterComponent } from './layouts/footer/footer.component';
 import { SpinnerComponent } from './components/spinner/spinner/spinner.component';
+import { EmailComponent } from './pages/email/email.component';
+import { HomeComponent } from './pages/home/home.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,7 +31,9 @@ import { SpinnerComponent } from './components/spinner/spinner/spinner.component
     LoginComponent,
     RegisterComponent,
     FooterComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    EmailComponent,
+    HomeComponent,
   ],
   imports: [
     HttpClientModule,
