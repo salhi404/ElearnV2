@@ -5,7 +5,7 @@ import { FeatherModule } from 'angular-feather';
 
 
 import { AlignJustify, Maximize, Monitor,Briefcase,Command,Mail,Copy,ShoppingBag,File,Layout,Grid,PieChart,Feather
-        ,Image,Flag,Sliders,Map,MapPin,UserCheck,Anchor,ChevronsDown,AlertTriangle,Bell  } from 'angular-feather/icons';
+        ,Image,Flag,Sliders,Map,MapPin,UserCheck,Anchor,ChevronsDown,AlertTriangle,Bell,ArrowDownCircle } from 'angular-feather/icons';
 
 const icons = {
   AlignJustify,
@@ -13,7 +13,7 @@ const icons = {
   Monitor,
   Briefcase,
   Command,Mail,Copy,ShoppingBag,File,Layout,Grid,PieChart,Feather
-  ,Image,Flag,Sliders,Map,MapPin,UserCheck,Anchor,ChevronsDown,AlertTriangle,Bell
+  ,Image,Flag,Sliders,Map,MapPin,UserCheck,Anchor,ChevronsDown,AlertTriangle,Bell,ArrowDownCircle
 };
 @NgModule({
   declarations: [],

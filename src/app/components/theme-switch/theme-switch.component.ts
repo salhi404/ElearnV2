@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit ,Input } from '@angular/core';
 import { EventsService } from 'src/app/services/events.service';
 @Component({
   selector: 'app-theme-switch',
@@ -6,7 +6,7 @@ import { EventsService } from 'src/app/services/events.service';
   styleUrls: ['./theme-switch.component.scss']
 })
 export class ThemeSwitchComponent implements OnInit {
-   isChecked : boolean=true;
+  @Input() isChecked : boolean=true;
   constructor(private events:EventsService,) { }
   checkCheckBoxvalue(event:any){
     if(event)this.events.chngLayoutEvent(this.events.DARKTHEMELIGHT);

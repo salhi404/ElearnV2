@@ -44,9 +44,10 @@ export class LoginComponent implements OnInit {
    this.authService.login(username, password).subscribe({
       next: data => {
         console.log("sdsdsd"+remember);
-        if(remember)this.storageService.saveUser(data);
+        this.storageService.saveUser(data);
         this.isLoginFailed = false;
         this.isLoggedIn = true;
+        this.storageService.setPrefrences(JSON.parse(data.configs));
        // this.roles = data.roles; altered
        // this.localStore.saveUserItems(data.username,this.localStore.toArreyOfObject(data.items));
       //  this.localStore.updateConfig(data.configs);
@@ -94,18 +95,8 @@ export class LoginComponent implements OnInit {
    // setTimeout(() => {
       /*this.manageService.changeState(this.manageService.LOGIN);
       this.manageService.changeUserItems(user);*/
-      if(remember){
-        this.router.navigate(['']);
-      }else{
-
-        console.log("navigationExtras");
-        console.log(this.navigationExtras);
-        this.navigationExtras={ state: {user:user,islogged:true}  };
-        console.log("navigationExtras after ");
-        console.log(this.navigationExtras);
-        
+        this.navigationExtras={ state: {user:user,islogged:true,remember:remember}  };
         this.router.navigate([''],this.navigationExtras);
-      }
       
    // },400);
   }

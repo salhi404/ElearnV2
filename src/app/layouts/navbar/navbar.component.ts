@@ -13,6 +13,7 @@ export class NavbarComponent implements OnInit {
 }
 @Input() logged:boolean=false;
 @Input() user:User=null as any;
+@Input() DarkTheme:boolean=false;
   showuserDD:boolean=false;
   showNntDD:boolean=false;
   showMsgDD:boolean=false;

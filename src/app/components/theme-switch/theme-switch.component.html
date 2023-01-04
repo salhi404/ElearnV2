@@ -1,7 +1,7 @@
 <!-- Darkmode Toggle -->
 <div class="darkmode-toggle-container nav-link  ">
 	<div class="darkmode-toggle-wrapper">
-		<input class="tgl" id="darkmode" type="checkbox" name="checkbox" [(ngModel)]="isChecked" (ngModelChange)="checkCheckBoxvalue($event)" />
+		<input class="tgl" id="darkmode" type="checkbox" name="checkbox" [(ngModel)]="!isChecked" (ngModelChange)="checkCheckBoxvalue($event)" />
 		<label class="tgl-btn" for="darkmode">
 			<svg class="icon icon_sun" width="1em" height="1em" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 				<circle cx="11.9998" cy="11.9998" r="5.75375" fill="currentColor" />

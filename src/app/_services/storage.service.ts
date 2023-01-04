@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
-import { User } from '../Interfaces/user';
+import { Pref, User } from '../Interfaces/user';
 const USER_KEY = 'authentication';
-
+const PREFRENCES_KEY = 'PREFRENCES';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,7 +12,41 @@ export class StorageService {
   clean(): void {
     localStorage.clear();
   }
+  public getPrefrences(isforUser?:boolean):Pref{
+    var pref={darkTheme:false,miniSideBar:false}
+    var forUser =false;
+    if (typeof isforUser !== 'undefined') {
+      forUser=true;
+    }
+    if(this.isLoggedIn()||forUser){
+       const data = localStorage.getItem(PREFRENCES_KEY+"_user");
+       if(data){
+        pref=JSON.parse(data);
+       }else{
+        localStorage.setItem(PREFRENCES_KEY+"_user", JSON.stringify(pref));
+       }
+    }else{
+      const data = localStorage.getItem(PREFRENCES_KEY+"_global");
+       if(data){
+        pref=JSON.parse(data);
+       }else{
+        localStorage.setItem(PREFRENCES_KEY+"_global", JSON.stringify(pref));
+       }
+    }
+    return pref;
+  }
 
+  public setPrefrences(pref:Pref){
+    if(this.isLoggedIn()){
+      localStorage.setItem(PREFRENCES_KEY+"_user", JSON.stringify(pref));
+    }else{
+      localStorage.setItem(PREFRENCES_KEY+"_global", JSON.stringify(pref));
+    }
+  }
+  public clearUser():void{
+    localStorage.removeItem(USER_KEY);
+    localStorage.removeItem(PREFRENCES_KEY+"_user");
+  }
   public saveUser(user: any): void {
     localStorage.removeItem(USER_KEY);
     localStorage.setItem(USER_KEY, JSON.stringify(user));
@@ -52,11 +86,12 @@ export class StorageService {
     return false;
   }
   parseUser(json:any) :User{
-    var user:User={username:"null",email:"null",roles:[],verified:false}
+    var user:User={username:"null",email:"null",roles:[],verified:false,pref:{darkTheme:false,miniSideBar:false}}
     user.username=json.username?json.username:user.username;
     user.email=json.email?json.email:user.email;
     user.roles=json.roles?json.roles:user.roles;
     user.verified=json.verified?json.verified:user.verified;
+    user.pref=json.configs?json.configs:user.pref;
     return user;
   }
 }

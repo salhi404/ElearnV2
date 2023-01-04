@@ -3,11 +3,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { StorageService } from './storage.service';
 import { Mail } from '../Interfaces/Mail';
+import { Pref } from '../Interfaces/user';
 //const URL_API = 'https://ayoubauth.herokuapp.com/api/auth/';
-//const URL_API = 'http://localhost:8080/'; 
+const URL_API = 'http://localhost:8080/'; 
 //const URL_API = 'https://shoppingapptracker.herokuapp.com/';
 // const URL_API = 'https://encouraging-crow.cyclic.app/';
-const URL_API = 'https://frantic-colt-leather-jacket.cyclic.app/';
+//const URL_API = 'https://frantic-colt-leather-jacket.cyclic.app/';
 const AUTH_API = URL_API+'api/auth/';
 const DATA_API = URL_API+'api/data/';
 const httpOptions = {
@@ -52,6 +53,10 @@ export class AuthService {
   sendMail(mail:Mail,provided:number):Observable<any>{
     const token = this.storageService.getTokent();
     return this.http.post(DATA_API + 'sendmail', {mail,provided,token}, httpOptions);
+  }
+  sendPref(pref:Pref):Observable<any>{
+    const token = this.storageService.getTokent();
+    return this.http.post(DATA_API + 'sendPref', {pref,token}, httpOptions);
   }
   getMail():Observable<any>{
     const token = this.storageService.getTokent();

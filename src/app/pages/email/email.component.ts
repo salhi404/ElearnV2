@@ -3,12 +3,14 @@ import { Mail } from 'src/app/Interfaces/Mail';
 import { AuthService } from 'src/app/_services/auth.service';
 import { StorageService } from 'src/app/_services/storage.service';
 import { DatePipe } from '@angular/common';
+import {  Router, NavigationExtras } from '@angular/router';
 @Component({
   selector: 'app-email',
   templateUrl: './email.component.html',
   styleUrls: ['./email.component.scss']
 })
 export class EmailComponent implements OnInit {
+  navigationExtras: NavigationExtras = { state: null as any };
   slectedFilter:number=1
   openComposer:boolean=false;
   isSentError:boolean=false;
@@ -20,6 +22,7 @@ export class EmailComponent implements OnInit {
   MarkedMail:Mail[]=[];
   DraftMail:Mail[]=[];
   TrashMail:Mail[]=[];
+  isLoggedIn = false;
   datepipe: DatePipe = new DatePipe('en-US')
   form: any = {
     email: null,
@@ -27,12 +30,19 @@ export class EmailComponent implements OnInit {
     body:null,
   };
   constructor(
+    private router: Router,
     private authService: AuthService,
     private storageService: StorageService,
   ) { }
 
   ngOnInit(): void {
-    this.getMail();
+    this.isLoggedIn = this.storageService.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.getMail();
+    }else{
+      this.navigationExtras={ state: {errorNbr:403}  };
+      this.router.navigate(['/error'],this.navigationExtras);
+    }
   }
   chooseFilter(filter:number):void{
     this.openComposer=false;

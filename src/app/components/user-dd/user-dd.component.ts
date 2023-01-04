@@ -35,7 +35,6 @@ export class UserDDComponent implements OnInit {
     this.authService.logout().subscribe({
       next: res => {
         console.log("Logged out");
-        this.storageService.clean();
         this.events.changeLoggingState(2);
         this.loading=false;
         this.router.navigate(['']);

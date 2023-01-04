@@ -4,11 +4,15 @@ export interface User{
     email:string;
     roles:string[];
     verified:boolean;
-    configs?:any;
+    pref:Pref;
     //fromTo:User
 }
 export interface UserPublic{
     username:string;
     email:string;
     status?:number;
+}
+export interface Pref{
+    darkTheme:boolean;
+    miniSideBar:boolean
 }

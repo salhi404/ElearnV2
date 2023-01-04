@@ -1,9 +1,10 @@
 import { Component, OnInit,HostListener,OnDestroy } from '@angular/core';
 import { EventsService } from 'src/app/services/events.service';
 import { StorageService } from 'src/app/_services/storage.service';
+import { AuthService } from '../../_services/auth.service';
 import { User } from 'src/app/Interfaces/user';
 import { Subscription } from 'rxjs';
-import {  Router, NavigationExtras, Navigation } from '@angular/router';
+import {  Router, } from '@angular/router';
 @Component({
   selector: 'app-root',
   templateUrl: './root.component.html',
@@ -14,6 +15,7 @@ export class RootComponent implements OnInit ,OnDestroy {
     private router: Router,
     private events:EventsService,
     private storageService: StorageService, 
+    private authService: AuthService,
     ) { 
         const navigation = this.router.getCurrentNavigation();
         this.state={user:this.user,islogged:false};
@@ -23,6 +25,7 @@ export class RootComponent implements OnInit ,OnDestroy {
             this.state = navigation.extras.state as {
               user: User,
               islogged:boolean,
+              remember:boolean,
             };
           }
         }
@@ -35,7 +38,7 @@ export class RootComponent implements OnInit ,OnDestroy {
   DarkTheme:boolean=false;
   isLoggedIn = false;
   user:User=null as any;
-  state:any={user:this.user,islogged:false};
+  state:any={user:this.user,islogged:false,remember:true};
   userSent:boolean=false;
   ngOnInit(): void {
     console.log("this.state");
@@ -46,7 +49,9 @@ export class RootComponent implements OnInit ,OnDestroy {
     }else{
       this.prepsubscription();
     }
-    
+    const pref=this.storageService.getPrefrences();
+    this.DarkTheme=pref.darkTheme;
+    this.showMiniSideBar=pref.miniSideBar;
     this.subscription =this.events.currentLayoutEvent.subscribe(state =>{
       switch (state) {
         case this.events.SIDEBARMINI:
@@ -59,15 +64,39 @@ export class RootComponent implements OnInit ,OnDestroy {
           this.DarkTheme=true;
         break;
       }
+      this.storageService.setPrefrences({darkTheme:this.DarkTheme,miniSideBar:this.showMiniSideBar})
     } )
     this.subscription2=this.events.loggingStatusEvent.subscribe(state=>{
       if(state==2){
-        this.isLoggedIn=false;
-        this.storageService.clean();
-        this.user=null as any;
-        this.events.changeLoggingState(-1);
+        this.logout();
       }
     })
+  }
+  logout(){
+    this.authService.sendPref({darkTheme:this.DarkTheme,miniSideBar:this.showMiniSideBar}).subscribe({
+      next: res => {
+        console.log("sendPref sessefull");
+      },
+      error: err => {
+        console.log("sendPref errrrrrrr :"+err);
+      //  this.loading=false;
+      }
+    });
+    this.isLoggedIn=false;
+    this.storageService.clearUser();
+    this.user=null as any;
+    this.events.changeLoggingState(-1);
+  }
+  test(){
+    if(this.isLoggedIn) this.authService.sendPref(this.storageService.getPrefrences(true)).subscribe({
+      next: res => {
+        console.log("sendPref sessefull");
+      },
+      error: err => {
+        console.log("sendPref errrrrrrr :"+err);
+      //  this.loading=false;
+      }
+    });
   }
   prepsubscription(){
     console.log("prepsubscription : ");
@@ -80,8 +109,20 @@ export class RootComponent implements OnInit ,OnDestroy {
     */
   }
   }
+  @HostListener('window:beforeunload')
   ngOnDestroy() {
+    this.storageService.setPrefrences({darkTheme:this.DarkTheme,miniSideBar:this.showMiniSideBar});
+    if(this.isLoggedIn) this.authService.sendPref(this.storageService.getPrefrences(true)).subscribe({
+      next: res => {
+        console.log("sendPref sessefull");
+      },
+      error: err => {
+        console.log("sendPref errrrrrrr :"+err);
+      //  this.loading=false;
+      }
+    });
     this.subscription.unsubscribe();
+    if(!this.state.remember&&this.isLoggedIn)this.logout();
   }
   @HostListener('window:resize', ['$event'])
   onWindowResize() {

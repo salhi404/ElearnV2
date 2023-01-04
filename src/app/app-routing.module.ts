@@ -5,7 +5,7 @@ import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { RootComponent } from './pages/root/root.component';
-
+import { ErrorsComponent } from './pages/errors/errors.component';
 const routes: Routes = [
   {
     path: '', component: RootComponent,
@@ -21,11 +21,15 @@ const routes: Routes = [
       {
           path: 'email',
           component: EmailComponent
-      }
+      },
+      
   ]
 },
 {path: 'login', component: LoginComponent},
 {path: 'signup', component: RegisterComponent},
+{
+  path: 'error', component: ErrorsComponent
+},
 //{path: '', redirectTo: '/home', pathMatch: 'full'},
 
 ];

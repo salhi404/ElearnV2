@@ -18,6 +18,7 @@ import { FooterComponent } from './layouts/footer/footer.component';
 import { SpinnerComponent } from './components/spinner/spinner/spinner.component';
 import { EmailComponent } from './pages/email/email.component';
 import { HomeComponent } from './pages/home/home.component';
+import { ErrorsComponent } from './pages/errors/errors.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,6 +35,7 @@ import { HomeComponent } from './pages/home/home.component';
     SpinnerComponent,
     EmailComponent,
     HomeComponent,
+    ErrorsComponent,
   ],
   imports: [
     HttpClientModule,
