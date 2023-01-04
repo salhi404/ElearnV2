@@ -3,6 +3,7 @@ import { Mail } from 'src/app/Interfaces/Mail';
 import { AuthService } from 'src/app/_services/auth.service';
 import { StorageService } from 'src/app/_services/storage.service';
 import { DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import {  Router, NavigationExtras } from '@angular/router';
 @Component({
   selector: 'app-email',
@@ -15,13 +16,17 @@ export class EmailComponent implements OnInit {
   openComposer:boolean=false;
   isSentError:boolean=false;
   isSentErrorMsg:string="";
+  selectAll=false;
+  numberOfItems:number=20;
+  selected:boolean[]=[];
+  modifiedMail:Mail[]=[];
   filteredMail:Mail[]=[];
   recievedMail:Mail[]=[];
   InboxdMail:Mail[]=[];
   SentMail:Mail[]=[];
-  MarkedMail:Mail[]=[];
   DraftMail:Mail[]=[];
-  TrashMail:Mail[]=[];
+  BinMail:Mail[]=[];
+  StarredMail:Mail[]=[];
   isLoggedIn = false;
   datepipe: DatePipe = new DatePipe('en-US')
   form: any = {
@@ -36,6 +41,9 @@ export class EmailComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    for (let index = 0; index < this.numberOfItems; index++) {
+      this.selected.push(false);
+    }
     this.isLoggedIn = this.storageService.isLoggedIn();
     if (this.isLoggedIn) {
       this.getMail();
@@ -44,9 +52,67 @@ export class EmailComponent implements OnInit {
       this.router.navigate(['/error'],this.navigationExtras);
     }
   }
+  toggleSelectAll(event:any){
+      for (let index = 0; index < this.filteredMail.length; index++) {
+        this.selected[index]=event;
+      }
+  }
+  starSelected(){
+    for (let index = 0; index < this.filteredMail.length; index++) {
+      if(this.selected[index]){
+        console.log("ind :"+index);
+        const elem=this.filteredMail[this.filteredMail.length-index-1];
+        console.log(elem); 
+          if(!elem.tags.includes("starred")){
+            elem.tags.push("starred");
+            this.StarredMail.push(elem);
+          }
+          if(!this.modifiedMail.includes(elem))this.modifiedMail.push(elem);
+      }
+    }
+  }
+  deStarSelected(){
+    for (let index = 0; index < this.filteredMail.length; index++) {
+      if(this.selected[index]){
+        console.log("ind :"+index);
+        const elem=this.filteredMail[this.filteredMail.length-index-1];
+        console.log(elem); 
+          if(elem.tags.includes("starred")){
+            elem.tags=elem.tags.filter(e=>e !="starred");
+            this.StarredMail=this.StarredMail.filter(e=>e.id !=elem.id);
+          }
+          if(!this.modifiedMail.includes(elem))this.modifiedMail.push(elem);
+      }
+    }
+  }
+  deleteSelected(){
+      for (let index = 0; index < this.filteredMail.length; index++) {
+        if(this.selected[index]){
+          console.log("ind :"+index);
+          const elem=this.filteredMail[this.filteredMail.length-index-1];
+          console.log(elem); 
+            if(!elem.tags.includes("bin")){
+              elem.tags.push("bin");
+              this.BinMail.push(elem);
+              this.InboxdMail=this.InboxdMail.filter(e=>e.id !=elem.id);
+              this.SentMail=this.SentMail.filter(e=>e.id !=elem.id);
+              this.StarredMail=this.StarredMail.filter(e=>e.id !=elem.id);
+              
+            }
+            if(!this.modifiedMail.includes(elem))this.modifiedMail.push(elem);
+        }
+    }
+    this.refilter(this.slectedFilter);
+    this.toggleSelectAll(false);
+  }
   chooseFilter(filter:number):void{
     this.openComposer=false;
     this.slectedFilter=filter;
+    this.toggleSelectAll(false);
+    this.selectAll=false;
+    this.refilter(filter);
+  }
+  refilter(filter:number){
     switch (filter) {
       case 1:
         this.filteredMail=this.InboxdMail;
@@ -55,20 +121,17 @@ export class EmailComponent implements OnInit {
         this.filteredMail=this.SentMail;
         break;
       case 3:
-        this.filteredMail=this.MarkedMail;
-        break;
-      case 4:
         this.filteredMail=this.DraftMail;
         break;
+      case 4:
+        this.filteredMail=this.BinMail;
+        break;
       case 5:
-      this.filteredMail=this.SentMail;
+      this.filteredMail=this.StarredMail;
       break;
-      case 6:
-      this.filteredMail=this.TrashMail;
-      break;
-      default:
+      /*default:
       this.filteredMail=[];
-      break;
+      break;*/
     }
   }
   refresh(){
@@ -106,6 +169,9 @@ export class EmailComponent implements OnInit {
         this.recievedMail=[];
         this.SentMail=[];
         this.InboxdMail=[];
+        this.StarredMail=[];
+        this.BinMail=[];
+        this.DraftMail=[];
         mails.forEach((element:any, index:number) => {
           const mm={
             id:element._id,
@@ -119,6 +185,8 @@ export class EmailComponent implements OnInit {
           this.recievedMail.push(mm);
           if(mm.tags.includes("sent"))this.SentMail.push(mm);
           if(mm.tags.includes("inbox"))this.InboxdMail.push(mm);
+          if(mm.tags.includes("starred"))this.StarredMail.push(mm);
+          if(mm.tags.includes("bin"))this.BinMail.push(mm);
 
         });
         this.chooseFilter(this.slectedFilter);
@@ -175,7 +243,30 @@ export class EmailComponent implements OnInit {
   openMsg(ind:number){
     console.log("open message number "+ind);
   }
-  ToggleStar(ind:number){
-    console.log("ToggleStar message number "+ind);
+  test(event:any,id:string){
+    /*console.log("id");
+    console.log(id);
+    console.log("event");
+    console.log(event);
+    */
+    
+  }
+  ToggleStar(id:string){
+    console.log("ToggleStar message number "+id);
+    this.recievedMail.forEach((element,ind)=>{
+      
+      if(element.id==id){
+        if(element.tags.includes("starred")){
+          element.tags = element.tags.filter(e => e !== 'starred');
+          this.StarredMail=this.StarredMail.filter(e=>e.id!=id);
+        }
+        else {
+          element.tags.push("starred");
+          this.StarredMail.push(element);
+        }
+        if(!this.modifiedMail.includes(element))this.modifiedMail.push(element);
+      }
+    })
+    
   }
 }

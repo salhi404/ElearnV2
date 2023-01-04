@@ -22,10 +22,7 @@
                       <a class=" pointer text-left" (click)="chooseFilter(4)">Bin</a>
                     </li>
                     <li [ngClass]="{'active':slectedFilter==5}">
-                      <a class=" pointer text-left" (click)="chooseFilter(5)">Important</a>
-                    </li>
-                    <li [ngClass]="{'active':slectedFilter==6}">
-                      <a class=" pointer text-left" (click)="chooseFilter(6)">Starred</a>
+                      <a class=" pointer text-left" (click)="chooseFilter(5)">Starred</a>
                     </li>
                   </ul>
                   <h5 class="b-b p-10 text-strong">Labels</h5>
@@ -87,7 +84,7 @@
                       <tr>
                         <th class="text-center">
                           <label class="form-check-label">
-                            <input type="checkbox">
+                            <input [(ngModel)]="selectAll" type="checkbox" (ngModelChange)="toggleSelectAll($event)"  />
                             <span class="form-check-sign"></span>
                           </label>
                         </th>
@@ -104,22 +101,26 @@
                                   <i class="material-icons">loop</i>
                                 </a>
                                 <div class="p-r-20">|</div>
-                                <a  class="col-dark-gray waves-effect m-r-20" title="Error"
+                                <a (click)="starSelected()" class="col-dark-gray waves-effect m-r-20" title="Error"
                                   data-toggle="tooltip">
-                                  <i class="material-icons">error</i>
+                                  <i class="material-icons">star</i>
                                 </a>
-                                <a  class="col-dark-gray waves-effect m-r-20" title="Delete"
+                                <a (click)="deStarSelected()" class="col-dark-gray waves-effect m-r-20" title="Error"
+                                  data-toggle="tooltip">
+                                  <i class="material-icons">star_border</i>
+                                </a>
+                                <a  (click)="deleteSelected()" class="col-dark-gray waves-effect m-r-20" title="Delete"
                                   data-toggle="tooltip">
                                   <i class="material-icons">delete</i>
                                 </a>
-                                <a  class="col-dark-gray waves-effect m-r-20" title="Folders"
+                                <!--<a  class="col-dark-gray waves-effect m-r-20" title="Folders"
                                   data-toggle="tooltip">
                                   <i class="material-icons">folder</i>
                                 </a>
                                 <a  class="col-dark-gray waves-effect m-r-20" title="Tag"
                                   data-toggle="tooltip">
                                   <i class="material-icons">local_offer</i>
-                                </a>
+                                </a>-->
                               </div>
                             </div>
                           </div>
@@ -141,15 +142,15 @@
                       </tr>
                     </thead>
                     <tbody>
-                        <tr  *ngFor="let mail of filteredMail.slice().reverse() ; index as i"  class="unread pointer">
+                        <tr  *ngFor="let mail of filteredMail.slice().reverse() ; index as i"  class="unread pointer" >
                           <td class="tbl-checkbox">
                             <label class="form-check-label">
-                              <input type="checkbox">
+                              <input type="checkbox" [(ngModel)]="selected[i]" (ngModelChange)="test($event,mail.id)">
                               <span class="form-check-sign"></span>
                             </label>
                           </td>
                           <td (click)="openMsg(i)"  class="hidden-xs">
-                            <i (click)="ToggleStar(i)" class="material-icons">star_border</i>
+                            <i (click)="ToggleStar(mail.id) ;$event.stopPropagation()" class="material-icons">{{mail.tags.includes("starred")?'star':'star_border'}}</i>
                           </td>
                           <td  (click)="openMsg(i)" class="hidden-xs">{{mail.fromTo.username}}</td>
                           <td  (click)="openMsg(i)" class="max-texts">
@@ -172,7 +173,7 @@
                 </div>
                 <div class="row">
                   <div class="col-sm-7 ">
-                    <p class="p-15">Showing 1 - 15 of 200</p>
+                    <p class="p-15">Showing {{filteredMail.length}}</p>
                   </div>
                 </div>
               </div>
