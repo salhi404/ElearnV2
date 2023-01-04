@@ -50,7 +50,11 @@ export class LoginComponent implements OnInit {
         this.storageService.saveUser(data);
         this.isLoginFailed = false;
         this.isLoggedIn = true;
-        this.storageService.setPrefrences(JSON.parse(data.configs));
+        try {
+          this.storageService.setPrefrences(JSON.parse(data.configs));
+        } catch (error) {
+          
+        }
        // this.roles = data.roles; altered
        // this.localStore.saveUserItems(data.username,this.localStore.toArreyOfObject(data.items));
       //  this.localStore.updateConfig(data.configs);

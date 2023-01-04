@@ -88,11 +88,11 @@ export class RegisterComponent implements OnInit {
           this.loading=false;
           this.isSignUpFailed = true;
         }
+        this.changed=false;
       }
     });
   }
   onSubmit(): void {
-    this.changed=false;
     console.log("loggggggg");
     this.userExisted=false;
     this.emailExisted=false;

@@ -18,7 +18,7 @@ export class RootComponent implements OnInit ,OnDestroy {
     private authService: AuthService,
     ) { 
         const navigation = this.router.getCurrentNavigation();
-        this.state={user:this.user,islogged:false};
+        this.state={user:this.user,islogged:false,remember:true};
         if(navigation){
           console.log("navigation zzzzzzzzzzzz");
           if(navigation.extras.state){
