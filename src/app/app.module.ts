@@ -19,6 +19,7 @@ import { SpinnerComponent } from './components/spinner/spinner/spinner.component
 import { EmailComponent } from './pages/email/email.component';
 import { HomeComponent } from './pages/home/home.component';
 import { ErrorsComponent } from './pages/errors/errors.component';
+import { HomeBtnComponent } from './components/home-btn/home-btn.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,6 +37,7 @@ import { ErrorsComponent } from './pages/errors/errors.component';
     EmailComponent,
     HomeComponent,
     ErrorsComponent,
+    HomeBtnComponent,
   ],
   imports: [
     HttpClientModule,

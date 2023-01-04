@@ -5,35 +5,7 @@
           <div class="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4">
             <div class="card card-primary">
               <div class="card-header">
-                <a routerLink="/" style="position: absolute;" class="buttonhome button-arrow btn btn-primary pointer  ">
-                  <span >
-                    <svg viewBox="8.5 8.5 8.5 8.5 " fill="none" xmlns="http://www.w3.org/2000/svg" class="arrow-icon">
-                    
-                      <g class="arrow-head"> 
-                        <path d="M10.828 12l4.95 4.95-1.414 1.414L8 12l6.364-6.364 1.414 1.414z" stroke="currentColor" stroke-width="2"/> 
-                      </g>
-                      <g class="arrow-body">
-                        <path d="M5 11.5H0" stroke="currentColor" stroke-width="4"/>
-                      </g>
-                    </svg> 
-                    
-                  </span>
-                  <span>home</span>    
-                </a>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                <div style="position: absolute;"><app-home-btn></app-home-btn> </div>
                 <h4 class="full-center" >Login</h4>
               </div>
               <div class="card-body">
@@ -53,11 +25,16 @@
                       class="form-control"
                       [(ngModel)]="form.username"
                       required
-                      #username="ngModel" 
+                      #username="ngModel"
+                      [ngClass]="{'is-invalid':(username.errors && f.submitted)||userNotFound}" 
+                      (change)="userNotFound=false;changed=true"
                     >
                     <div class="invalid-feedback" role="alert" *ngIf="username.errors && f.submitted">
                       Username is required!
-                   </div>
+                    </div>
+                    <div class="invalid-feedback" role="alert" *ngIf="userNotFound">
+                      User Not found.
+                    </div>
                   </div>
                   <div class="form-group">
                     <div class="d-block">
@@ -77,9 +54,14 @@
                       [(ngModel)]="form.password"
                       required
                       #password="ngModel"
+                      [ngClass]="{'is-invalid':(password.errors && f.submitted)||invalidpass}"
+                      (change)="invalidpass=false;changed=true"
                     >
                     <div class="invalid-feedback" role="alert" *ngIf="password.errors && f.submitted" >
                       <div *ngIf="password.errors['required']">please fill in your password</div>
+                    </div>
+                    <div class="invalid-feedback" role="alert" *ngIf="invalidpass">
+                      Invalid Password!
                     </div>
                   </div>
                   <div class="form-group">
@@ -101,7 +83,7 @@
                       <span class="mx-2"></span>
                       <app-spinner *ngIf="loading" [type]="1"></app-spinner>
                     </button>
-                    <div class="invalid-feedback" *ngIf="f.submitted && isLoginFailed">
+                    <div class="invalid-feedback" *ngIf="f.submitted && isLoginFailed && !userNotFound && !invalidpass && !loading&&!changed">
                       Signup failed!<br />{{ errorMessage }}
                   </div>
                   </div>

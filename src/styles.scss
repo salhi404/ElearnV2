@@ -3382,7 +3382,7 @@ select.form-control:not([size]):not([multiple]) {
 }
 
 .card .card-header .form-control {
-    height: 31px;
+    height: 42px;
     font-size: 13px;
     border-radius: 30px
 }
@@ -3412,6 +3412,7 @@ select.form-control:not([size]):not([multiple]) {
     padding-right: 20px !important;
     padding-top: 7px !important;
     padding-bottom: 7px !important;
+    height: 42px;
 }
 
 .card .card-header h4+.card-header-action .btn.active,
@@ -6291,23 +6292,23 @@ pre {
 }
 
 .page-error .page-search {
-    margin: 40px auto;
-    max-width: 100%;
-    width: 350px
+    margin: 40px auto!important;
+    max-width: 100%!important;
+    width: 350px!important
 }
 
 .page-error .page-search .form-control {
-    border-radius: 30px
+    border-radius: 30px !important
 }
 
 .page-error .page-search .btn {
-    border-radius: 30px;
-    margin-left: 10px
+    border-radius: 30px!important;
+    margin-left: 10px!important
 }
 
 @media (max-width: 575.98px) {
     .page-error .page-search {
-        width: 100%
+        width: 100%!important
     }
 }
 

@@ -19,9 +19,12 @@ export class LoginComponent implements OnInit {
   };
   isLoggedIn = false;
   isLoginFailed = false;
+  userNotFound =false;
+  invalidpass=false;
   errorMessage = '';
   roles: string[] = [];
   loading:boolean=false;
+  changed=false;
   constructor( 
   //private localStore: LocalService,
   //private dialog_service: NewItemDialogService,
@@ -54,6 +57,8 @@ export class LoginComponent implements OnInit {
         this.goToHomePage(this.storageService.parseUser(data),remember);
       },
       error: err => {
+        if(err.status==404)this.userNotFound=true;
+        if(err.status==401)this.invalidpass=true;
         if(err.status==500 && attempt<6){
           var time=0;
           switch (attempt) {
@@ -84,6 +89,9 @@ export class LoginComponent implements OnInit {
     });
   }
   onSubmit(): void {
+    this.changed=false;
+    this.userNotFound=false;
+    this.invalidpass=false;
     if(!this.loading){
       this.loading=true;
       this.register(1)

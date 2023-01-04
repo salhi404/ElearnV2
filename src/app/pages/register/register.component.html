@@ -2,10 +2,11 @@
     <section class="section">
       <div class="container mt-5">
         <div class="row">
-          <div class="col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 col-xl-6 offset-xl-3">
+          <div class="col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4">
             <div class="card card-primary">
               <div class="card-header">
-                <h4>Register</h4>
+                <div style="position: absolute;"><app-home-btn></app-home-btn> </div>
+                <h4 class="full-center" >Register</h4>
               </div>
               <div class="card-body">
                 <form 
@@ -37,8 +38,10 @@
                       name="username" 
                       id="username" 
                       autocomplete="off"
+                      [ngClass]="{'is-invalid':(username.errors && f.submitted)||userExisted}"
+                      (change)="userExisted=false;changed=true"
                     >
-                    <div class="invalid-feedback show"  *ngIf="username.errors && f.submitted">
+                    <div class="invalid-feedback"  *ngIf="username.errors && f.submitted">
                       <div *ngIf="username.errors['required']">Username is required</div>
                     <div *ngIf="username.errors['minlength']">
                       Username must be at least 3 characters
@@ -46,6 +49,9 @@
                     <div *ngIf="username.errors['maxlength']">
                       Username must be at most 20 characters
                     </div>
+                    </div>
+                    <div class="invalid-feedback" role="alert" *ngIf="userExisted">
+                      Username is already in use!
                     </div>
                   </div>
                   <div class="form-group">
@@ -61,12 +67,17 @@
                       required
                       email
                       #email="ngModel"
+                      [ngClass]="{'is-invalid':(email.errors && f.submitted)||emailExisted}"
+                      (change)="emailExisted=false;changed=true"
                     >
                     <div class="invalid-feedback" *ngIf="email.errors && f.submitted">
                       <div *ngIf="email.errors['required']">Email is required</div>
                       <div *ngIf="email.errors['email']">
                         Email must be a valid email address
                       </div>
+                    </div>
+                    <div class="invalid-feedback" role="alert" *ngIf="emailExisted">
+                      Email is already in use!
                     </div>
                   </div>
                   <div class="row">
@@ -82,6 +93,8 @@
                         required
                         minlength="6"
                         #password="ngModel"
+                        [ngClass]="{'is-invalid':password.errors && f.submitted}"
+                        
                        >
                        <div class="invalid-feedback"  *ngIf="password.errors && f.submitted">
                         <div *ngIf="password.errors['required']">Password is required</div>
@@ -105,6 +118,7 @@
                         [(ngModel)]="form.agree"
                         required
                         #agree="ngModel"
+                        [ngClass]="{'is-invalid':agree.errors && f.submitted}"
                       >
                       <label class="custom-control-label" for="agree">I agree with the terms and conditions</label>
                     </div>
@@ -118,7 +132,7 @@
                       <span class="mx-2"></span>
                       <app-spinner *ngIf="loading" [type]="1"></app-spinner>
                     </button>
-                    <div class="invalid-feedback" *ngIf="f.submitted && isSignUpFailed">
+                    <div class="invalid-feedback" *ngIf="f.submitted && isSignUpFailed&&!emailExisted&&!userExisted&&!changed">
                       Signup failed!<br />{{ errorMessage }}
                   </div>
                   </div>

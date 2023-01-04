@@ -17,10 +17,13 @@ export class RegisterComponent implements OnInit {
     agree:null,
 
   };
+  userExisted=false;
+  emailExisted=false;
   isSuccessful = false;
   isSignUpFailed = false;
   errorMessage = '';
   loading:boolean=false;
+  changed=false;
   constructor(
     //private localStore: LocalService,
     //private manageService :AuthManageService,
@@ -57,6 +60,8 @@ export class RegisterComponent implements OnInit {
         this.loading=false;
       },
       error: err => {
+        if(err.status==401)this.userExisted=true;
+        if(err.status==403)this.emailExisted=true;
         if(err.status==500 && attempt<6){
           var time=0;
           switch (attempt) {
@@ -87,8 +92,10 @@ export class RegisterComponent implements OnInit {
     });
   }
   onSubmit(): void {
+    this.changed=false;
     console.log("loggggggg");
-    
+    this.userExisted=false;
+    this.emailExisted=false;
     if(!this.loading){
       this.loading=true;
       this.register(1)
