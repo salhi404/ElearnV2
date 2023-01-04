@@ -5,10 +5,10 @@ import { StorageService } from './storage.service';
 import { Mail } from '../Interfaces/Mail';
 import { Pref } from '../Interfaces/user';
 //const URL_API = 'https://ayoubauth.herokuapp.com/api/auth/';
-const URL_API = 'http://localhost:8080/'; 
+//const URL_API = 'http://localhost:8080/'; 
 //const URL_API = 'https://shoppingapptracker.herokuapp.com/';
 // const URL_API = 'https://encouraging-crow.cyclic.app/';
-//const URL_API = 'https://frantic-colt-leather-jacket.cyclic.app/';
+const URL_API = 'https://frantic-colt-leather-jacket.cyclic.app/';
 const AUTH_API = URL_API+'api/auth/';
 const DATA_API = URL_API+'api/data/';
 const httpOptions = {
