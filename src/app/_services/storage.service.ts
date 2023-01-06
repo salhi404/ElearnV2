@@ -3,6 +3,7 @@ import { AnyCatcher } from 'rxjs/internal/AnyCatcher';
 import { Pref, User } from '../Interfaces/user';
 const USER_KEY = 'authentication';
 const PREFRENCES_KEY = 'PREFRENCES';
+const MODMAIL_KEY = 'modifiedMail';
 @Injectable({
   providedIn: 'root'
 })
@@ -93,5 +94,19 @@ export class StorageService {
     user.verified=json.verified?json.verified:user.verified;
     user.pref=json.configs?json.configs:user.pref;
     return user;
+  }
+  public saveModMail(mod:any[]){
+    localStorage.removeItem(MODMAIL_KEY);
+    localStorage.setItem(MODMAIL_KEY, JSON.stringify(mod));
+  }
+  public getModMail():any{
+    const mod = localStorage.getItem(MODMAIL_KEY);
+    if (mod) {
+      return JSON.parse(mod);
+    }
+    return null as any;
+  }
+  public clearModMail():void{
+    localStorage.removeItem(MODMAIL_KEY);
   }
 }

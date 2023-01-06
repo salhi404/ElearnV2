@@ -4946,13 +4946,13 @@ h6 .badge {
 
 .navbar {
     height: 70px;
-    left: 250px;
+    left: 220px;
     right: 0px;
     position: absolute;
     z-index: 890;
     background-color: transparent;
     height: 70px;
-    left: 250px;
+    left: 220px;
     right: 0;
     position: absolute;
     z-index: 890;
@@ -6317,7 +6317,7 @@ pre {
     position: fixed;
     top: 0;
     height: 100%;
-    width: 250px;
+    width: 220px;
     background-color: #fff;
     z-index: 880;
     left: 0
@@ -6331,7 +6331,7 @@ pre {
 }
 
 body.sidebar-gone .main-sidebar {
-    left: -250px
+    left: -220px
 }
 
 .sidebar-mini .hide-sidebar-mini {
@@ -23295,7 +23295,11 @@ button.bg-dark:hover {
 .embed-responsive-1by1::before {
     padding-top: 100%
 }
-
+.flex-center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .flex-row {
     -ms-flex-direction: row !important;
     -webkit-box-orient: horizontal !important;

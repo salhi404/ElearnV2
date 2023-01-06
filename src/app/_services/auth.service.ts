@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { StorageService } from './storage.service';
 import { Mail } from '../Interfaces/Mail';
 import { Pref } from '../Interfaces/user';
+
 //const URL_API = 'https://ayoubauth.herokuapp.com/api/auth/';
 const URL_API = 'http://localhost:8080/'; 
 //const URL_API = 'https://shoppingapptracker.herokuapp.com/';
@@ -53,6 +54,14 @@ export class AuthService {
   sendMail(mail:Mail,provided:number):Observable<any>{
     const token = this.storageService.getTokent();
     return this.http.post(DATA_API + 'sendmail', {mail,provided,token}, httpOptions);
+  }
+  syncMailTags(tags:any[]):Observable<any>{
+    const token = this.storageService.getTokent();
+    return this.http.post(DATA_API + 'syncmailtags', {tags,token}, httpOptions);
+  }
+  deleteMail(mails:string[]):Observable<any>{
+    const token = this.storageService.getTokent();
+    return this.http.post(DATA_API + 'deletemail', {mails,token}, httpOptions);
   }
   sendPref(pref:Pref):Observable<any>{
     const token = this.storageService.getTokent();
