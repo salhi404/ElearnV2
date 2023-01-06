@@ -41,6 +41,7 @@ export class RootComponent implements OnInit ,OnDestroy {
   state:any={user:this.user,islogged:false,remember:true};
   userSent:boolean=false;
   ngOnInit(): void {
+    //this.storageService.clearUser();
     console.log("this.state");
     console.log(this.state);
     if(this.state.islogged){

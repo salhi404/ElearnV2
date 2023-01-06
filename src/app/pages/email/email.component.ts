@@ -55,7 +55,7 @@ export class EmailComponent implements OnInit {
     for (let index = 0; index < this.numberOfItems; index++) {
       this.selected.push(false);
     }
-    this.storageService.clearModMail()
+    //this.storageService.clearModMail()
     const tempMod=this.storageService.getModMail();
     if(tempMod)this.modifiedMail=tempMod;
   }
