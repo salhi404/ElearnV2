@@ -5,6 +5,7 @@ import { StorageService } from 'src/app/_services/storage.service';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {  Router, NavigationExtras } from '@angular/router';
+import { User } from 'src/app/Interfaces/user';
   interface  Mod{
   mail:string
   modType:number
@@ -15,10 +16,13 @@ import {  Router, NavigationExtras } from '@angular/router';
   styleUrls: ['./email.component.scss']
 })
 export class EmailComponent implements OnInit {
+  user:User=null as any;
+  replacedBody:string[]=[];
   localSynced=false;
   navigationExtras: NavigationExtras = { state: null as any };
   slectedFilter:number=1
-  openComposer:boolean=false;
+  openedWindow:number=1;
+  openedMail:Mail=null as any;
   isSentError:boolean=false;
   isSentErrorMsg:string="";
   selectAll=false;
@@ -48,6 +52,7 @@ export class EmailComponent implements OnInit {
     this.isLoggedIn = this.storageService.isLoggedIn();
     if (this.isLoggedIn) {
       this.getMail();
+      this.user=this.storageService.getUser() ;
     }else{
       this.navigationExtras={ state: {errorNbr:403}  };
       this.router.navigate(['/error'],this.navigationExtras);
@@ -224,7 +229,7 @@ export class EmailComponent implements OnInit {
     this.storageService.clearModMail();
   }
   chooseFilter(filter:number):void{
-    this.openComposer=false;
+    this.openedWindow=1;
     this.slectedFilter=filter;
     this.toggleSelectAll(false);
     this.selectAll=false;
@@ -255,8 +260,8 @@ export class EmailComponent implements OnInit {
   refresh(){
     this.getMail();
   }
-  openComposeWindow():void{
-    this.openComposer=true;
+  openWindow(wnd:number):void{
+    this.openedWindow=wnd;
     this.slectedFilter=-1;
   }
 
@@ -366,7 +371,20 @@ export class EmailComponent implements OnInit {
     });
   }
   openMsg(ind:number){
-    console.log("open message number "+ind);
+    this.openedWindow=3
+    this.openedMail=this.filteredMail[this.filteredMail.length-ind-1];
+    this.replacedBody=this.openedMail.body.split(/(\r\n|\r|\n)/g);
+    this.replacedBody.forEach
+  }
+  reply(){
+    this.openedWindow=2;
+    this.form.email=this.openedMail.fromTo.email;
+    this.form.subject=this.openedMail.subject;
+  }
+  forward(){
+    this.openedWindow=2;
+    this.form.body=this.openedMail.body;
+    this.form.subject=this.openedMail.subject;
   }
   test(event:any,id:string){
     /*console.log("id");
