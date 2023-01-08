@@ -45,6 +45,8 @@ export class EmailComponent implements OnInit {
   isLoggedIn = false;
   loading:boolean=false;
   sending:boolean=false;
+  MsgSentSeccesfull:boolean=false;
+  ShowSeccesfull:boolean=false;
   datepipe: DatePipe = new DatePipe('en-US')
   form: any = {
     email: null,
@@ -397,13 +399,24 @@ export class EmailComponent implements OnInit {
       next: data => {
         console.log(data);
         this.sending=false;
+        this.ShowSeccesfull=true;
+        this.MsgSentSeccesfull=true;
+        setTimeout(() => {
+          this.ShowSeccesfull=false;
+        }, 1800);
       },
       error: err => {
         this.isSentError=true;
         this.sending=false;
         this.isSentErrorMsg=err.error.message;
         console.log(err.error.message);
+        this.ShowSeccesfull=true;
+        this.MsgSentSeccesfull=false;
+        setTimeout(() => {
+          this.ShowSeccesfull=false;
+        }, 1800);
       }
+      
     });
   }
   openMsg(ind:number){

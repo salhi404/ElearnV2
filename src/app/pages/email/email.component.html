@@ -289,8 +289,9 @@
                             <input type="file" class="default" multiple>
                         </div>-->
                         <br><br>
-                              <button  class="btn btn-info btn-border-radius waves-effect mr-2">
-                                <span style="font-family: monospace;" *ngIf="!sending" >Send</span> 
+                              <button  class="btn  btn-border-radius waves-effect mr-2" [ngClass]="{'btn-info':!ShowSeccesfull,'btn-success':ShowSeccesfull&&MsgSentSeccesfull,'btn-danger':ShowSeccesfull&&!MsgSentSeccesfull}">
+                                <span *ngIf="ShowSeccesfull"  >{{MsgSentSeccesfull?'sent':'Failed!'}}<span *ngIf="MsgSentSeccesfull">&check;</span></span>
+                                <span style="font-family: monospace;" *ngIf="!sending&&!ShowSeccesfull" >Send</span> 
                                 <app-spinner *ngIf="sending" [type]="8" [height]="5" [width]="5" [size]="3" ></app-spinner>
                               </button>
                               <a (click)="chooseFilter(1)" class="btn btn-danger btn-border-radius waves-effect DiscardBtn ">Discard</a>
