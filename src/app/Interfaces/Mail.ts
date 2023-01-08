@@ -7,5 +7,6 @@ export interface Mail{
     date:Date;
     subject:string;
     body:string;
-    tags:string[]
+    tags:string[];
+    label:number;
 }

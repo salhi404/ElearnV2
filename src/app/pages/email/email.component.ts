@@ -4,6 +4,7 @@ import { AuthService } from 'src/app/_services/auth.service';
 import { StorageService } from 'src/app/_services/storage.service';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import {  Router, NavigationExtras } from '@angular/router';
 import { User } from 'src/app/Interfaces/user';
   interface  Mod{
@@ -16,6 +17,8 @@ import { User } from 'src/app/Interfaces/user';
   styleUrls: ['./email.component.scss']
 })
 export class EmailComponent implements OnInit {
+  labels:any[]=[{name:"Family",color:'col-red',bgColor:"badge-danger"},{name:"Work",color:'col-blue',bgColor:"badge-primary"},{name:"Shop",color:'col-orange',bgColor:"badge-orange"}
+                  ,{name:"Themeforest",color:'col-cyan',bgColor:"badge-cyan"},{name:"Google",color:'col-blue-grey',bgColor:"badge-blue-grey"}];
   user:User=null as any;
   replacedBody:string[]=[];
   localSynced=false;
@@ -42,6 +45,7 @@ export class EmailComponent implements OnInit {
     email: null,
     subject: null,
     body:null,
+    label:-1,
   };
   constructor(
     private router: Router,
@@ -274,7 +278,8 @@ export class EmailComponent implements OnInit {
       subject:"test subject ",
       body:"Page When Looking At Its Layout Looking At Its Layout The Point Of Using Lorem\
       Page When Looking At Its Layout Looking At Its Layout The Point Of Using Lorem.",
-      tags:["Inbox","Sent","Marked","Draft","Sent","trash"]
+      tags:["Inbox","Sent","Marked","Draft","Sent","trash"],
+      label:-1
     }
     this.authService.sendMail(mail,1).subscribe({
       next: data => {
@@ -298,6 +303,7 @@ export class EmailComponent implements OnInit {
             subject:element.subject,
             body:element.body,
             tags:element.tags,
+            label:element.label||-1,
           }
           this.recievedMail.push(mm);
         });
@@ -357,7 +363,8 @@ export class EmailComponent implements OnInit {
       date:new Date(),
       subject:this.form.subject,
       body:this.form.body,
-      tags:["Sent"]
+      tags:["Sent"],
+      label:this.form.label
     }
     this.authService.sendMail(mail,1).subscribe({
       next: data => {

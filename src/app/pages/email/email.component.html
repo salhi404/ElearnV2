@@ -28,23 +28,23 @@
                   <h5 class="b-b p-10 text-strong">Labels</h5>
                   <ul class="" id="mail-labels">
                     <li>
-                      <a href="javascript:;">
+                      <a class="pointer">
                         <i class="material-icons col-red">local_offer</i>Family</a>
                     </li>
                     <li>
-                      <a href="javascript:;">
+                      <a class="pointer">
                         <i class="material-icons col-blue">local_offer</i>Work</a>
                     </li>
                     <li>
-                      <a href="javascript:;">
+                      <a class="pointer">
                         <i class="material-icons col-orange">local_offer</i>Shop</a>
                     </li>
                     <li>
-                      <a href="javascript:;">
+                      <a class="pointer">
                         <i class="material-icons col-cyan">local_offer</i>Themeforest</a>
                     </li>
                     <li>
-                      <a href="javascript:;">
+                      <a class="pointer">
                         <i class="material-icons col-blue-grey">local_offer</i>Google</a>
                     </li>
                   </ul>
@@ -166,6 +166,7 @@
                           <td  (click)="openMsg(i)" class="max-texts">
                             <a >
                               <!--<span class="badge badge-primary">Work</span>-->
+                              <span *ngIf="mail.label!=-1" class="badge mr-2 {{labels[mail.label].bgColor}}"> {{labels[mail.label].name}}</span>
                               <span class="mr-2" style="font-weight: 900; word-wrap:no-wrap">{{mail.subject.substring(0,18)}}{{mail.subject.length>18?'...':''}}</span>
                               <span style="font-weight: 400;">{{mail.body.substring(0,50-mail.subject.length)}}{{(mail.subject.length+mail.body.length)>50?'...':''}}</span>
                               
@@ -257,6 +258,20 @@
                         <div class="invalid-feedback" *ngIf="body.errors && f.submitted">
                             <div *ngIf="body.errors['required']">message is required</div>
                         </div>
+                        <select 
+                          class="custom-select mb-3"
+                          [(ngModel)]="form.label"
+                          #label="ngModel"
+                          name="label"
+                        >
+                          <option value="-1" [ngValue]="-1" >Choose label </option>
+                          <option *ngFor="let label of labels;index as i " [ngValue]="i">
+                            <a class="pointer">
+                              {{label.name}}
+                            </a>
+                          </option>
+                          
+                        </select>
                         <!--<div class="compose-editor m-t-20">
                             <div id="summernote"></div>
                             <input type="file" class="default" multiple>
