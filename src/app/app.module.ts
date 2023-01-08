@@ -20,6 +20,7 @@ import { EmailComponent } from './pages/email/email.component';
 import { HomeComponent } from './pages/home/home.component';
 import { ErrorsComponent } from './pages/errors/errors.component';
 import { HomeBtnComponent } from './components/home-btn/home-btn.component';
+import { SceletonLoadComponent } from './components/sceleton-load/sceleton-load.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,6 +39,7 @@ import { HomeBtnComponent } from './components/home-btn/home-btn.component';
     HomeComponent,
     ErrorsComponent,
     HomeBtnComponent,
+    SceletonLoadComponent,
   ],
   imports: [
     ReactiveFormsModule,

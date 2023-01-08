@@ -1,1 +1,4 @@
-<span  [ngClass]="{'loader1':type==1,'loader2':type==2,'loader3':type==3,'loader4':type==4,'size_1':size==1,'size_2':size==2}"></span>
+<div *ngIf="type<8" [ngStyle]="{'width.px':width,'height.px':height}"   [ngClass]="{'loader1':type==1,'loader2':type==2,'loader3':type==3,
+'loader4':type==4,'loader5':type==5,'loader6':type==6,
+'loader7':type==7,'loader8':type==8,'size_1':size==1,'size_3':size==3}"></div>
+<div *ngIf="type==8" [ngStyle]="{'loader8':type==8}" class="classic-4"></div>

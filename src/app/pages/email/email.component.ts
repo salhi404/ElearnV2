@@ -6,7 +6,7 @@ import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FormBuilder, Validators } from '@angular/forms';
 import {  Router, NavigationExtras } from '@angular/router';
-import { User } from 'src/app/Interfaces/user';
+import { User, UserPublic } from 'src/app/Interfaces/user';
   interface  Mod{
   mail:string
   modType:number
@@ -20,6 +20,8 @@ export class EmailComponent implements OnInit {
   labels:any[]=[{name:"Family",color:'col-red',bgColor:"badge-danger"},{name:"Work",color:'col-blue',bgColor:"badge-primary"},{name:"Shop",color:'col-orange',bgColor:"badge-orange"}
                   ,{name:"Themeforest",color:'col-cyan',bgColor:"badge-cyan"},{name:"Google",color:'col-blue-grey',bgColor:"badge-blue-grey"}];
   user:User=null as any;
+  reciepients:UserPublic[]=[];
+  nmbrOfShowingMsgs:number=0;
   chosenLabel:number=-1;
   replacedBody:string[]=[];
   localSynced=false;
@@ -41,6 +43,8 @@ export class EmailComponent implements OnInit {
   BinMail:Mail[]=[];
   StarredMail:Mail[]=[];
   isLoggedIn = false;
+  loading:boolean=false;
+  sending:boolean=false;
   datepipe: DatePipe = new DatePipe('en-US')
   form: any = {
     email: null,
@@ -78,7 +82,12 @@ export class EmailComponent implements OnInit {
   toggleLabel(index:number){
     if(this.chosenLabel==index){
       this.chosenLabel=-1;
-    }else this.chosenLabel=index;
+      this.nmbrOfShowingMsgs=this.filteredMail.length;
+    }else{
+      this.chosenLabel=index;
+      this.nmbrOfShowingMsgs=this.filteredMail.filter(e=>e.label==index).length;
+      
+    } 
   }
   ToggleStar(id:string){
     this.recievedMail.forEach((element,ind)=>{
@@ -249,18 +258,23 @@ export class EmailComponent implements OnInit {
     switch (filter) {
       case 1:
         this.filteredMail=this.InboxdMail;
+        this.nmbrOfShowingMsgs=this.InboxdMail.length;
         break;
       case 2:
         this.filteredMail=this.SentMail;
+        this.nmbrOfShowingMsgs=this.SentMail.length;
         break;
       case 3:
         this.filteredMail=this.DraftMail;
+        this.nmbrOfShowingMsgs=this.DraftMail.length;
         break;
       case 4:
         this.filteredMail=this.BinMail;
+        this.nmbrOfShowingMsgs=this.BinMail.length;
         break;
       case 5:
       this.filteredMail=this.StarredMail;
+      this.nmbrOfShowingMsgs=this.StarredMail.length;
       break;
       /*default:
       this.filteredMail=[];
@@ -287,16 +301,20 @@ export class EmailComponent implements OnInit {
       tags:["Inbox","Sent","Marked","Draft","Sent","trash"],
       label:-1
     }
+    
     this.authService.sendMail(mail,1).subscribe({
       next: data => {
         console.log(data);
+        
       },
       error: err => {
         console.log(err.error.message);
+        
       }
     });
   }
    recieveMail():void{
+    this.loading=true;
     this.authService.getMail().subscribe({
       next: mails => {
         this.recievedMail=[]; 
@@ -319,10 +337,11 @@ export class EmailComponent implements OnInit {
         }
         this.resectionMail();
         this.chooseFilter(this.slectedFilter);
-        
+        this.loading=false;
       },
+      
       error: err => {
-        
+        this.loading=false;
         console.log(err.error.message);
       }
     });
@@ -338,6 +357,7 @@ export class EmailComponent implements OnInit {
       if(element.tags.includes("inbox")&&!element.tags.includes("bin"))this.InboxdMail.push(element);
       if(element.tags.includes("starred")&&!element.tags.includes("bin"))this.StarredMail.push(element);
       if(element.tags.includes("bin"))this.BinMail.push(element);
+      if(this.reciepients.filter(e=>e.email==element.fromTo.email).length==0)this.reciepients.push(element.fromTo); 
     });
   }
   getMail():Mail[]{
@@ -372,12 +392,15 @@ export class EmailComponent implements OnInit {
       tags:["Sent"],
       label:this.form.label
     }
+    this.sending=true;
     this.authService.sendMail(mail,1).subscribe({
       next: data => {
         console.log(data);
+        this.sending=false;
       },
       error: err => {
         this.isSentError=true;
+        this.sending=false;
         this.isSentErrorMsg=err.error.message;
         console.log(err.error.message);
       }
@@ -390,14 +413,18 @@ export class EmailComponent implements OnInit {
     this.replacedBody.forEach
   }
   reply(){
-    this.openedWindow=2;
     this.form.email=this.openedMail.fromTo.email;
     this.form.subject=this.openedMail.subject;
+    this.openedWindow=2;
   }
   forward(){
-    this.openedWindow=2;
     this.form.body=this.openedMail.body;
     this.form.subject=this.openedMail.subject;
+    this.openedWindow=2;
+  }
+  snedTo(email:string){
+    this.form.email=email;
+    this.openedWindow=2;
   }
   test(event:any,id:string){
     /*console.log("id");

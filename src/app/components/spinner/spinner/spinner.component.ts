@@ -8,6 +8,8 @@ import { Input } from '@angular/core';
 export class SpinnerComponent implements OnInit {
   @Input() type:number=1
   @Input() size:number=1
+  @Input() width:number=14
+  @Input() height:number=14
   constructor() { }
 
   ngOnInit(): void {
