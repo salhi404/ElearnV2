@@ -38,6 +38,7 @@
 .theme-black .chosenLabel {
     background-color: #313131
 }
+
 .pointer{
     cursor: pointer;
 }
@@ -4239,10 +4240,12 @@ table tr:hover .table-links {
     color: #fff
 }
 .badge.badge-orange {
-    background-color: #ff9800 !important
+    background-color: #ff9800 !important;
+    color: #fff;
 }
 .badge.badge-cyan {
-    background-color: #29c0b1 !important
+    background-color: #29c0b1 !important;
+    color: #fff;
 }
 .badge.badge-blue-grey {
     background-color: #607d8b !important
