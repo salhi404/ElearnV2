@@ -28,24 +28,29 @@
                   <h5 class="b-b p-10 text-strong">Labels</h5>
                   <ul class="" id="mail-labels">
                     <li>
-                      <a class="pointer">
-                        <i class="material-icons col-red">local_offer</i>Family</a>
+                      <a (click)="toggleLabel(0)" class="pointer" [ngClass]="{'chosenLabel':chosenLabel==0}" >
+                        <i class="material-icons col-red">local_offer</i>Family
+                      </a>
                     </li>
                     <li>
-                      <a class="pointer">
-                        <i class="material-icons col-blue">local_offer</i>Work</a>
+                      <a (click)="toggleLabel(1)" class="pointer" [ngClass]="{'chosenLabel':chosenLabel==1}" >
+                        <i class="material-icons col-blue">local_offer</i>Work
+                      </a>
                     </li>
                     <li>
-                      <a class="pointer">
-                        <i class="material-icons col-orange">local_offer</i>Shop</a>
+                      <a (click)="toggleLabel(2)" class="pointer" [ngClass]="{'chosenLabel':chosenLabel==2}" >
+                        <i class="material-icons col-orange">local_offer</i>Shop
+                      </a>
                     </li>
                     <li>
-                      <a class="pointer">
-                        <i class="material-icons col-cyan">local_offer</i>Themeforest</a>
+                      <a (click)="toggleLabel(3)" class="pointer" [ngClass]="{'chosenLabel':chosenLabel==3}" >
+                        <i class="material-icons col-cyan">local_offer</i>Themeforest
+                      </a>
                     </li>
                     <li>
-                      <a class="pointer">
-                        <i class="material-icons col-blue-grey">local_offer</i>Google</a>
+                      <a (click)="toggleLabel(4)" class="pointer" [ngClass]="{'chosenLabel':chosenLabel==4}" >
+                        <i class="material-icons col-blue-grey">local_offer</i>Google
+                      </a>
                     </li>
                   </ul>
                   <h5 class="b-b p-10 text-strong">Online</h5>
@@ -152,7 +157,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                        <tr    *ngFor="let mail of filteredMail.slice().reverse() ; index as i"  class="unread pointer" >
+                        <tr [ngClass]="{'hideMsg':chosenLabel!=mail.label&&chosenLabel!=-1}"  *ngFor="let mail of filteredMail.slice().reverse() ; index as i"  class="unread pointer" >
                           <td class="tbl-checkbox">
                             <label class="form-check-label">
                               <input type="checkbox" [(ngModel)]="selected[i]" (ngModelChange)="test($event,mail.id)">

@@ -20,6 +20,7 @@ export class EmailComponent implements OnInit {
   labels:any[]=[{name:"Family",color:'col-red',bgColor:"badge-danger"},{name:"Work",color:'col-blue',bgColor:"badge-primary"},{name:"Shop",color:'col-orange',bgColor:"badge-orange"}
                   ,{name:"Themeforest",color:'col-cyan',bgColor:"badge-cyan"},{name:"Google",color:'col-blue-grey',bgColor:"badge-blue-grey"}];
   user:User=null as any;
+  chosenLabel:number=-1;
   replacedBody:string[]=[];
   localSynced=false;
   navigationExtras: NavigationExtras = { state: null as any };
@@ -73,6 +74,11 @@ export class EmailComponent implements OnInit {
       for (let index = 0; index < this.numberOfItems; index++) {
         this.selected[index]=event;
       }
+  }
+  toggleLabel(index:number){
+    if(this.chosenLabel==index){
+      this.chosenLabel=-1;
+    }else this.chosenLabel=index;
   }
   ToggleStar(id:string){
     this.recievedMail.forEach((element,ind)=>{

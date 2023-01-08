@@ -32,7 +32,12 @@
 .search-element input,.search-element .btn{
     background-color:rgba(255, 255, 255, 0)!important;
 }
-
+.chosenLabel {
+    background-color: #e6e6e6
+}
+.theme-black .chosenLabel {
+    background-color: #313131
+}
 .pointer{
     cursor: pointer;
 }
