@@ -12,11 +12,16 @@ export class EventsService {
   currentLayoutEvent = this.layoutEvent.asObservable();
   public loggingEvent = new BehaviorSubject(-1);
   loggingStatusEvent = this.loggingEvent.asObservable();
+  public updatesEvent = new BehaviorSubject(-1);
+  updatestatusEvent = this.updatesEvent.asObservable();
   constructor() { }
   chngLayoutEvent(state: number) {
     this.layoutEvent.next(state)
   }
   changeLoggingState(state: number) {
     this.loggingEvent.next(state)
+  }
+  changeUpdateState(state: number) {
+    this.updatesEvent.next(state)
   }
 }

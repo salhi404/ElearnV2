@@ -37,6 +37,7 @@ export class RootComponent implements OnInit ,OnDestroy {
   isTabletMode:boolean=false;
   DarkTheme:boolean=false;
   isLoggedIn = false;
+  mailUpadte:number=-1;
   user:User=null as any;
   state:any={user:this.user,islogged:false,remember:true};
   userSent:boolean=false;
@@ -49,6 +50,14 @@ export class RootComponent implements OnInit ,OnDestroy {
       this.user=this.state.user;
     }else{
       this.prepsubscription();
+    }
+    if( this.isLoggedIn){
+      this.getMailUpdate();
+
+      setInterval(() => {
+        this.getMailUpdate();
+      }, 12000);
+      
     }
     const pref=this.storageService.getPrefrences();
     this.DarkTheme=pref.darkTheme;
@@ -67,9 +76,26 @@ export class RootComponent implements OnInit ,OnDestroy {
       }
       this.storageService.setPrefrences({darkTheme:this.DarkTheme,miniSideBar:this.showMiniSideBar})
     } )
-    this.subscription2=this.events.loggingStatusEvent.subscribe(state=>{
-      if(state==2){
-        this.logout();
+    
+  }
+  getMailUpdate(){
+    this.authService.getMailUpdate().subscribe({
+      next:mailUpdate=>{
+        console.log(mailUpdate.code);
+        if(this.mailUpadte==-1){
+        this.mailUpadte=mailUpdate.code;
+        console.log("mailUpdate.code"+mailUpdate.code);
+        }else{
+          if(this.mailUpadte!=mailUpdate.code){
+            this.mailUpadte=mailUpdate.code;
+            console.log("updated");
+            this.events.changeUpdateState(1);
+          }
+        }
+        
+      },
+      error:err=>{
+
       }
     })
   }
@@ -123,6 +149,7 @@ export class RootComponent implements OnInit ,OnDestroy {
       }
     });
     this.subscription.unsubscribe();
+    this.subscription2.unsubscribe();
     if(!this.state.remember&&this.isLoggedIn)this.logout();
   }
   @HostListener('window:resize', ['$event'])

@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,OnDestroy } from '@angular/core';
 import { Mail } from 'src/app/Interfaces/Mail';
 import { AuthService } from 'src/app/_services/auth.service';
 import { StorageService } from 'src/app/_services/storage.service';
 import { DatePipe } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { FormBuilder, Validators } from '@angular/forms';
+import { EventsService } from 'src/app/services/events.service';
 import {  Router, NavigationExtras } from '@angular/router';
 import { User, UserPublic } from 'src/app/Interfaces/user';
+import { Subscription } from 'rxjs';
   interface  Mod{
   mail:string
   modType:number
@@ -16,7 +16,7 @@ import { User, UserPublic } from 'src/app/Interfaces/user';
   templateUrl: './email.component.html',
   styleUrls: ['./email.component.scss']
 })
-export class EmailComponent implements OnInit {
+export class EmailComponent implements OnInit,OnDestroy {
   labels:any[]=[{name:"Family",color:'col-red',bgColor:"badge-danger"},{name:"Work",color:'col-blue',bgColor:"badge-primary"},{name:"Shop",color:'col-orange',bgColor:"badge-orange"}
                   ,{name:"Themeforest",color:'col-cyan',bgColor:"badge-cyan"},{name:"Google",color:'col-blue-grey',bgColor:"badge-blue-grey"}];
   user:User=null as any;
@@ -47,23 +47,29 @@ export class EmailComponent implements OnInit {
   sending:boolean=false;
   MsgSentSeccesfull:boolean=false;
   ShowSeccesfull:boolean=false;
-  datepipe: DatePipe = new DatePipe('en-US')
+  datepipe: DatePipe = new DatePipe('en-US');
   form: any = {
     email: null,
     subject: null,
     body:null,
     label:-1,
   };
+  subscription: Subscription = new Subscription;
   constructor(
     private router: Router,
     private authService: AuthService,
     private storageService: StorageService,
+    private events:EventsService,
   ) { }
   ngOnInit(): void {
     this.isLoggedIn = this.storageService.isLoggedIn();
     if (this.isLoggedIn) {
       this.getMail();
       this.user=this.storageService.getUser() ;
+      this.subscription=this.events.updatestatusEvent.subscribe(state=>{
+        //console.log("state"+state);
+        this.refresh();
+      });
     }else{
       this.navigationExtras={ state: {errorNbr:403}  };
       this.router.navigate(['/error'],this.navigationExtras);
@@ -74,6 +80,9 @@ export class EmailComponent implements OnInit {
     //this.storageService.clearModMail()
     const tempMod=this.storageService.getModMail();
     if(tempMod)this.modifiedMail=tempMod;
+  }
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
   toggleSelectAll(event:any){
       this.selectAll=event;
