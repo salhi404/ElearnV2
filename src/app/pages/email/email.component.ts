@@ -68,7 +68,8 @@ export class EmailComponent implements OnInit,OnDestroy {
       this.user=this.storageService.getUser() ;
       this.subscription=this.events.updatestatusEvent.subscribe(state=>{
         //console.log("state"+state);
-        this.refresh();
+        if(state!=-1)this.refresh();
+        
       });
     }else{
       this.navigationExtras={ state: {errorNbr:403}  };
@@ -100,7 +101,7 @@ export class EmailComponent implements OnInit,OnDestroy {
       
     } 
   }
-  ToggleStar(id:string){
+  ToggleStar(id:string,fosync:boolean){
     this.recievedMail.forEach((element,ind)=>{
       console.log("id:"+element.id);
       console.log("element id:"+id);
@@ -114,7 +115,7 @@ export class EmailComponent implements OnInit,OnDestroy {
           element.tags.push("starred");
           this.StarredMail.push(element);
         }
-        if(this.localSynced)this.toggleModMailArrey(element,1);
+        if(!fosync)this.toggleModMailArrey(element,1);
         //if(!this.modifiedMail.includes({mail:element,modType:1}))this.modifiedMail.push({mail:element,modType:1});
         
       }
@@ -230,13 +231,26 @@ export class EmailComponent implements OnInit,OnDestroy {
       }
     })
   }
+  toggleOppened(id:string){
+    this.recievedMail.forEach((element,ind)=>{
+      if(element.id===id){
+        console.log("foundddddddd");
+        console.log(element);
+        if(!element.tags.includes("oppened")) element.tags.push("oppened"); 
+        console.log(element);
+      }
+    })
+  }
   private synclocal(){
     this.modifiedMail.forEach(element => {
       if(element.modType==1){
-        this.ToggleStar(element.mail);
+        this.ToggleStar(element.mail,true);
       }
       if(element.modType==2){
         this.toggleDelete(element.mail);
+      }
+      if(element.modType==3){
+        this.toggleOppened(element.mail);
       }
     });
   }
@@ -342,10 +356,7 @@ export class EmailComponent implements OnInit,OnDestroy {
           }
           this.recievedMail.push(mm);
         });
-        if(!this.localSynced){
-          this.synclocal();
-          this.localSynced=true;
-        }
+        this.synclocal();
         this.resectionMail();
         this.chooseFilter(this.slectedFilter);
         this.loading=false;
@@ -431,6 +442,11 @@ export class EmailComponent implements OnInit,OnDestroy {
   openMsg(ind:number){
     this.openedWindow=3
     this.openedMail=this.filteredMail[this.filteredMail.length-ind-1];
+    if(!this.openedMail.tags.includes("oppened")){
+      this.openedMail.tags.push("oppened");
+      this.modifiedMail.push({mail:this.openedMail.id,modType:3});
+      this.storageService.saveModMail(this.modifiedMail);
+    }
     this.replacedBody=this.openedMail.body.split(/(\r\n|\r|\n)/g);
     this.replacedBody.forEach
   }

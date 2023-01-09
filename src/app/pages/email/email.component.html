@@ -163,7 +163,7 @@
                           <app-sceleton-load [type]="1" [height]="20" [width]="60" [border]="20"></app-sceleton-load>
                         </td>
                       </tr>
-                        <tr [ngClass]="{'hideMsg':chosenLabel!=mail.label&&chosenLabel!=-1}"  *ngFor="let mail of filteredMail.slice().reverse() ; index as i"  class="unread pointer" >
+                        <tr  [ngClass]="{'hideMsg':chosenLabel!=mail.label&&chosenLabel!=-1,'unoppened':!mail.tags.includes('oppened')&&mail.tags.includes('inbox')}"  *ngFor="let mail of filteredMail.slice().reverse() ; index as i"  class="unread pointer" >
                           <td class="tbl-checkbox">
                             <label class="form-check-label">
                               <input type="checkbox" [(ngModel)]="selected[i]" (ngModelChange)="test($event,mail.id)">
@@ -171,7 +171,7 @@
                             </label>
                           </td>
                           <td (click)="openMsg(i)"  class="hidden-xs">
-                            <i *ngIf="slectedFilter!=4" (click)="ToggleStar(mail.id) ;$event.stopPropagation()" class="material-icons no-pointer" [ngClass]="{'text-warning':mail.tags.includes('starred')}"  >{{mail.tags.includes("starred")?'star':'star_border'}}</i>
+                            <i *ngIf="slectedFilter!=4" (click)="ToggleStar(mail.id,false) ;$event.stopPropagation()" class="material-icons no-pointer" [ngClass]="{'text-warning':mail.tags.includes('starred')}"  >{{mail.tags.includes("starred")?'star':'star_border'}}</i>
                           </td>
                           <td  (click)="openMsg(i)" class="hidden-xs">{{mail.fromTo.username}}</td>
                           <td  (click)="openMsg(i)" class="max-texts">
