@@ -5,6 +5,7 @@ import { AuthService } from '../../_services/auth.service';
 import { User } from 'src/app/Interfaces/user';
 import { Subscription } from 'rxjs';
 import {  Router, } from '@angular/router';
+import { Mail } from 'src/app/Interfaces/Mail';
 @Component({
   selector: 'app-root',
   templateUrl: './root.component.html',
@@ -29,7 +30,9 @@ export class RootComponent implements OnInit ,OnDestroy {
             };
           }
         }
-    } 
+    }
+  unoppenedMail:Mail[]=[];
+  unoppenedMailCount:number=0
   showSettingPanel:boolean=false
   subscription: Subscription = new Subscription;
   subscription2: Subscription = new Subscription;
@@ -43,6 +46,7 @@ export class RootComponent implements OnInit ,OnDestroy {
   userSent:boolean=false;
   ngOnInit(): void {
     //this.storageService.clearUser();
+    this.onWindowResize();
     console.log("this.state");
     console.log(this.state);
     if(this.state.islogged){
@@ -53,10 +57,10 @@ export class RootComponent implements OnInit ,OnDestroy {
     }
     if( this.isLoggedIn){
       this.getMailUpdate();
-
       setInterval(() => {
         this.getMailUpdate();
       }, 12000);
+      this.getnoppenedMail(); 
       
     }
     const pref=this.storageService.getPrefrences();
@@ -93,6 +97,18 @@ export class RootComponent implements OnInit ,OnDestroy {
           }
         }
         
+      },
+      error:err=>{
+
+      }
+    })
+  }
+  getnoppenedMail(){
+    this.authService.getUnoppenedMail().subscribe({
+      next:data=>{
+        console.log("UnoppenedMail");
+        if(data.mails)this.unoppenedMail=data.mails;
+        if(data.count)this.unoppenedMailCount=data.count;
       },
       error:err=>{
 
@@ -156,8 +172,6 @@ export class RootComponent implements OnInit ,OnDestroy {
   onWindowResize() {
     if(window.innerWidth<=1024)this.isTabletMode=true;
     else this.isTabletMode=false;
-    
-    
   }
 
 }

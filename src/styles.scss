@@ -6754,8 +6754,9 @@ body.layout-3 .main-footer {
 .main-sidebar .sidebar-brand {
     display: inline-block;
     width: 100%;
-    text-align: center;
+    text-align: left;
     height: 50px;
+    padding-left: 15px;
     line-height: 50px
 }
 

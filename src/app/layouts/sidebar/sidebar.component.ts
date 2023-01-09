@@ -1,4 +1,4 @@
-import { Component, OnInit,ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit,Input,ElementRef, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { EventsService } from 'src/app/services/events.service';
@@ -8,6 +8,7 @@ import { EventsService } from 'src/app/services/events.service';
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit {
+  @Input() isTabletMode:boolean=false;
   @HostListener('document:click', ['$event'])
   clickout(event:any) {
     if(this.eRef.nativeElement.contains(event.target)) {
@@ -18,6 +19,7 @@ export class SidebarComponent implements OnInit {
      this.sideBarShow=false;
     }
   }
+
   activeDropDown:boolean[]=[]
   sideBarShow:boolean=false;
   blockOutside:boolean=false;

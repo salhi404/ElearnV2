@@ -1,8 +1,8 @@
 <div style=" min-height: 1450px;" [ngClass]="{'sidebar-mini':showMiniSideBar&&!isTabletMode,'dark':DarkTheme,'dark-sidebar':DarkTheme,'theme-black':DarkTheme}" >
   <div id="app" >
     <div class="main-wrapper main-wrapper-1">
-      <app-navbar [logged]="isLoggedIn" [user]="user" [DarkTheme]="DarkTheme"></app-navbar>
-      <app-sidebar></app-sidebar>
+      <app-navbar [mailCount]="unoppenedMailCount" [mails]="unoppenedMail" [logged]="isLoggedIn" [user]="user" [DarkTheme]="DarkTheme"></app-navbar>
+      <app-sidebar [isTabletMode]="isTabletMode" ></app-sidebar>
       <!-- Main Content -->
       <router-outlet></router-outlet>
       <app-footer></app-footer>
