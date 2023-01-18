@@ -11814,50 +11814,21 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
     color: gray;
     cursor: pointer
 }
-
-.chat-app {
-    height: 690px
+.chat-scroll{
+    height: 500px!important;
+    overflow-y:scroll ;
 }
-
-.chat-app .people-list {
-    width: 280px;
-    position: absolute;
-    left: 0;
-    top: 0;
-    padding: 20px
-}
-
-.chat-app .chat {
-    border-left: 1px solid #e8e8e8
-}
-
-.chat-app .list_btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 9999;
-    padding: 0;
-    width: 40px;
-    height: 40px;
-    text-align: center;
-    line-height: 40px;
-    display: none;
-    -webkit-box-shadow: 0 10px 25px 0 rgba(0, 0, 0, 0.3);
-    -moz-box-shadow: 0 10px 25px 0 rgba(0, 0, 0, 0.3);
-    -ms-box-shadow: 0 10px 25px 0 rgba(0, 0, 0, 0.3);
-    box-shadow: 0 10px 25px 0 rgba(0, 0, 0, 0.3);
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    -ms-border-radius: 3px;
-    border-radius: 3px
-}
-
 .people-list {
-    transition: 0.5s
+    transition: 0.5s;
+    height: 570px!important;
+    padding:0 !important;
 }
 
 .people-list .chat-search {
-    margin: 10px
+    padding: 10px;
+    height: 65px;
+    border-bottom: 1px solid #eee;
+    border-radius: 0 0.55rem 0 0;
 }
 
 .people-list .chat-list li {
@@ -11912,9 +11883,12 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
     color: #999;
     font-size: 13px
 }
-
+.chat-body{
+    height: 570px; 
+}
 .chat .chat-header {
-    padding: 20px;
+    height: 65px;
+    padding: 10px;
     border-bottom: 1px solid #eee;
     border-radius: 0 0.55rem 0 0
 }
@@ -11925,7 +11899,7 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
     -moz-border-radius: 50%;
     -ms-border-radius: 50%;
     border-radius: 50%;
-    width: 45px
+    width: 38px
 }
 
 .chat .chat-header .chat-about {
@@ -11935,7 +11909,7 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
 
 .chat .chat-header .chat-with {
     font-weight: bold;
-    font-size: 16px
+    font-size: 13px
 }
 
 .chat .chat-header .chat-num-messages {
@@ -12044,13 +12018,13 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
 
 .online {
     margin-right: 3px;
-    font-size: 10px;
+    font-size: 10px!important;
     color: #86bb71
 }
 
 .offline {
     margin-right: 3px;
-    font-size: 10px;
+    font-size: 10px!important;
     color: #e38968
 }
 
@@ -12083,8 +12057,8 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
 
 .chat-box .chat-content {
     background-color: #f9f9f9 !important;
-    height: 400px;
-    overflow: hidden;
+    height: 450px;
+    overflow: scroll;
     padding-top: 25px !important
 }
 

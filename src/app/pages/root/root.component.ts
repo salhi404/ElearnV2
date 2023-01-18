@@ -66,6 +66,11 @@ export class RootComponent implements OnInit ,OnDestroy {
     const pref=this.storageService.getPrefrences();
     this.DarkTheme=pref.darkTheme;
     this.showMiniSideBar=pref.miniSideBar;
+    this.subscription2=this.events.loggingStatusEvent.subscribe(state=>{
+      if(state==2){
+        this.logout();
+      }
+    })
     this.subscription =this.events.currentLayoutEvent.subscribe(state =>{
       switch (state) {
         case this.events.SIDEBARMINI:

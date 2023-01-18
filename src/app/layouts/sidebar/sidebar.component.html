@@ -17,17 +17,13 @@
         </li>
         <li [ngClass]="{'active2':router.url==='/email' }" class="dropdown">
           <a routerLink="/email" class="nav-link pointer">
-            <i-feather class="fsideIcons" name="Mail"></i-feather>
+            <i-feather class="fsideIcons" name="mail"></i-feather>
             <span>Email</span></a>
         </li>
-        <li class="dropdown">
-          <a (click)="toggelDropDown(0)" [ngClass]="{'dropped':activeDropDown[0]}" class="menu-toggle nav-link has-dropdown">
-            <i-feather class="fsideIcons" name="Briefcase"></i-feather><span>Widgets</span>
-            </a>
-          <ul class="dropdown-menu" [ngClass]="{'show':activeDropDown[0]}">
-            <li><a class="nav-link" href="widget-chart.html">Chart Widgets</a></li>
-            <li><a class="nav-link" href="widget-data.html">Data Widgets</a></li>
-          </ul>
+        <li [ngClass]="{'active2':router.url==='/chat' }" class="dropdown">
+          <a routerLink="/chat" class="nav-link pointer">
+            <i-feather class="fsideIcons" name="message-circle"></i-feather>
+            <span>Chat</span></a>
         </li>
         <li class="dropdown">
           <a href="#" class="menu-toggle nav-link has-dropdown"><i-feather class="fsideIcons" name="Command"></i-feather><span>Apps</span></a>
