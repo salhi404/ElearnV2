@@ -62,6 +62,7 @@ export class RootComponent implements OnInit ,OnDestroy {
     if( this.isLoggedIn){
       this.prepsubscription();
       this.socketService.setupSocketConnection(this.storageService.getTokent());
+      this.socketService.getMsg();
       this.getMailUpdate();
       /*setInterval(() => {
         this.getMailUpdate();

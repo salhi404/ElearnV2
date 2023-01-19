@@ -46,7 +46,7 @@
                     <div *ngIf="activeChat!=-1" class="chat-header clearfix">
                       <img src="assets/img/users/user-1.png" alt="avatar">
                       <div class="chat-about">
-                        <div class="chat-with">{{activeChatter.chatter.username}}</div>
+                        <div class="chat-with">{{activeChatter.chatter.username+'('+activeChatter.chatter.email+')'+activeChatter.chatroom}}</div>
                         <div class="chat-num-messages">{{activeChatter.chat.length}} messages</div>
                       </div>
                     </div>
