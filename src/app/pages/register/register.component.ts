@@ -60,8 +60,8 @@ export class RegisterComponent implements OnInit {
         this.loading=false;
       },
       error: err => {
-        if(err.status==401)this.userExisted=true;
-        if(err.status==403)this.emailExisted=true;
+        if(err.status==457)this.userExisted=true;
+        if(err.status==458)this.emailExisted=true;
         if(err.status==500 && attempt<6){
           var time=0;
           switch (attempt) {

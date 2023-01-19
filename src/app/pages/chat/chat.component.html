@@ -1,29 +1,43 @@
+
+
 <div class="main-content">
+  
     <section class="section">
+      
       <div class="section-body">
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 ">
             <div class="card">
               <div class="body">
                 <div id="plist"  class="people-list">
+                  
                   <div class="chat-search">
                     <div class="form-group">
                       <div class="input-group mb-3">
                         <input type="email" name="email" [(ngModel)]="emailAdd"  required email
-                        #email="ngModel" class="form-control" placeholder="email" aria-label="ddd">
+                        #email="ngModel" class="form-control" placeholder="email" aria-label="ddd" [ngClass]="{'is-invalid2':(emailAddErrors>0&&emailAddErrors<4)&&(emailAddErrorString==emailAdd)}" >
                         
                         <div class="input-group-append">
-                          <button (click)="addchatter(email.errors)" class="btn btn-primary addBtn "  type="button"><i class="material-icons addicon">add</i></button>
+                          <button (click)="addchatter(email.errors)" class="btn {{(emailAddErrors>0&&emailAddErrors<4)&&(emailAddErrorString==emailAdd)?'btn-danger':'btn-primary'}} addBtn "  type="button"><i class="material-icons addicon">add</i></button>
                         </div>
                       </div>
                     </div>
                   </div>
+                  <div [ngClass]="{'show':!alerthidden,'dismissalert':alertDismissed}" class="alert {{alertType}} alert-dismissible fade customAlert">
+                    <div class="alert-body" >
+                      <button  class="close closeBtn" (click)="dismissAlert(true)">
+                        <span style="height:30px;">&times;</span>
+                      </button>
+                      {{emailAddErrormsg}}
+                    </div>
+                  </div>
                   <div >
                     <div class="chat-scroll scroller">
+                      
                       <ul class="chat-list list-unstyled m-b-0">
 
                         <li (click)="openChat(i,chatterinfo)" *ngFor="let chatterinfo of chattersinfo;index as i" class="clearfix {{i==activeChat?'active':''}}">
-                          <img src="assets/img/users/user-{{i%5+1}}.png" alt="avatar">
+                          <img src="assets/img/users/user-{{i==0?'1':'2'}}.png" alt="avatar">
                           <div class="about">
                             <div class="name">{{chatterinfo.chatter.username}}</div>
                             <div class="status">
@@ -44,7 +58,7 @@
                <div class="chat-body">
                 <div class="chat">
                     <div *ngIf="activeChat!=-1" class="chat-header clearfix">
-                      <img src="assets/img/users/user-1.png" alt="avatar">
+                      <img src="assets/img/users/user-{{activeChat==0?'1':'2'}}.png" alt="avatar">
                       <div class="chat-about">
                         <div class="chat-with">{{activeChatter.chatter.username+'('+activeChatter.chatter.email+')'+activeChatter.chatroom}}</div>
                         <div class="chat-num-messages">{{activeChatter.chat.length}} messages</div>
@@ -54,7 +68,7 @@
                   <div class="chat-box" id="mychatbox" >
                     <div *ngIf="activeChat!=-1" class="card-body chat-content" #target >
                         <div *ngFor="let chat of activeChatter.chat;index as i" class="chat-item {{chat.isSent?'chat-right':'chat-left'}}" >
-                        <img src="assets/img/users/user-{{(i)%2+1}}.png">
+                        <img src="assets/img/users/user-{{chat.isSent?'1':'2'}}.png">
                         <div class="chat-details">
                         <div class="chat-text"> {{chat.msg}} </div>
                         <div class="chat-time">{{datepipe.transform(chat.date,'HH:mm')}}</div>

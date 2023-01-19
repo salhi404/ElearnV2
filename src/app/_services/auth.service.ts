@@ -51,6 +51,13 @@ export class AuthService {
     console.log("Logging out auth");
     return this.http.post(AUTH_API + 'signout', { }, httpOptions);
   }
+  verifyMail(mail:string): Observable<any> {
+    //const token = this.storageService.getTokent();
+    return this.http.post(AUTH_API + 'verifymail', {mail/*,token*/}, httpOptions);
+  }
+  verify(id:string,token:string): Observable<any> {
+    return this.http.put(AUTH_API + 'verify', {id,token}, httpOptions);
+  }
   sendMail(mail:Mail,provided:number):Observable<any>{
     const token = this.storageService.getTokent();
     return this.http.post(DATA_API + 'sendmail', {mail,provided,token}, httpOptions);
@@ -89,9 +96,6 @@ export class AuthService {
   putConfigs(configs:string): Observable<any> {
     const token = this.storageService.getTokent();
     return this.http.put(AUTH_API + 'putconfig', {configs,token}, httpOptions);
-  }
-  verify(id:string,token:string): Observable<any> {
-    return this.http.put(AUTH_API + 'verify', {id,token}, httpOptions);
   }
   sendverificationcation(): Observable<any> {
     const token = this.storageService.getTokent();

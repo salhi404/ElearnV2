@@ -61,8 +61,8 @@ export class LoginComponent implements OnInit {
         this.goToHomePage(this.storageService.parseUser(data),remember);
       },
       error: err => {
-        if(err.status==404)this.userNotFound=true;
-        if(err.status==401)this.invalidpass=true;
+        if(err.status==456)this.userNotFound=true;
+        if(err.status==455)this.invalidpass=true;
         if(err.status==500 && attempt<6){
           var time=0;
           switch (attempt) {

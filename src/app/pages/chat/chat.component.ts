@@ -6,11 +6,13 @@ import { StorageService } from 'src/app/_services/storage.service';
 import {  Router, NavigationExtras } from '@angular/router';
 import { SocketioService } from 'src/app/services/socketio.service';
 import { Subscription } from 'rxjs';
+import { AuthService } from '../../_services/auth.service';
 
 interface ChatInfo{
   chatter:UserPublic;
   chat:Chat[];
   chatroom:string;
+  loaded:boolean;
 }
 @Component({
   selector: 'app-chat',
@@ -21,6 +23,8 @@ export class ChatComponent implements OnInit,OnDestroy {
   @ViewChild('target')
   private myScrollContainer!: ElementRef;
   chats:Chat[]=[];
+  timeout1:any;
+  timeout2:any;
   user:User=null as any;
   chatters:UserPublic[]=[];
   chattersinfo:ChatInfo[]=[];
@@ -28,12 +32,18 @@ export class ChatComponent implements OnInit,OnDestroy {
   subscription: Subscription = new Subscription;
   navigationExtras: NavigationExtras = { state: null as any };
   emailAdd:string='';
-  MsgTosend:string=''
+  MsgTosend:string='';
+  alerthidden=true;
+  alertDismissed=true;
+  alertType='alert-danger';
   emailAddErrors:number=0;
+  emailAddErrorString:string='';
+  emailAddErrormsg:string='';
+  sendMessageErrors:number=0;
   activeChat:number=-1;
   isLoggedIn:boolean=false;
   activeChatter:ChatInfo=null as any;
-  constructor(private storageService: StorageService,private router: Router, private socketService:SocketioService,) { }
+  constructor(private storageService: StorageService,private router: Router, private socketService:SocketioService,private authService: AuthService,) { }
   datepipe: DatePipe = new DatePipe('en-US');
 
   ngOnInit(): void {
@@ -49,7 +59,7 @@ export class ChatComponent implements OnInit,OnDestroy {
             from.chat.push(chat);
           }else{
             this.chatters.push({username:data.data.username,email:data.data.email,OnlineStat:-1});
-            this.chattersinfo.push({chatter:this.chatters[this.chatters.length-1],chat:[chat],chatroom:this.chatters[this.chatters.length-1].email})
+            this.chattersinfo.push({chatter:this.chatters[this.chatters.length-1],chat:[chat],chatroom:this.chatters[this.chatters.length-1].email,loaded:true})
             this.storageService.saveChatters(this.chatters);
           }
           console.log("from");
@@ -61,7 +71,7 @@ export class ChatComponent implements OnInit,OnDestroy {
       this.navigationExtras={ state: {errorNbr:403}  };
       this.router.navigate(['/error'],this.navigationExtras);
     }
-    //this.chatters=this.storageService.getChatters();
+    this.chatters=this.storageService.getChatters();
     if (this.isLoggedIn) {
       this.chatters=this.chatters.filter(chatter=>chatter.email!=this.user.email)
       this.chatters.unshift({username:this.user.username+'(you)',email:this.user.email,OnlineStat:-1});
@@ -71,7 +81,7 @@ export class ChatComponent implements OnInit,OnDestroy {
     }
     for (let index = 0; index < this.chatters.length; index++) {
       const element = this.chatters[index];
-      this.chattersinfo.push({chatter:element,chat:[...this.chats],chatroom:element.email})
+      this.chattersinfo.push({chatter:element,chat:[...this.chats],chatroom:element.email,loaded:false})
     }
     if(this.chatters.length>0){
       this.openChat(0,this.chattersinfo[0]);
@@ -80,11 +90,26 @@ export class ChatComponent implements OnInit,OnDestroy {
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
+  dismissAlert(fade:boolean){
+    clearInterval(this.timeout1);
+    clearInterval(this.timeout2);
+    this.alerthidden=true;
+    if(fade){
+      setTimeout(() => {
+        this.alertDismissed=true;
+      }, 300);
+    }else{
+      this.alertDismissed=true;
+    } 
+  }
+  getchat(from:string){
+
+  }
   sendChat(errors:any){
     //console.log(errors);
     if(errors){
       if (typeof errors.required !== 'undefined'){
-        this.emailAddErrors=1;
+        this.sendMessageErrors=1;
         console.log("Message is required");
       }
     }else{
@@ -111,20 +136,61 @@ export class ChatComponent implements OnInit,OnDestroy {
     if(errors){
       if (typeof errors.required !== 'undefined'){
         this.emailAddErrors=1;
-          console.log("Email is required");
+        this.emailAddErrormsg="Email is required";
+        console.log("Email is required");
       }else{
         if(typeof errors.email !== 'undefined'){
           this.emailAddErrors=2;
           console.log("Email must be a valid email address");
+          this.emailAddErrormsg="email not valid";
         }
       }
+      this.emailAddErrorString=this.emailAdd;
+      this.dismissAlert(false);
+      this.showAlert(true);
     }else{
-      if (this.chatters.filter(chatter=>chatter.email==this.emailAdd).length == 0){
-        this.chatters.push({username:"user"+(this.tempind++),email:this.emailAdd,OnlineStat:(this.tempind%3==2)?(new Date().getTime()-(this.tempind+1)*60*1000):-1});
-        this.chattersinfo.push({chatter:this.chatters[this.chatters.length-1],chat:[...this.chats],chatroom:this.chatters[this.chatters.length-1].email})
-        this.storageService.saveChatters(this.chatters);
-      }
+    if (this.chatters.filter(chatter=>chatter.email==this.emailAdd).length == 0){
+      this.authService.verifyMail(this.emailAdd).subscribe({
+        next: data => {
+          console.log('recieved data mail : ');
+          console.log(data);
+          
+            this.chatters.push({username:data.username,email:data.email,OnlineStat:-1});
+            this.chattersinfo.push({chatter:this.chatters[this.chatters.length-1],chat:[],chatroom:this.chatters[this.chatters.length-1].email,loaded:true})
+            this.storageService.saveChatters(this.chatters);
+          
+        },
+        error: err => {
+          this.emailAddErrorString=this.emailAdd;
+          if(err.status==460){
+            this.emailAddErrors=3;
+            console.log(this.emailAddErrormsg="email not registered");
+            this.dismissAlert(false);
+            this.showAlert(true);
+          } 
+        }
+      });
+    }else{
+      this.emailAddErrors=4;
+      this.emailAddErrormsg="user already exists";
+      this.dismissAlert(false);
+      this.showAlert(false);
     }
+    }
+  }
+  showAlert(isDanger:boolean){
+    this.alertType=isDanger?'alert-danger':'alert-info';
+    this.alerthidden=false;
+    this.alertDismissed=false;
+    this.timeout1=setTimeout(() => {
+      console.log("timeout1 fired ");
+      this.alerthidden=true;
+    }, 3500);
+    this.timeout2=setTimeout(() => {
+      console.log("timeout2 fired ");
+      
+      this.alertDismissed=true;
+    }, 4000);
   }
   openChat(ind:number,chatter:ChatInfo){
     this.activeChat=ind;

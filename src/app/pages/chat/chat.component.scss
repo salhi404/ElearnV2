@@ -33,3 +33,20 @@
     padding: 5 15 0 15;
 
   }
+  .closeBtn{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .dismissalert{
+    display: none;
+  }
+  .customAlert{
+    position: absolute;
+    width: 100%;
+  }
+  .is-invalid2{
+    border-color: #dc3545
+  }
+ 
