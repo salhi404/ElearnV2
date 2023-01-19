@@ -6,6 +6,7 @@ import { User } from 'src/app/Interfaces/user';
 import { Subscription } from 'rxjs';
 import {  Router, } from '@angular/router';
 import { Mail } from 'src/app/Interfaces/Mail';
+import { SocketioService } from 'src/app/services/socketio.service';
 @Component({
   selector: 'app-root',
   templateUrl: './root.component.html',
@@ -17,6 +18,7 @@ export class RootComponent implements OnInit ,OnDestroy {
     private events:EventsService,
     private storageService: StorageService, 
     private authService: AuthService,
+    private socketService:SocketioService,
     ) { 
         const navigation = this.router.getCurrentNavigation();
         this.state={user:this.user,islogged:false,remember:true};
@@ -49,17 +51,21 @@ export class RootComponent implements OnInit ,OnDestroy {
     this.onWindowResize();
     console.log("this.state");
     console.log(this.state);
+    this.isLoggedIn=this.storageService.isLoggedIn();
+    if(this.isLoggedIn){
+      this.user=this.storageService.getUser();
+    }
     if(this.state.islogged){
       this.isLoggedIn =this.state.islogged;
       this.user=this.state.user;
-    }else{
-      this.prepsubscription();
     }
     if( this.isLoggedIn){
+      this.prepsubscription();
+      this.socketService.setupSocketConnection(this.storageService.getTokent());
       this.getMailUpdate();
-      setInterval(() => {
+      /*setInterval(() => {
         this.getMailUpdate();
-      }, 12000);
+      }, 12000);*/
       this.getnoppenedMail(); 
       
     }
@@ -172,6 +178,7 @@ export class RootComponent implements OnInit ,OnDestroy {
     this.subscription.unsubscribe();
     this.subscription2.unsubscribe();
     if(!this.state.remember&&this.isLoggedIn)this.logout();
+    this.socketService.disconnect();
   }
   @HostListener('window:resize', ['$event'])
   onWindowResize() {

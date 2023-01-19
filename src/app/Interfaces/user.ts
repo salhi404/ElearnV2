@@ -11,6 +11,7 @@ export interface UserPublic{
     username:string;
     email:string;
     status?:number;
+    OnlineStat?:number;
 }
 export interface Pref{
     darkTheme:boolean;

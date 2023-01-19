@@ -7,119 +7,31 @@
               <div class="body">
                 <div id="plist"  class="people-list">
                   <div class="chat-search">
-                    <input type="text" class="form-control" placeholder="Search..." />
+                    <div class="form-group">
+                      <div class="input-group mb-3">
+                        <input type="email" name="email" [(ngModel)]="emailAdd"  required email
+                        #email="ngModel" class="form-control" placeholder="email" aria-label="ddd">
+                        
+                        <div class="input-group-append">
+                          <button (click)="addchatter(email.errors)" class="btn btn-primary addBtn "  type="button"><i class="material-icons addicon">add</i></button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <div >
                     <div class="chat-scroll scroller">
                       <ul class="chat-list list-unstyled m-b-0">
-                        <li class="clearfix active">
-                          <img src="assets/img/users/user-4.png" alt="avatar">
+
+                        <li (click)="openChat(i,chatterinfo)" *ngFor="let chatterinfo of chattersinfo;index as i" class="clearfix {{i==activeChat?'active':''}}">
+                          <img src="assets/img/users/user-{{i%5+1}}.png" alt="avatar">
                           <div class="about">
-                            <div class="name">William Smith</div>
+                            <div class="name">{{chatterinfo.chatter.username}}</div>
                             <div class="status">
-                              <i class="material-icons offline">fiber_manual_record</i>
-                              left 7 mins ago </div>
-                          </div>
-                        </li>
-                        <li class="clearfix ">
-                          <img src="assets/img/users/user-1.png" alt="avatar">
-                          <div class="about">
-                            <div class="name">Martha Williams</div>
-                            <div class="status">
-                              <i class="material-icons offline">fiber_manual_record</i>
-                              online </div>
-                          </div>
-                        </li>
-                        <li class="clearfix">
-                          <img src="assets/img/users/user-2.png" alt="avatar">
-                          <div class="about">
-                            <div class="name">Joseph Clark</div>
-                            <div class="status">
-                              <i class="material-icons online">fiber_manual_record</i>
-                              online </div>
-                          </div>
-                        </li>
-                        <li class="clearfix">
-                          <img src="assets/img/users/user-3.png" alt="avatar">
-                          <div class="about">
-                            <div class="name">Nancy Taylor</div>
-                            <div class="status">
-                              <i class="material-icons online">fiber_manual_record</i>
-                              online </div>
-                          </div>
-                        </li>
-                        <li class="clearfix">
-                          <img src="assets/img/users/user-4.png" alt="avatar">
-                          <div class="about">
-                            <div class="name">Margaret Wilson</div>
-                            <div class="status">
-                              <i class="material-icons online">fiber_manual_record</i>
-                              online </div>
-                          </div>
-                        </li>
-                        <li class="clearfix">
-                          <img src="assets/img/users/user-5.png" alt="avatar">
-                          <div class="about">
-                            <div class="name">Joseph Jones</div>
-                            <div class="status">
-                              <i class="material-icons offline">fiber_manual_record</i>
-                              left 30 mins ago </div>
-                          </div>
-                        </li>
-                        <li class="clearfix">
-                          <img src="assets/img/users/user-1.png" alt="avatar">
-                          <div class="about">
-                            <div class="name">Jane Brown</div>
-                            <div class="status">
-                              <i class="material-icons offline">fiber_manual_record</i>
-                              left 10 hours ago </div>
-                          </div>
-                        </li>
-                        <li class="clearfix">
-                          <img src="assets/img/users/user-2.png" alt="avatar">
-                          <div class="about">
-                            <div class="name">Eliza Johnson</div>
-                            <div class="status">
-                              <i class="material-icons online">fiber_manual_record</i>
-                              online </div>
-                          </div>
-                        </li>
-                        <li class="clearfix">
-                            <img src="assets/img/users/user-2.png" alt="avatar">
-                            <div class="about">
-                              <div class="name">Eliza Johnson</div>
-                              <div class="status">
-                                <i class="material-icons online">fiber_manual_record</i>
-                                online </div>
+                              <i class="material-icons {{chatterinfo.chatter.OnlineStat==-1?'online':'offline'}}">fiber_manual_record</i>
+                              <span>{{chatterinfo.chatter.OnlineStat==-1?'Online':'last seen '+ datepipe.transform(chatterinfo.chatter.OnlineStat,'HH:mm')}} </span> 
                             </div>
-                          </li>
-                          <li class="clearfix">
-                            <img src="assets/img/users/user-2.png" alt="avatar">
-                            <div class="about">
-                              <div class="name">Eliza Johnson</div>
-                              <div class="status">
-                                <i class="material-icons online">fiber_manual_record</i>
-                                online </div>
-                            </div>
-                          </li>
-                          <li class="clearfix">
-                            <img src="assets/img/users/user-2.png" alt="avatar">
-                            <div class="about">
-                              <div class="name">Eliza Johnson</div>
-                              <div class="status">
-                                <i class="material-icons online">fiber_manual_record</i>
-                                online </div>
-                            </div>
-                          </li>
-                          <li class="clearfix">
-                            <img src="assets/img/users/user-2.png" alt="avatar">
-                            <div class="about">
-                              <div class="name">Eliza Johnson</div>
-                              <div class="status">
-                                <i class="material-icons online">fiber_manual_record</i>
-                                online </div>
-                            </div>
-                          </li>
+                          </div>
+                        </li>
                       </ul>
                     </div>
                   </div>
@@ -131,28 +43,29 @@
             <div class="card">
                <div class="chat-body">
                 <div class="chat">
-                    <div class="chat-header clearfix">
+                    <div *ngIf="activeChat!=-1" class="chat-header clearfix">
                       <img src="assets/img/users/user-1.png" alt="avatar">
                       <div class="chat-about">
-                        <div class="chat-with">Maria Smith</div>
-                        <div class="chat-num-messages">2 new messages</div>
+                        <div class="chat-with">{{activeChatter.chatter.username}}</div>
+                        <div class="chat-num-messages">{{activeChatter.chat.length}} messages</div>
                       </div>
                     </div>
                   </div>
-                  <div class="chat-box" id="mychatbox">
-                    <div class="card-body chat-content" >
-                        <div *ngFor="let chat of chats;index as i" class="chat-item {{i%2?'chat-right':'chat-left'}}" >
-                        <img src="assets/img/users/user-{{(i)%3+1}}.png">
+                  <div class="chat-box" id="mychatbox" >
+                    <div *ngIf="activeChat!=-1" class="card-body chat-content" #target >
+                        <div *ngFor="let chat of activeChatter.chat;index as i" class="chat-item {{chat.isSent?'chat-right':'chat-left'}}" >
+                        <img src="assets/img/users/user-{{(i)%2+1}}.png">
                         <div class="chat-details">
                         <div class="chat-text"> {{chat.msg}} </div>
                         <div class="chat-time">{{datepipe.transform(chat.date,'HH:mm')}}</div>
                         </div>
                         </div>
                     </div>
-                    <div class="card-footer chat-form">
+                    <div *ngIf="activeChat!=-1" class="card-footer chat-form">
                       <form id="chat-form">
-                        <input type="text" class="form-control" placeholder="Type a message">
-                        <button class="btn btn-primary">
+                        <input type="text"  name="text" [(ngModel)]="MsgTosend"  required 
+                        #Msg="ngModel" class="form-control" placeholder="Type a message" >
+                        <button (click)="sendChat(Msg.errors)" class="btn btn-primary">
                           <i class="far fa-paper-plane"></i>
                         </button>
                       </form>

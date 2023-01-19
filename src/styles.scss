@@ -10981,7 +10981,10 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
 }
 
 .dark .navbar.active {
-    background-color: #fff
+    background-color: #fff 
+}
+.dark .addBtn {
+    border: 1px solid  #979da6 !important;
 }
 
 .dark .navbar .form-inline .form-control {

@@ -4,6 +4,7 @@ import { Pref, User } from '../Interfaces/user';
 const USER_KEY = 'authentication';
 const PREFRENCES_KEY = 'PREFRENCES';
 const MODMAIL_KEY = 'modifiedMail';
+const Chatters_KEY = 'ChattersList';
 @Injectable({
   providedIn: 'root'
 })
@@ -99,14 +100,28 @@ export class StorageService {
     localStorage.removeItem(MODMAIL_KEY);
     localStorage.setItem(MODMAIL_KEY, JSON.stringify(mod));
   }
-  public getModMail():any{
+  public getModMail():any[]{
     const mod = localStorage.getItem(MODMAIL_KEY);
     if (mod) {
       return JSON.parse(mod);
     }
-    return null as any;
+    return [];
   }
   public clearModMail():void{
     localStorage.removeItem(MODMAIL_KEY);
+  }
+  public saveChatters(list:any[]){
+    localStorage.removeItem(Chatters_KEY);
+    localStorage.setItem(Chatters_KEY, JSON.stringify(list));
+  }
+  public getChatters():any[]{
+    const list = localStorage.getItem(Chatters_KEY);
+    if (list) {
+      return JSON.parse(list);
+    }
+    return [];
+  }
+  public clearChatters():void{
+    localStorage.removeItem(Chatters_KEY);
   }
 }
