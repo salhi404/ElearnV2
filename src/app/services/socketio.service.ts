@@ -18,6 +18,10 @@ export class SocketioService {
   }
   setupSocketConnection(token:string) {
     this.socket = io(environment.SOCKET_ENDPOINT, {
+      'reconnection': true,
+      'reconnectionDelay': 9000,
+      'reconnectionDelayMax' : 10000,
+      'reconnectionAttempts': 2,
       auth: {
         token
       }
