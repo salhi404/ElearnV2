@@ -9,7 +9,8 @@ import { Pref } from '../Interfaces/user';
 //const URL_API = 'http://192.168.1.101:3000/'; 
 // const URL_API = 'https://shoppingapptracker.herokuapp.com/';
 //const URL_API = 'https://encouraging-crow.cyclic.app/';
-const URL_API = 'https://frantic-colt-leather-jacket.cyclic.app/';
+//const URL_API = 'https://frantic-colt-leather-jacket.cyclic.app/';
+const URL_API = 'https://elearnappsiteserver.onrender.com/';
 const AUTH_API = URL_API+'api/auth/';
 const DATA_API = URL_API+'api/data/';
 const httpOptions = {
