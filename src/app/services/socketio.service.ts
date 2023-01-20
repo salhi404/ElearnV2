@@ -15,6 +15,7 @@ export class SocketioService {
   }
   setupSocketConnection(token:string) {
     this.socket = io(environment.SOCKET_ENDPOINT, {
+      transports: ['websocket'],
       'reconnection': true,
       'reconnectionDelay': 9000,
       'reconnectionDelayMax' : 10000,
