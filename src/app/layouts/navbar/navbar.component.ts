@@ -29,7 +29,6 @@ export class NavbarComponent implements OnInit {
     ngOnInit(): void {
       this.chkScreenMode();
       this.elem = document.documentElement;
-      console.log(this.user);
       
   }
   @HostListener('document:fullscreenchange', ['$event'])

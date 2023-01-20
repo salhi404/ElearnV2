@@ -112,6 +112,10 @@
                                   data-toggle="tooltip">
                                   <i class="material-icons text-danger">delete_forever</i>
                                 </a>
+                                <a   class=" m-r-20" >
+                                  <span *ngIf="chosenLabel!=-1" class="badge mr-2 {{labels[chosenLabel].bgColor}}"> {{labels[chosenLabel].name}}</span>
+                                </a>
+                                
                                 <!--<a  class="col-dark-gray waves-effect m-r-20" title="Folders"
                                   data-toggle="tooltip">
                                   <i class="material-icons">folder</i>
@@ -127,7 +131,7 @@
                         <th class="hidden-xs" colspan="2">
                           <div class="pull-right">
                             <div class="email-btn-group m-l-15">
-                              <a (click)="sync()" class="btn btn-info col-white pointer" *ngIf="modifiedMail.length>0">sync({{modifiedMail.length}})</a>
+                              <!--<a (click)="sync()" class="btn btn-info col-white pointer" *ngIf="modifiedMail.length>0">sync({{modifiedMail.length}})</a>-->
                               <a  class="col-dark-gray waves-effect flex-center " title="previous"
                                 data-toggle="tooltip">
                                 <i class="material-icons align-center m-l-5">navigate_before</i>

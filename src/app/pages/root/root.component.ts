@@ -23,7 +23,6 @@ export class RootComponent implements OnInit ,OnDestroy {
         const navigation = this.router.getCurrentNavigation();
         this.state={user:this.user,islogged:false,remember:true};
         if(navigation){
-          console.log("navigation zzzzzzzzzzzz");
           if(navigation.extras.state){
             this.state = navigation.extras.state as {
               user: User,
@@ -49,8 +48,6 @@ export class RootComponent implements OnInit ,OnDestroy {
   ngOnInit(): void {
     //this.storageService.clearUser();
     this.onWindowResize();
-    console.log("this.state");
-    console.log(this.state);
     this.isLoggedIn=this.storageService.isLoggedIn();
     if(this.isLoggedIn){
       this.user=this.storageService.getUser();
@@ -63,7 +60,7 @@ export class RootComponent implements OnInit ,OnDestroy {
       this.prepsubscription();
       this.socketService.setupSocketConnection(this.storageService.getTokent());
       this.socketService.getMsg();
-      this.getMailUpdate();
+      //this.getMailUpdate();
       /*setInterval(() => {
         this.getMailUpdate();
       }, 12000);*/
@@ -118,7 +115,6 @@ export class RootComponent implements OnInit ,OnDestroy {
   getnoppenedMail(){
     this.authService.getUnoppenedMail().subscribe({
       next:data=>{
-        console.log("UnoppenedMail");
         if(data.mails)this.unoppenedMail=data.mails;
         if(data.count)this.unoppenedMailCount=data.count;
       },
@@ -169,11 +165,9 @@ export class RootComponent implements OnInit ,OnDestroy {
     });
   }
   prepsubscription(){
-    console.log("prepsubscription : ");
     this.isLoggedIn = this.storageService.isLoggedIn();
   if (this.isLoggedIn) {
     this.user = this.storageService.getUser();
-    console.log(this.user);
     /*this.showAdminBoard = this.roles.includes('ROLE_ADMIN');
     this.showModeratorBoard = this.roles.includes('ROLE_MODERATOR');
     */

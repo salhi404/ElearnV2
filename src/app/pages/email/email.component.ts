@@ -1,4 +1,4 @@
-import { Component, OnInit,OnDestroy } from '@angular/core';
+import { Component, OnInit,OnDestroy, HostListener } from '@angular/core';
 import { Mail } from 'src/app/Interfaces/Mail';
 import { AuthService } from 'src/app/_services/auth.service';
 import { StorageService } from 'src/app/_services/storage.service';
@@ -82,8 +82,10 @@ export class EmailComponent implements OnInit,OnDestroy {
     const tempMod=this.storageService.getModMail();
     if(tempMod)this.modifiedMail=tempMod;
   }
+  @HostListener('window:beforeunload')
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    //this.sync();
   }
   toggleSelectAll(event:any){
       this.selectAll=event;
@@ -261,19 +263,23 @@ export class EmailComponent implements OnInit,OnDestroy {
       elem=this.recievedMail.find(el=>el.id==element.mail);
       if(elem) mailtags.push({mailId:element.mail,tag:elem.tags});
     });
+    console.log("synced1");
     this.authService.syncMailTags(mailtags).subscribe({
       next: data => {
         console.log(data);
+        console.log("synced2");
+        
       },
       error: err => {
         console.log(err.error.message);
+        console.log("synced err");
       }
     });
     this.modifiedMail=[];
     this.storageService.clearModMail();
   }
   chooseFilter(filter:number):void{
-    this.openedWindow=1;
+    this.openWindow(1);
     this.slectedFilter=filter;
     this.toggleSelectAll(false);
     this.selectAll=false;
@@ -311,7 +317,8 @@ export class EmailComponent implements OnInit,OnDestroy {
   }
   openWindow(wnd:number):void{
     this.openedWindow=wnd;
-    this.slectedFilter=-1;
+    if(wnd==2) this.slectedFilter=-1;
+    this.chosenLabel=-1;
   }
 
   sendMail(){
@@ -357,6 +364,7 @@ export class EmailComponent implements OnInit,OnDestroy {
           this.recievedMail.push(mm);
         });
         this.synclocal();
+        this.sync();
         this.resectionMail();
         this.chooseFilter(this.slectedFilter);
         this.loading=false;
@@ -440,7 +448,7 @@ export class EmailComponent implements OnInit,OnDestroy {
     });
   }
   openMsg(ind:number){
-    this.openedWindow=3
+    this.openWindow(3);
     this.openedMail=this.filteredMail[this.filteredMail.length-ind-1];
     if(!this.openedMail.tags.includes("oppened")){
       this.openedMail.tags.push("oppened");
@@ -453,16 +461,16 @@ export class EmailComponent implements OnInit,OnDestroy {
   reply(){
     this.form.email=this.openedMail.fromTo.email;
     this.form.subject=this.openedMail.subject;
-    this.openedWindow=2;
+    this.openWindow(2);
   }
   forward(){
     this.form.body=this.openedMail.body;
     this.form.subject=this.openedMail.subject;
-    this.openedWindow=2;
+    this.openWindow(2);
   }
   snedTo(email:string){
     this.form.email=email;
-    this.openedWindow=2;
+    this.openWindow(2);
   }
   test(event:any,id:string){
     /*console.log("id");

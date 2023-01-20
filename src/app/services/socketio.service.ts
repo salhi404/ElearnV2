@@ -23,6 +23,14 @@ export class SocketioService {
         token
       }
     });
+    console.log("listening");
+    this.socket.on("connect", () => {console.log("connected to socket");
+     });
+    
+    
+    this.socket.on("connect_error", (err:any) => {
+      console.log(`connect_error due to ${err.message}`);
+    });
   }
   disconnect() {
     if (this.socket) {
