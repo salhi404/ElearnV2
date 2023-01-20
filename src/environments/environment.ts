@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   SOCKET_ENDPOINTLOCAL: 'http://192.168.1.101:3000',
-  SOCKET_ENDPOINT:'https://frantic-colt-leather-jacket.cyclic.app'
+  SOCKET_ENDPOINT:'https://frantic-colt-leather-jacket.cyclic.app:3000'
 };
 
 /*

@@ -14,7 +14,7 @@ export class SocketioService {
     this.recievedMsgEvent.next({code:state,data:chat})
   }
   setupSocketConnection(token:string) {
-    this.socket = io(environment.SOCKET_ENDPOINTLOCAL, {
+    this.socket = io(environment.SOCKET_ENDPOINT, {
       'reconnection': true,
       'reconnectionDelay': 9000,
       'reconnectionDelayMax' : 10000,
