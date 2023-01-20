@@ -88,12 +88,13 @@ export class StorageService {
     return false;
   }
   parseUser(json:any) :User{
-    var user:User={username:"null",email:"null",roles:[],verified:false,pref:{darkTheme:false,miniSideBar:false}}
+    var user:User={username:"null",email:"null",roles:[],verified:false,pref:{darkTheme:false,miniSideBar:false},contacts:[]}
     user.username=json.username?json.username:user.username;
     user.email=json.email?json.email:user.email;
     user.roles=json.roles?json.roles:user.roles;
     user.verified=json.verified?json.verified:user.verified;
     user.pref=json.configs?json.configs:user.pref;
+    user.contacts=json.contacts?json.contacts:user.contacts;
     return user;
   }
   public saveModMail(mod:any[]){

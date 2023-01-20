@@ -60,10 +60,9 @@ export class ChatComponent implements OnInit,OnDestroy {
           }else{
             this.chatters.push({username:data.data.username,email:data.data.email,OnlineStat:-1});
             this.chattersinfo.push({chatter:this.chatters[this.chatters.length-1],chat:[chat],chatroom:this.chatters[this.chatters.length-1].email,loaded:true})
-            this.storageService.saveChatters(this.chatters);
+            //this.storageService.saveChatters(this.chatters);
           }
-          console.log("from");
-          console.log(from);
+          this.scrollToBottom();
           
         }
       })
@@ -73,15 +72,16 @@ export class ChatComponent implements OnInit,OnDestroy {
     }
     this.chatters=this.storageService.getChatters();
     if (this.isLoggedIn) {
-      this.chatters=this.chatters.filter(chatter=>chatter.email!=this.user.email)
+      this.chatters=this.chatters.filter(chatter=>chatter.email!=this.user.email);
       this.chatters.unshift({username:this.user.username+'(you)',email:this.user.email,OnlineStat:-1});
     }
-    for (let index = 0; index < 10; index++) {
+    /*for (let index = 0; index < 10; index++) {
       this.chats.push({msg:'message '+index,date:new Date(),isSent:index%3==0})
-    }
+    }*/
     for (let index = 0; index < this.chatters.length; index++) {
       const element = this.chatters[index];
-      this.chattersinfo.push({chatter:element,chat:[...this.chats],chatroom:element.email,loaded:false})
+      this.chattersinfo.push({chatter:element,chat:[...this.chats],chatroom:element.email,loaded:false});
+
     }
     if(this.chatters.length>0){
       this.openChat(0,this.chattersinfo[0]);
@@ -119,17 +119,19 @@ export class ChatComponent implements OnInit,OnDestroy {
       //this.socketService.sendMsg("sms : "+message );
       this.MsgTosend='';
     }
-    setTimeout(() => {
-      this.scrollToBottom();
-    }, 50);
+    this.scrollToBottom();
+    
     
   }
   scrollToBottom(){
-    this.myScrollContainer.nativeElement.scroll({
-      top: this.myScrollContainer.nativeElement.scrollHeight,
-      left: 0,
-      behavior: 'smooth'
-    });
+    setTimeout(() => {
+      this.myScrollContainer.nativeElement.scroll({
+        top: this.myScrollContainer.nativeElement.scrollHeight,
+        left: 0,
+        behavior: 'smooth'
+      });
+    }, 50);
+    
   }
   addchatter(errors:any){
     console.log(errors);
@@ -158,7 +160,20 @@ export class ChatComponent implements OnInit,OnDestroy {
             this.chatters.push({username:data.username,email:data.email,OnlineStat:-1});
             this.chattersinfo.push({chatter:this.chatters[this.chatters.length-1],chat:[],chatroom:this.chatters[this.chatters.length-1].email,loaded:true})
             this.storageService.saveChatters(this.chatters);
-          
+            if(this.chatters.length>1){
+              this.authService.putcontacts(this.chatters.filter(el=>el.email!=this.user.email)).subscribe({
+                next:data=>{
+                  console.log('data');
+                  console.log(data);
+                },
+                error:err=>{
+                  console.log('err');
+                  console.log(err);
+                }
+              });
+            }
+            
+
         },
         error: err => {
           this.emailAddErrorString=this.emailAdd;
@@ -194,10 +209,18 @@ export class ChatComponent implements OnInit,OnDestroy {
   }
   openChat(ind:number,chatter:ChatInfo){
     this.activeChat=ind;
-    this.activeChatter=chatter
-    setTimeout(() => {
-      this.scrollToBottom();
-    }, 100);
+    this.activeChatter=chatter;
+    this.authService.getChatLog(this.user.email,this.activeChatter.chatter.email).subscribe({
+      next:(data)=>{
+        this.activeChatter.chat=[...data];
+        this.scrollToBottom();
+      },
+      error:(err)=>{
+        console.log("err");
+        console.log(err);
+      }
+    });
+    this.scrollToBottom();
   }
 
 }

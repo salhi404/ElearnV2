@@ -44,7 +44,7 @@ export class LoginComponent implements OnInit {
     const { username, password ,remember} = this.form;
     console.log("remember");
     console.log(remember);
-   this.authService.login(username, password).subscribe({
+    this.authService.login(username, password).subscribe({
       next: data => {
         console.log("sdsdsd"+remember);
         this.storageService.saveUser(data);
@@ -52,7 +52,12 @@ export class LoginComponent implements OnInit {
         this.isLoggedIn = true;
         try {
           this.storageService.setPrefrences(JSON.parse(data.configs));
+          this.storageService.saveChatters(data.contacts);
+          console.log("JSON.parse(data.contacts)");
+          console.log(data.contacts);
         } catch (error) {
+          console.log("contacts eroooooooooor");
+          console.log(error);
           
         }
        // this.roles = data.roles; altered

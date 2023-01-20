@@ -5,6 +5,7 @@ export interface User{
     roles:string[];
     verified:boolean;
     pref:Pref;
+    contacts:[];
     //fromTo:User
 }
 export interface UserPublic{

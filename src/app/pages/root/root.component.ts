@@ -137,8 +137,23 @@ export class RootComponent implements OnInit ,OnDestroy {
       //  this.loading=false;
       }
     });
+    const chatter=this.storageService.getChatters();
+    if(chatter.length>1){
+      this.authService.putcontacts(chatter.filter(el=>el.email!=this.user.email)).subscribe({
+        next:data=>{
+          console.log('data');
+          console.log(data);
+        },
+        error:err=>{
+          console.log('err');
+          console.log(err);
+        }
+      });
+    }
     this.isLoggedIn=false;
     this.storageService.clearUser();
+
+    this.storageService.clearChatters();
     this.user=null as any;
     this.events.changeLoggingState(-1);
   }

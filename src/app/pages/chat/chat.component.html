@@ -42,7 +42,7 @@
                             <div class="name">{{chatterinfo.chatter.username}}</div>
                             <div class="status">
                               <i class="material-icons {{chatterinfo.chatter.OnlineStat==-1?'online':'offline'}}">fiber_manual_record</i>
-                              <span>{{chatterinfo.chatter.OnlineStat==-1?'Online':'last seen '+ datepipe.transform(chatterinfo.chatter.OnlineStat,'HH:mm')}} </span> 
+                              <span><!--{{chatterinfo.chatter.OnlineStat==-1?'Online':'last seen '+ datepipe.transform(chatterinfo.chatter.OnlineStat,'HH:mm')}}--> {{chatterinfo.chatter.email}}</span> 
                             </div>
                           </div>
                         </li>
@@ -60,7 +60,7 @@
                     <div *ngIf="activeChat!=-1" class="chat-header clearfix">
                       <img src="assets/img/users/user-{{activeChat==0?'1':'2'}}.png" alt="avatar">
                       <div class="chat-about">
-                        <div class="chat-with">{{activeChatter.chatter.username+'('+activeChatter.chatter.email+')'+activeChatter.chatroom}}</div>
+                        <div class="chat-with">{{activeChatter.chatter.username}}</div>
                         <div class="chat-num-messages">{{activeChatter.chat.length}} messages</div>
                       </div>
                     </div>
