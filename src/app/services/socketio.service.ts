@@ -2,9 +2,6 @@ import { Injectable } from '@angular/core';
 import { io } from 'socket.io-client';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Manager } from "socket.io-client";
-
-const manager = new Manager(environment.SOCKET_ENDPOINT ); 
 @Injectable({
   providedIn: 'root'
 })
@@ -17,7 +14,7 @@ export class SocketioService {
     this.recievedMsgEvent.next({code:state,data:chat})
   }
   setupSocketConnection(token:string) {
-    this.socket = io(environment.SOCKET_ENDPOINT, {
+    this.socket = io(environment.SOCKET_ENDPOINTLOCAL, {
       'reconnection': true,
       'reconnectionDelay': 9000,
       'reconnectionDelayMax' : 10000,
