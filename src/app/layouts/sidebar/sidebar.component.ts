@@ -16,10 +16,12 @@ export class SidebarComponent implements OnInit {
     } else {
      //console.log("clicked outside");
      if(!this.blockOutside)
-     this.sideBarShow=false;
+     this.toggleSideBarShow(false);
     }
   }
-
+  toggleSideBarShow(show:boolean){
+    this.sideBarShow=show;
+  }
   activeDropDown:boolean[]=[]
   sideBarShow:boolean=false;
   blockOutside:boolean=false;

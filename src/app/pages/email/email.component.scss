@@ -1,6 +1,7 @@
 .composeBtn{
     color: white!important;
     font-weight: 400;
+    margin-right: 0;
 }
 .DiscardBtn{
     color: white!important;
@@ -16,3 +17,49 @@
     background-color: rgba(120, 199, 236, 0.37)!important;
 }
 .hiddenLabel{visibility: hidden;}
+.flex-centerr{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.iconBtn{
+    cursor: pointer;
+    height: 42px;
+    width: 42px;
+    border-radius: 21px;
+}
+.iconBtnBack{
+    position: absolute;
+    border-radius: 21px;
+    height: 35px;
+    width: 35px;
+}
+.iconBtn:hover .iconBtnBack{
+    height: 42px;
+    width: 42px;
+    background-color: rgba(173, 173, 173, 0.37);
+    transition: 0.2s;
+}
+.iconBtn a {
+    margin: 0;
+    padding: 0;
+    height: 25px;
+    width: 25px;
+}
+.iconBtn i{
+    margin: 0;
+    padding: 0;
+    font-size: 24px;
+
+}
+.vew-mail-header{
+    text-align: center;
+    margin: 0;
+}
+.mail-sender{
+    position: relative;
+    top: -10px;
+}
+.mail-list{
+    padding-top: 5px;
+}

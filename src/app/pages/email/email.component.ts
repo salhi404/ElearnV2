@@ -317,10 +317,13 @@ export class EmailComponent implements OnInit,OnDestroy {
   }
   openWindow(wnd:number):void{
     this.openedWindow=wnd;
-    if(wnd==2) this.slectedFilter=-1;
+    if(wnd==2) this.slectedFilter=-this.slectedFilter;
     this.chosenLabel=-1;
   }
-
+  backfromCompose(){
+    this.slectedFilter=-this.slectedFilter;
+    this.openWindow(1);
+  }
   sendMail(){
     const mail:Mail={
       id:this.storageService.getId(),

@@ -11,17 +11,17 @@
       <ul class="sidebar-menu">
         <li class="menu-header">Main</li>
         <li [ngClass]="{'active2':router.url==='/home' }" >
-          <a  routerLink="/home"  class="nav-link pointer">
+          <a  (click)="toggleSideBarShow(false)" routerLink="/home"  class="nav-link pointer">
             <i-feather class="fsideIcons" name="monitor"></i-feather>
             <span>Home</span></a>
         </li>
         <li [ngClass]="{'active2':router.url==='/email' }" class="dropdown">
-          <a routerLink="/email" class="nav-link pointer">
+          <a (click)="toggleSideBarShow(false)" routerLink="/email" class="nav-link pointer">
             <i-feather class="fsideIcons" name="mail"></i-feather>
             <span>Email</span></a>
         </li>
         <li [ngClass]="{'active2':router.url==='/chat' }" class="dropdown">
-          <a routerLink="/chat" class="nav-link pointer">
+          <a (click)="toggleSideBarShow(false)" routerLink="/chat" class="nav-link pointer">
             <i-feather class="fsideIcons" name="message-circle"></i-feather>
             <span>Chat</span></a>
         </li>
