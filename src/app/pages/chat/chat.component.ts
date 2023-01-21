@@ -5,7 +5,7 @@ import { User, UserPublic } from 'src/app/Interfaces/user';
 import { StorageService } from 'src/app/_services/storage.service';
 import {  Router, NavigationExtras } from '@angular/router';
 import { SocketioService } from 'src/app/services/socketio.service';
-import { Subscription } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 import { AuthService } from '../../_services/auth.service';
 
 interface ChatInfo{
@@ -28,6 +28,7 @@ export class ChatComponent implements OnInit,OnDestroy {
   user:User=null as any;
   chatters:UserPublic[]=[];
   chattersinfo:ChatInfo[]=[];
+  recievedchatError:string='';
   tempind:number=0;
   subscription: Subscription = new Subscription;
   navigationExtras: NavigationExtras = { state: null as any };
@@ -56,14 +57,25 @@ export class ChatComponent implements OnInit,OnDestroy {
           const chat:Chat={msg:data.data.message,date:data.data.date,isSent:false}
           var from =this.chattersinfo.find(e=>e.chatter.email==data.data.email);
           if (typeof from !== 'undefined'){
-            from.chat.push(chat);
+            if(!from.loaded)this.getchat(from);
+            else from.chat.push(chat);
           }else{
             this.chatters.push({username:data.data.username,email:data.data.email,OnlineStat:-1});
             this.chattersinfo.push({chatter:this.chatters[this.chatters.length-1],chat:[chat],chatroom:this.chatters[this.chatters.length-1].email,loaded:true})
-            //this.storageService.saveChatters(this.chatters);
+            this.getchat(this.chattersinfo[this.chattersinfo.length-1]);
+            this.storageService.saveChatters(this.chatters);
+            this.authService.putcontacts(this.chatters.filter(el=>el.email!=this.user.email)).subscribe({
+              next:data=>{
+                console.log('data');
+                console.log(data);
+              },
+              error:err=>{
+                console.log('err');
+                console.log(err);
+              }
+            });
           }
           this.scrollToBottom();
-          
         }
       })
     }else{
@@ -87,6 +99,9 @@ export class ChatComponent implements OnInit,OnDestroy {
       this.openChat(0,this.chattersinfo[0]);
     }
   }
+  loadAndPush(info:ChatInfo,chat:Chat){
+
+  }
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
@@ -102,8 +117,38 @@ export class ChatComponent implements OnInit,OnDestroy {
       this.alertDismissed=true;
     } 
   }
-  getchat(from:string){
-
+  getchat(from:ChatInfo){
+    this.authService.getChatLog(this.user.email,from.chatter.email).subscribe({
+     next:(data)=>{
+       console.log("data recieved for user :"+from);
+       console.log(data);
+       from.chat= data as Chat[];
+     },
+     error:(err)=>{
+       console.log("err");
+       console.log(err);
+       return null;
+     }
+   });
+  }
+  async getchatasync(from:string):Promise<Chat[]>{
+    return new Promise(resolve=>{
+      this.authService.getChatLog(this.user.email,from).pipe(
+         take(1) //useful if you need the data once and don't want to manually cancel the subscription again
+       )
+       .subscribe({
+        next:(data)=>{
+          console.log("data recieved for user :"+from);
+          console.log(data);
+          resolve(data as Chat[]);
+        },
+        error:(err)=>{
+          console.log("err");
+          console.log(err);
+          return null;
+        }
+      });
+  })
   }
   sendChat(errors:any){
     //console.log(errors);
@@ -207,19 +252,19 @@ export class ChatComponent implements OnInit,OnDestroy {
       this.alertDismissed=true;
     }, 4000);
   }
-  openChat(ind:number,chatter:ChatInfo){
+  async openChat(ind:number,chatter:ChatInfo){
     this.activeChat=ind;
     this.activeChatter=chatter;
-    this.authService.getChatLog(this.user.email,this.activeChatter.chatter.email).subscribe({
-      next:(data)=>{
-        this.activeChatter.chat=[...data];
-        this.scrollToBottom();
-      },
-      error:(err)=>{
-        console.log("err");
-        console.log(err);
+    if(!this.activeChatter.loaded){
+      const recievedchat =await this.getchatasync(this.activeChatter.chatter.email);
+      if(recievedchat){
+        this.activeChatter.chat=recievedchat;
+        this.activeChatter.loaded=true;
+      }else{
+        this.recievedchatError=this.activeChatter.chatter.email;
       }
-    });
+      
+    } 
     this.scrollToBottom();
   }
 
