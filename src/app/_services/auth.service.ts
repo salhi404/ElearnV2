@@ -13,6 +13,7 @@ const URL_API = 'http://192.168.1.101:3000/';
 //const URL_API = 'https://starter-express-api-production-816a.up.railway.app/';
 const AUTH_API = URL_API+'api/auth/';
 const DATA_API = URL_API+'api/data/';
+const INFO_API = URL_API+'api/info/';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
@@ -79,6 +80,10 @@ export class AuthService {
     const token = this.storageService.getTokent();
     const id=this.storageService.getId();
     return this.http.post(DATA_API + 'getmail', {token}, httpOptions);
+  }
+  getconnectedchatters(chaters:string[]):Observable<any>{
+    const token = this.storageService.getTokent();
+    return this.http.post(INFO_API + 'getconnectedchatters', {token,chaters}, httpOptions);
   }
   getChatLog(owner:string,fromTo:string):Observable<any>{
     const token = this.storageService.getTokent();

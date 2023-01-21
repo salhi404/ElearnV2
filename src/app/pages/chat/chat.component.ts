@@ -25,6 +25,7 @@ export class ChatComponent implements OnInit,OnDestroy {
   chats:Chat[]=[];
   timeout1:any;
   timeout2:any;
+  connectedchatersloeaded=false;
   user:User=null as any;
   chatters:UserPublic[]=[];
   chattersinfo:ChatInfo[]=[];
@@ -95,9 +96,31 @@ export class ChatComponent implements OnInit,OnDestroy {
       this.chattersinfo.push({chatter:element,chat:[...this.chats],chatroom:element.email,loaded:false});
 
     }
-    if(this.chatters.length>0){
+    if(this.chattersinfo.length>0){
       this.openChat(0,this.chattersinfo[0]);
+      this.getconnectedchaters();
+      setInterval(() => {
+        this.getconnectedchaters();
+      }, 20000);
+      
     }
+  }
+  getconnectedchaters(){
+    this.authService.getconnectedchatters(this.chatters.map(e=>e.email)).subscribe({
+      next:(data:any)=>{
+       /* console.log("connected chaters data recieved ");
+        console.log(data);*/
+        this.chattersinfo.forEach(el=>{
+          if(el.chatter.email!=this.user.email) el.chatter.OnlineStat=data.find((ell:any)=>ell.user==el.chatter.email).date;
+        })
+        this.connectedchatersloeaded=true;
+        
+      },
+      error:(err)=>{
+        console.log("err");
+        console.log(err);
+      }
+    })
   }
   loadAndPush(info:ChatInfo,chat:Chat){
 

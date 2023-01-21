@@ -42,7 +42,7 @@
                             <div class="name">{{chatterinfo.chatter.username}}</div>
                             <div class="status">
                               <i class="material-icons {{chatterinfo.chatter.OnlineStat==-1?'online':'offline'}}">fiber_manual_record</i>
-                              <span><!--{{chatterinfo.chatter.OnlineStat==-1?'Online':'last seen '+ datepipe.transform(chatterinfo.chatter.OnlineStat,'HH:mm')}}--> {{chatterinfo.chatter.email}}</span> 
+                              <span>{{chatterinfo.chatter.OnlineStat==-1?'Online':'last seen '+ datepipe.transform(chatterinfo.chatter.OnlineStat,'HH:mm')}}</span> 
                             </div>
                           </div>
                         </li>
