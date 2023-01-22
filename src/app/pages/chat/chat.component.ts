@@ -7,6 +7,7 @@ import {  Router, NavigationExtras } from '@angular/router';
 import { SocketioService } from 'src/app/services/socketio.service';
 import { Subscription, take } from 'rxjs';
 import { AuthService } from '../../_services/auth.service';
+import { EventsService } from 'src/app/services/events.service';
 
 interface ChatInfo{
   chatter:UserPublic;
@@ -46,7 +47,7 @@ export class ChatComponent implements OnInit,OnDestroy {
   activeChat:number=-1;
   isLoggedIn:boolean=false;
   activeChatter:ChatInfo=null as any;
-  constructor(private storageService: StorageService,private router: Router, private socketService:SocketioService,private authService: AuthService,) { }
+  constructor(private storageService: StorageService,private router: Router, private socketService:SocketioService,private authService: AuthService,private events:EventsService,) { }
   datepipe: DatePipe = new DatePipe('en-US');
 
   ngOnInit(): void {
@@ -308,9 +309,17 @@ export class ChatComponent implements OnInit,OnDestroy {
     
     this.scrollToBottom();
   }
+  sendtotalunoppenedcount(){
+    var count=0
+    this.chattersinfo.forEach(element => {
+      count+=element.unoppenedcount;
+    });
+    this.events.chngchatEvent(count);
+  }
   markasoppened(){
     this.activeChatter.chat.forEach(el=>el.isoppened=true);
     this.activeChatter.unoppenedcount=0;
+    this.sendtotalunoppenedcount();
     this.authService.marckchatasoppened(this.activeChatter.chatter.email).subscribe({
       next:data=>{
         console.log(data);

@@ -22,8 +22,11 @@
         </li>
         <li [ngClass]="{'active2':router.url==='/chat' }" class="dropdown">
           <a (click)="toggleSideBarShow(false)" routerLink="/chat" class="nav-link pointer">
-            <i-feather class="fsideIcons" name="message-circle"></i-feather>
-            <span>Chat</span></a>
+            <i-feather class="fsideIcons" name="message-circle"></i-feather> 
+            <div *ngIf="unoppenedchatCount>0" class="badge badge-success badgesideBar " style="display: unset;"> {{unoppenedchatCount}}</div>
+            <span>Chat</span>
+           
+          </a>
         </li>
         <li class="dropdown">
           <a href="#" class="menu-toggle nav-link has-dropdown"><i-feather class="fsideIcons" name="Command"></i-feather><span>Apps</span></a>

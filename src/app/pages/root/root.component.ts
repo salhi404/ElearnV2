@@ -33,10 +33,13 @@ export class RootComponent implements OnInit ,OnDestroy {
         }
     }
   unoppenedMail:Mail[]=[];
-  unoppenedMailCount:number=0
+  unoppenedMailCount:number=0;
+  unoppenedchatCount:number=0
   showSettingPanel:boolean=false
   subscription: Subscription = new Subscription;
   subscription2: Subscription = new Subscription;
+  subscription3: Subscription = new Subscription;
+  subscription4: Subscription = new Subscription;
   showMiniSideBar:boolean=false;
   isTabletMode:boolean=false;
   DarkTheme:boolean=false;
@@ -64,7 +67,16 @@ export class RootComponent implements OnInit ,OnDestroy {
       /*setInterval(() => {
         this.getMailUpdate();
       }, 12000);*/
-      this.getnoppenedMail(); 
+      this.getnoppenedMail();
+      this.getnoppenedchat();
+      this.subscription3=this.socketService.recieveMsg.subscribe(data=>{
+        if(data.code==1)this.unoppenedchatCount++;
+      });
+      this.subscription4=this.events.currentchatEvent.subscribe(state=>{
+        if(state>=0){
+          this.unoppenedchatCount=state;
+        }
+      })
       
     }
     const pref=this.storageService.getPrefrences();
@@ -120,6 +132,23 @@ export class RootComponent implements OnInit ,OnDestroy {
       },
       error:err=>{
 
+      }
+    })
+  }
+  getnoppenedchat(){
+    console.log('getnoppenedchat');
+    
+    this.authService.getunoppenedchat().subscribe({
+      next:data=>{
+        console.log('getnoppenedchat data :');
+        console.log(data);
+        
+        if(data.count)this.unoppenedchatCount=data.count;
+      },
+      error:err=>{
+        console.log('getnoppenedchat error :');
+        console.log(err);
+        
       }
     })
   }
