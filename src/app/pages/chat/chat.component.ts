@@ -11,6 +11,7 @@ import { AuthService } from '../../_services/auth.service';
 interface ChatInfo{
   chatter:UserPublic;
   chat:Chat[];
+  unoppenedcount:number;
   chatroom:string;
   loaded:boolean;
 }
@@ -55,14 +56,22 @@ export class ChatComponent implements OnInit,OnDestroy {
       this.subscription=this.socketService.recieveMsg.subscribe(data=>{
         if(data.code==1){
           console.log(data.data);
-          const chat:Chat={msg:data.data.message,date:data.data.date,isSent:false}
+          const chat:Chat={msg:data.data.message,date:data.data.date,isSent:false,isoppened:false}
           var from =this.chattersinfo.find(e=>e.chatter.email==data.data.email);
           if (typeof from !== 'undefined'){
-            if(!from.loaded)this.getchat(from);
-            else from.chat.push(chat);
+            if(!from.loaded){
+              this.getchat(from);
+            }
+            else{
+              from.chat.push(chat);
+              from.unoppenedcount++;
+              if(this.activeChatter.chatter.email==from.chatter.email){
+                this.markasoppened();
+              }
+            } 
           }else{
             this.chatters.push({username:data.data.username,email:data.data.email,OnlineStat:-1});
-            this.chattersinfo.push({chatter:this.chatters[this.chatters.length-1],chat:[chat],chatroom:this.chatters[this.chatters.length-1].email,loaded:true})
+            this.chattersinfo.push({chatter:this.chatters[this.chatters.length-1],chat:[chat],chatroom:this.chatters[this.chatters.length-1].email,loaded:true,unoppenedcount:1})
             this.getchat(this.chattersinfo[this.chattersinfo.length-1]);
             this.storageService.saveChatters(this.chatters);
             this.authService.putcontacts(this.chatters.filter(el=>el.email!=this.user.email)).subscribe({
@@ -93,9 +102,9 @@ export class ChatComponent implements OnInit,OnDestroy {
     }*/
     for (let index = 0; index < this.chatters.length; index++) {
       const element = this.chatters[index];
-      this.chattersinfo.push({chatter:element,chat:[...this.chats],chatroom:element.email,loaded:false});
-
+      this.chattersinfo.push({chatter:element,chat:[...this.chats],chatroom:element.email,loaded:true,unoppenedcount:0});
     }
+    this.chattersinfo.forEach(el=>this.getchat(el));
     if(this.chattersinfo.length>0){
       this.openChat(0,this.chattersinfo[0]);
       this.getconnectedchaters();
@@ -141,11 +150,13 @@ export class ChatComponent implements OnInit,OnDestroy {
     } 
   }
   getchat(from:ChatInfo){
-    this.authService.getChatLog(this.user.email,from.chatter.email).subscribe({
+    this.authService.getChatLog(from.chatter.email).subscribe({
      next:(data)=>{
        console.log("data recieved for user :"+from);
        console.log(data);
        from.chat= data as Chat[];
+       from.unoppenedcount=from.chat.filter(el=>!el.isoppened).length;
+       from.loaded=true;
      },
      error:(err)=>{
        console.log("err");
@@ -156,7 +167,7 @@ export class ChatComponent implements OnInit,OnDestroy {
   }
   async getchatasync(from:string):Promise<Chat[]>{
     return new Promise(resolve=>{
-      this.authService.getChatLog(this.user.email,from).pipe(
+      this.authService.getChatLog(from).pipe(
          take(1) //useful if you need the data once and don't want to manually cancel the subscription again
        )
        .subscribe({
@@ -182,7 +193,7 @@ export class ChatComponent implements OnInit,OnDestroy {
       }
     }else{
       const message=this.MsgTosend
-      this.activeChatter.chat.push({msg:this.MsgTosend,date:new Date(),isSent:true});
+      this.activeChatter.chat.push({msg:this.MsgTosend,date:new Date(),isSent:true,isoppened:false});
       this.socketService.sendMessage(message,this.activeChatter.chatroom);
       //this.socketService.sendMsg("sms : "+message );
       this.MsgTosend='';
@@ -226,7 +237,7 @@ export class ChatComponent implements OnInit,OnDestroy {
           console.log(data);
           
             this.chatters.push({username:data.username,email:data.email,OnlineStat:-1});
-            this.chattersinfo.push({chatter:this.chatters[this.chatters.length-1],chat:[],chatroom:this.chatters[this.chatters.length-1].email,loaded:true})
+            this.chattersinfo.push({chatter:this.chatters[this.chatters.length-1],chat:[],chatroom:this.chatters[this.chatters.length-1].email,loaded:true,unoppenedcount:0})
             this.storageService.saveChatters(this.chatters);
             if(this.chatters.length>1){
               this.authService.putcontacts(this.chatters.filter(el=>el.email!=this.user.email)).subscribe({
@@ -275,20 +286,37 @@ export class ChatComponent implements OnInit,OnDestroy {
       this.alertDismissed=true;
     }, 4000);
   }
-  async openChat(ind:number,chatter:ChatInfo){
+ async openChat(ind:number,chatter:ChatInfo){
     this.activeChat=ind;
     this.activeChatter=chatter;
-    if(!this.activeChatter.loaded){
-      const recievedchat =await this.getchatasync(this.activeChatter.chatter.email);
-      if(recievedchat){
-        this.activeChatter.chat=recievedchat;
-        this.activeChatter.loaded=true;
-      }else{
-        this.recievedchatError=this.activeChatter.chatter.email;
-      }
-      
-    } 
+    if(!chatter.loaded){
+      chatter.chat= await this.getchatasync(chatter.chatter.email);
+      chatter.unoppenedcount=chatter.chat.filter(el=>!el.isoppened).length;
+      chatter.loaded=true;
+    }
+    var unreadexists=false;
+    try {
+      chatter.chat.forEach(ele=>{
+        if(!ele.isoppened)unreadexists=true;
+      })
+    } catch (error) {
+    }
+    if(unreadexists){
+      console.log("unoppened exists");
+      this.markasoppened();
+    }
+    
     this.scrollToBottom();
   }
-
+  markasoppened(){
+    this.activeChatter.chat.forEach(el=>el.isoppened=true);
+    this.activeChatter.unoppenedcount=0;
+    this.authService.marckchatasoppened(this.activeChatter.chatter.email).subscribe({
+      next:data=>{
+        console.log(data);
+      },error:err=>{
+        console.log(err);
+      }
+    })
+  }
 }

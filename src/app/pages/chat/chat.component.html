@@ -38,8 +38,8 @@
 
                         <li (click)="openChat(i,chatterinfo)" *ngFor="let chatterinfo of chattersinfo;index as i" class="clearfix {{i==activeChat?'active':''}}">
                           <img src="assets/img/users/user-{{i==0?'1':'2'}}.png" alt="avatar">
-                          <div class="about">
-                            <div class="name">{{chatterinfo.chatter.username}}</div>
+                          <div class="about" >
+                            <div class="name"  >{{chatterinfo.chatter.username}}<span *ngIf="chatterinfo.unoppenedcount>0" class="badge badge-success unredBadg ">{{chatterinfo.unoppenedcount}}</span> </div>
                             <div class="status">
                               <i class="material-icons {{chatterinfo.chatter.OnlineStat==-1?'online':'offline'}}">fiber_manual_record</i>
                               <span>{{chatterinfo.chatter.OnlineStat==-1?'Online':'last seen '+ datepipe.transform(chatterinfo.chatter.OnlineStat,'HH:mm')}}</span> 

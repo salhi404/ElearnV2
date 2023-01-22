@@ -85,9 +85,13 @@ export class AuthService {
     const token = this.storageService.getTokent();
     return this.http.post(INFO_API + 'getconnectedchatters', {token,chaters}, httpOptions);
   }
-  getChatLog(owner:string,fromTo:string):Observable<any>{
+  getChatLog(fromTo:string):Observable<any>{
     const token = this.storageService.getTokent();
     return this.http.post(DATA_API + 'getchatlog', {token,fromTo}, httpOptions);
+  }
+  marckchatasoppened(fromTo:string):Observable<any>{
+    const token = this.storageService.getTokent();
+    return this.http.post(DATA_API + 'marckchatasoppened', {token,fromTo}, httpOptions);
   }
   getUnoppenedMail():Observable<any>{
     const token = this.storageService.getTokent();
