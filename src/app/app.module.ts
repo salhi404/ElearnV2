@@ -22,6 +22,7 @@ import { ErrorsComponent } from './pages/errors/errors.component';
 import { HomeBtnComponent } from './components/home-btn/home-btn.component';
 import { SceletonLoadComponent } from './components/sceleton-load/sceleton-load.component';
 import { ChatComponent } from './pages/chat/chat.component';
+import { InterfaceComponent } from './pages/interface/interface.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -42,6 +43,7 @@ import { ChatComponent } from './pages/chat/chat.component';
     HomeBtnComponent,
     SceletonLoadComponent,
     ChatComponent,
+    InterfaceComponent,
   ],
   imports: [
     ReactiveFormsModule,

@@ -7,13 +7,14 @@ import { RegisterComponent } from './pages/register/register.component';
 import { RootComponent } from './pages/root/root.component';
 import { ErrorsComponent } from './pages/errors/errors.component';
 import { ChatComponent } from './pages/chat/chat.component';
+import { InterfaceComponent } from './pages/interface/interface.component';
 const routes: Routes = [
   {
     path: '', component: RootComponent,
     children: [
       {
-        path: '', redirectTo: '/home', 
-        pathMatch: 'full'
+        path: '',
+        component:InterfaceComponent
       },
       {
           path: 'home',
