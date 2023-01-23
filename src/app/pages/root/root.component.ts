@@ -16,57 +16,29 @@ import { SocketioService } from 'src/app/services/socketio.service';
 export class RootComponent implements OnInit, OnDestroy {
   currentRoute:number = 0;
   interfaceLayout:boolean = false;
+  unoppenedchatCount: number=0;
   constructor(
     private router: Router,
     private events: EventsService,
     private storageService: StorageService,
     private authService: AuthService,
-    private socketService: SocketioService,
-  ) {
-    const navigation = this.router.getCurrentNavigation();
-    this.state = { user: this.user, islogged: false, remember: true };
-    if (navigation) {
-      if (navigation.extras.state) {
-        this.state = navigation.extras.state as {
-          user: User,
-          islogged: boolean,
-          remember: boolean,
-        };
-      }
+    private socketService:SocketioService,
+    ) { 
+        const navigation = this.router.getCurrentNavigation();
+        this.state={user:this.user,islogged:false,remember:true};
+        if(navigation){
+          if(navigation.extras.state){
+            this.state = navigation.extras.state as {
+              user: User,
+              islogged:boolean,
+              remember:boolean,
+            };
+          }
+        }
     }
-    this.router.events.pipe(
-      filter((event: any) => event instanceof NavigationEnd)
-    ).subscribe((event: any) => {
-
-      if(!this.storageService.isLoggedIn()&&event.url!="/login"&&event.url!="/signup"){
-        this.router.navigate(["/"]);
-      }
-      this.interfaceLayout=false;
-      switch (event.url) {
-        case "/":
-          if(this.storageService.isLoggedIn())this.router.navigate(["/home"]);
-          this.currentRoute=0;
-          this.interfaceLayout=true;
-          break;
-        case "/home":
-          this.currentRoute=1;
-          break;
-        case "/email":
-          this.currentRoute=2;
-          break;
-        case "/chat":
-          this.currentRoute=3;
-          break;
-      } 
-      console.log(event);
-      console.log(this.currentRoute);
-
-    });
-  }
-  unoppenedMail: Mail[] = [];
-  unoppenedMailCount: number = 0;
-  unoppenedchatCount: number = 0
-  showSettingPanel: boolean = false
+  unoppenedMail:Mail[]=[];
+  unoppenedMailCount:number=0
+  showSettingPanel:boolean=false
   subscription: Subscription = new Subscription;
   subscription2: Subscription = new Subscription;
   subscription3: Subscription = new Subscription;
