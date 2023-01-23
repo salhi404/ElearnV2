@@ -35,8 +35,10 @@
     <app-msg-dd [mailCount]="mailCount" [mails]="mails" *ngIf="logged" ></app-msg-dd>
     <app-ntf-dd *ngIf="logged" ></app-ntf-dd>
     <app-user-dd *ngIf="logged" [username]="user.username" ></app-user-dd>
-    <a routerLink="/login" class="btn btn-icon icon-left btn-primary" *ngIf="!logged" >
-      <i class="far fa-user"></i>
+    <a [ngClass]="{'authBtn joinBtn':interfaceLayout}" routerLink="/login" class="btn btn-icon icon-left btn-warning " *ngIf="!logged&&interfaceLayout" >
+      <span>join</span>
+    </a>
+    <a [ngClass]="{'authBtn loginBtn':interfaceLayout}" routerLink="/login" class="btn btn-icon icon-left btn-outline-primary " *ngIf="!logged" >
       <span>login</span>
     </a>
   </ul>

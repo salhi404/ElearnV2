@@ -34,4 +34,21 @@
   .interfaceLayout{
     left: 0px !important;
     transition: 0s;
+    box-shadow:none!important;
+    height: 100px;
+  }
+  .authBtn{
+    padding: 12px 28px;
+    margin-right: 5px;
+    
+  }
+  .authBtn i{
+    font-size: 16px;
+  }
+  .authBtn span{
+    font-size: 20px;
+    margin-left: 5px;
+  }
+  .joinBtn{
+    margin-right: 15px;
   }
