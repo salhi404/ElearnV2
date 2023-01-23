@@ -113,7 +113,7 @@ export class LoginComponent implements OnInit {
       /*this.manageService.changeState(this.manageService.LOGIN);
       this.manageService.changeUserItems(user);*/
         this.navigationExtras={ state: {user:user,islogged:true,remember:remember}  };
-        this.router.navigate([''],this.navigationExtras);
+        this.router.navigate(["/home"],this.navigationExtras);
       
    // },400);
   }

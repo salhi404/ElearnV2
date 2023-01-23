@@ -1,25 +1,25 @@
 <div class="navbar-bg"></div>
-<nav  class="navbar navbar-expand-lg main-navbar fixed absolute">
+<nav [ngClass]="{'interfaceLayout':interfaceLayout}"  class="navbar navbar-expand-lg main-navbar fixed absolute">
   <div class="form-inline mr-auto">
     <ul class="navbar-nav mr-3">
-      <li>
+      <li *ngIf="!interfaceLayout">
         <a (click)="toggeleSideBarMini()" class="nav-link  collapse-btn pointer sidebar-toggle-1"> 
             <i-feather class="fnavIcon" name="align-justify"></i-feather>
         </a>
       </li>
-      <li>
+      <li *ngIf="!interfaceLayout">
         <a (click)="toggeleSideBarShow()"  class="nav-link  collapse-btn pointer sidebar-toggle-2"> 
             <i-feather class="fnavIcon" name="align-justify"></i-feather>
         </a>
-      </li>
-      <li>
+      </li >
+      <li *ngIf="!interfaceLayout">
         <a (click)="toggleFullScreen()" class="nav-link  fullscreen-btn pointer">
             <i-feather class="fnavIcon" name="Maximize"></i-feather>
         </a>
-      </li>
-        <app-theme-switch [isChecked]="DarkTheme"></app-theme-switch>
+      </li >
+        <app-theme-switch *ngIf="!interfaceLayout" [isChecked]="DarkTheme"></app-theme-switch>
 
-      <li>
+      <li *ngIf="!interfaceLayout">
         <form class="form-inline mr-auto" >
           <div class="search-element">
             <input class="form-control"  type="search" placeholder="Search" aria-label="Search" data-width="200">

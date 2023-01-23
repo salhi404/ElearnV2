@@ -9,6 +9,7 @@ import { EventsService } from 'src/app/services/events.service';
 })
 export class SidebarComponent implements OnInit {
   @Input() isTabletMode:boolean=false;
+  @Input() unoppenedchatCount:number=0;
   @HostListener('document:click', ['$event'])
   clickout(event:any) {
     if(this.eRef.nativeElement.contains(event.target)) {

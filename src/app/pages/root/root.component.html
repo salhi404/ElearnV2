@@ -1,12 +1,12 @@
 <div [ngClass]="{'sidebar-mini':showMiniSideBar&&!isTabletMode,'dark':DarkTheme,'dark-sidebar':DarkTheme,'theme-black':DarkTheme}" >
   <div id="app" >
     <div class="main-wrapper main-wrapper-1">
-      <app-navbar [mailCount]="unoppenedMailCount" [mails]="unoppenedMail" [logged]="isLoggedIn" [user]="user" [DarkTheme]="DarkTheme"></app-navbar>
-      <app-sidebar [isTabletMode]="isTabletMode" ></app-sidebar>
+      <app-navbar [interfaceLayout]="interfaceLayout" [mailCount]="unoppenedMailCount" [mails]="unoppenedMail" [logged]="isLoggedIn" [user]="user" [DarkTheme]="DarkTheme"></app-navbar>
+      <app-sidebar *ngIf="!interfaceLayout" [isTabletMode]="isTabletMode" [unoppenedchatCount]="unoppenedchatCount" ></app-sidebar>
       <!-- Main Content -->
       <div ><router-outlet></router-outlet></div>
-      
-      <app-footer></app-footer>
+      <!-- <div style="position: fixed;left: 200px;top: 200px;" >{{currentRoute}}</div>-->
+      <app-footer *ngIf="!interfaceLayout"></app-footer>
     </div>
   </div>
 </div>

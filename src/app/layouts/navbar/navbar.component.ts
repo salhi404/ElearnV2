@@ -17,6 +17,7 @@ export class NavbarComponent implements OnInit {
 @Input() DarkTheme:boolean=false;
 @Input() mails:Mail[]=[];
 @Input() mailCount:number=0;
+@Input() interfaceLayout:boolean=false;
   showuserDD:boolean=false;
   showNntDD:boolean=false;
   showMsgDD:boolean=false;
