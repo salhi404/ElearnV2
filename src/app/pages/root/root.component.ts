@@ -37,7 +37,8 @@ export class RootComponent implements OnInit, OnDestroy {
     this.router.events.pipe(
       filter((event: any) => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
-      if(!this.storageService.isLoggedIn()){
+
+      if(!this.storageService.isLoggedIn()&&event.url!="/login"&&event.url!="/signup"){
         this.router.navigate(["/"]);
       }
       this.interfaceLayout=false;
