@@ -64,6 +64,7 @@ export class RootComponent implements OnInit, OnDestroy {
 
     });
   }
+  
   unoppenedMail: Mail[] = [];
   unoppenedMailCount: number = 0;
   showSettingPanel: boolean = false
@@ -85,6 +86,12 @@ export class RootComponent implements OnInit, OnDestroy {
     this.isLoggedIn = this.storageService.isLoggedIn();
     if (this.isLoggedIn) {
       this.user = this.storageService.getUser();
+      this.authService.verifyJwt().subscribe({next:data=>{
+        if(!data.verified)this.logout();
+      },error:err=>{
+        if(!err.verified)this.logout();
+        
+      }});
     }
     if (this.state.islogged) {
       this.isLoggedIn = this.state.islogged;
@@ -212,6 +219,7 @@ export class RootComponent implements OnInit, OnDestroy {
     this.storageService.clearChatters();
     this.user = null as any;
     this.events.changeLoggingState(-1);
+    this.router.navigate(["/"]);
   }
   test() {
     if (this.isLoggedIn) this.authService.sendPref(this.storageService.getPrefrences(true)).subscribe({

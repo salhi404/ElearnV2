@@ -1,4 +1,4 @@
-import { Component, OnInit,OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit,OnDestroy, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { Chat } from 'src/app/Interfaces/chat';
 import { DatePipe } from '@angular/common';
 import { User, UserPublic } from 'src/app/Interfaces/user';
@@ -27,6 +27,7 @@ export class ChatComponent implements OnInit,OnDestroy {
   chats:Chat[]=[];
   timeout1:any;
   timeout2:any;
+  interval:any;
   connectedchatersloeaded=false;
   user:User=null as any;
   chatters:UserPublic[]=[];
@@ -109,7 +110,7 @@ export class ChatComponent implements OnInit,OnDestroy {
     if(this.chattersinfo.length>0){
       this.openChat(0,this.chattersinfo[0]);
       this.getconnectedchaters();
-      setInterval(() => {
+      this.interval=setInterval(() => {
         this.getconnectedchaters();
       }, 20000);
       
@@ -132,15 +133,14 @@ export class ChatComponent implements OnInit,OnDestroy {
       }
     })
   }
-  loadAndPush(info:ChatInfo,chat:Chat){
-
-  }
+  @HostListener('window:beforeunload')
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    clearInterval(this.interval);
   }
   dismissAlert(fade:boolean){
-    clearInterval(this.timeout1);
-    clearInterval(this.timeout2);
+    clearTimeout(this.timeout1);
+    clearTimeout(this.timeout2);
     this.alerthidden=true;
     if(fade){
       setTimeout(() => {

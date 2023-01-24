@@ -15,7 +15,7 @@ export class LoginComponent implements OnInit {
   form: any = {
     username: null,
     password: null,
-    remember:false
+    remember:true
   };
   isLoggedIn = false;
   isLoginFailed = false;
@@ -36,8 +36,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.storageService.isLoggedIn()) {
-      this.isLoggedIn = true;
-      this.roles = this.storageService.getUser().roles;
+      this.router.navigate(["/home"]);
     }
   }
   register(attempt:number):void{
@@ -98,6 +97,9 @@ export class LoginComponent implements OnInit {
     });
   }
   onSubmit(): void {
+    if (this.storageService.isLoggedIn()) {
+      this.router.navigate(["/home"]);
+    }
     this.changed=false;
     this.userNotFound=false;
     this.invalidpass=false;

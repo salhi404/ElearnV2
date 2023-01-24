@@ -6,11 +6,11 @@ import { Mail } from '../Interfaces/Mail';
 import { Pref } from '../Interfaces/user';
 
 //const URL_API = 'https://ayoubauth.herokuapp.com/api/auth/';
-//const URL_API = 'http://192.168.1.101:3000/'; 
+const URL_API = 'http://192.168.1.101:3000/'; 
 // const URL_API = 'https://shoppingapptracker.herokuapp.com/';
 //const URL_API = 'https://encouraging-crow.cyclic.app/';
 //const URL_API = 'https://frantic-colt-leather-jacket.cyclic.app/';
-const URL_API = 'https://starter-express-api-production-816a.up.railway.app/';
+//const URL_API = 'https://starter-express-api-production-816a.up.railway.app/';
 const AUTH_API = URL_API+'api/auth/';
 const DATA_API = URL_API+'api/data/';
 const INFO_API = URL_API+'api/info/';
@@ -59,6 +59,10 @@ export class AuthService {
   }
   verify(id:string,token:string): Observable<any> {
     return this.http.put(AUTH_API + 'verify', {id,token}, httpOptions);
+  }
+  verifyJwt():Observable<any>{
+    const token = this.storageService.getTokent();
+    return this.http.post(AUTH_API + 'verifyjwt', {token}, httpOptions);
   }
   sendMail(mail:Mail,provided:number):Observable<any>{
     const token = this.storageService.getTokent();

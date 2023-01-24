@@ -1,6 +1,6 @@
 <nav [ngClass]="{'interfaceLayout':interfaceLayout}"  class="navbar navbar-expand-lg main-navbar fixed absolute">
   <div class="form-inline mr-auto">
-    <div class="navBrand">
+    <div class="navBrand" *ngIf="!logged&&interfaceLayout" >
         <img alt="image" src="assets/img/logo.png" class="" /> 
         <span  class="logo-name">E-learn</span>
     </div>
@@ -42,7 +42,7 @@
     <a [ngClass]="{'authBtn joinBtn':interfaceLayout}" routerLink="/signup" class="btn btn-icon icon-left btn-warning " *ngIf="!logged&&interfaceLayout" >
       <span>join</span>
     </a>
-    <a [ngClass]="{'authBtn loginBtn':interfaceLayout}" routerLink="/login" class="btn btn-icon icon-left btn-outline-primary " *ngIf="!logged" >
+    <a [ngClass]="{'authBtn loginBtn':interfaceLayout}" routerLink="/login" class="btn btn-icon icon-left btn-outline-primary " *ngIf="!logged&&interfaceLayout" >
       <span>login</span>
     </a>
   </ul>

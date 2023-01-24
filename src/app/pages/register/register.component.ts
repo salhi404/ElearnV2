@@ -33,6 +33,9 @@ export class RegisterComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
+    if (this.storageService.isLoggedIn()) {
+      this.router.navigate(["/home"]);
+    }
   }
   goToHomePage(user:string): void {
   //  setTimeout(() => {
@@ -93,13 +96,14 @@ export class RegisterComponent implements OnInit {
     });
   }
   onSubmit(): void {
-    console.log("loggggggg");
+    if (this.storageService.isLoggedIn()) {
+      this.router.navigate(["/home"]);
+    }
     this.userExisted=false;
     this.emailExisted=false;
     if(!this.loading){
       this.loading=true;
       this.register(1)
     }
-    
   }
 }
