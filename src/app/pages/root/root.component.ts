@@ -110,10 +110,16 @@ export class RootComponent implements OnInit, OnDestroy {
       this.getnoppenedchat();
       this.subscription3 = this.socketService.recieveMsg.subscribe(data => {
         if (data.code == 1) this.unoppenedchatCount++;
+        var info=this.events.infoEvent.getValue();
+        info.unoppenedchatCount=this.unoppenedchatCount;
+        this.events.changeInfoState(info);
       });
       this.subscription4 = this.events.currentchatEvent.subscribe(state => {
         if (state >= 0) {
           this.unoppenedchatCount = state;
+          var info=this.events.infoEvent.getValue();
+          info.unoppenedchatCount=this.unoppenedchatCount;
+          this.events.changeInfoState(info);
         }
       })
 
@@ -167,7 +173,12 @@ export class RootComponent implements OnInit, OnDestroy {
     this.authService.getUnoppenedMail().subscribe({
       next: data => {
         if (data.mails) this.unoppenedMail = data.mails;
-        if (data.count) this.unoppenedMailCount = data.count;
+        if (data.count){ 
+          this.unoppenedMailCount = data.count;
+          var info=this.events.infoEvent.getValue();
+          info.unoppenedMailCount=data.count;
+          this.events.changeInfoState(info);
+        }
       },
       error: err => {
 
@@ -181,8 +192,10 @@ export class RootComponent implements OnInit, OnDestroy {
       next: data => {
         console.log('getnoppenedchat data :');
         console.log(data);
-
         if (data.count) this.unoppenedchatCount = data.count;
+          var info=this.events.infoEvent.getValue();
+          info.unoppenedchatCount=this.unoppenedchatCount;
+          this.events.changeInfoState(info);
       },
       error: err => {
         console.log('getnoppenedchat error :');

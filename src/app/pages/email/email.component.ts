@@ -66,11 +66,11 @@ export class EmailComponent implements OnInit,OnDestroy {
     if (this.isLoggedIn) {
       this.getMail();
       this.user=this.storageService.getUser() ;
-      this.subscription=this.events.updatestatusEvent.subscribe(state=>{
+     /* this.subscription=this.events.updatestatusEvent.subscribe(state=>{
         //console.log("state"+state);
         if(state!=-1)this.refresh();
         
-      });
+      });*/
     }else{
       this.navigationExtras={ state: {errorNbr:403}  };
       this.router.navigate(['/error'],this.navigationExtras);

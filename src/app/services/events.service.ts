@@ -14,8 +14,8 @@ export class EventsService {
   currentchatEvent = this.chatEvent.asObservable();
   public loggingEvent = new BehaviorSubject(-1);
   loggingStatusEvent = this.loggingEvent.asObservable();
-  public infoEvent = new BehaviorSubject({});
- infostatusEvent = this.infoEvent.asObservable();
+  public infoEvent = new BehaviorSubject({unoppenedchatCount:0,unoppenedMailCount:0});
+  infostatusEvent = this.infoEvent.asObservable();
   constructor() { }
   chngLayoutEvent(state: number) {
     this.layoutEvent.next(state)
