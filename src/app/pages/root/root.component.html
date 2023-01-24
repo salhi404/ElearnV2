@@ -5,7 +5,8 @@
       <app-sidebar *ngIf="!interfaceLayout" [isTabletMode]="isTabletMode" [unoppenedchatCount]="unoppenedchatCount" ></app-sidebar>
       <!-- Main Content -->
       <div ><router-outlet></router-outlet></div>
-      <!-- <div style="position: fixed;left: 200px;top: 200px;" >{{currentRoute}}</div>-->
+      
+      <!--<div style="position: fixed;left: 200px;top: 200px;" ><i-feather class="fnavIcon"  name="Maximize" style="color: red;" ></i-feather><span style="color: red;" >test</span></div>-->
       <app-footer *ngIf="!interfaceLayout"></app-footer>
     </div>
   </div>

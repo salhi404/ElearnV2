@@ -3,16 +3,13 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'material-icons/iconfont/material-icons.css';
 
-.theme-black .fnavIcon{
-    color: rgb(255, 255, 255)!important;
 
-}
-.search-element {
+/*.search-element {
      background-color:rgba(227, 237, 252, 0.568)!important;
      border:1px solid rgba(227, 237, 252, 0.568)!important;
      border-radius: 4px;
      
- }
+ }*/
  .theme-black .search-element input,.theme-black .search-element .btn{
      background-color:unset!important;
  }
@@ -20,16 +17,19 @@
     background-color:unset!important;
     
 }
+.theme-black .sidebar-brand .logo-name{
+    color: #a9b7d0;
+}
 .search-element input,.search-element .btn{
     background-color:rgba(255, 255, 255, 0)!important;
 }
 .chosenLabel {
     background-color: #e6e6e6
 }
-.theme-black .chosenLabel {
-    background-color: #313131
-}
+/*.theme-black .fnavIcon{
+    color: rgb(255, 255, 255)!important;
 
+}*/
 .pointer{
     cursor: pointer;
 }
@@ -22444,17 +22444,11 @@ h6 .badge {
 
 .navbar {
     height: 70px;
-    left: 250px;
+    left: 200px;
     right: 0px;
     position: absolute;
     z-index: 890;
     background-color: transparent;
-    height: 70px;
-    left: 250px;
-    right: 0;
-    position: absolute;
-    z-index: 890;
-    background-color: transparent
 }
 
 .navbar.active {
@@ -23814,7 +23808,7 @@ pre {
     position: fixed;
     top: 0;
     height: 100%;
-    width: 250px;
+    width: 200px;
     background-color: #fff;
     z-index: 880;
     left: 0
@@ -23828,7 +23822,7 @@ pre {
 }
 
 body.sidebar-gone .main-sidebar {
-    left: -250px
+    left: -200px
 }
 
 .sidebar-mini .hide-sidebar-mini {
@@ -28387,7 +28381,6 @@ body.layout-3 .main-footer {
 .theme-white .navbar .nav-link .feather {
     color: #555556
 }
-
 .theme-white .navbar .form-inline .form-control {
     background-color: #f0f3ff
 }
@@ -28429,7 +28422,9 @@ body.layout-3 .main-footer {
     background-color: #353c48;
     border-color: #353c48
 }
-
+.theme-black .navbar .nav-link .feather {
+    color: #a9b7d0
+}
 .theme-black.sidebar-mini .main-sidebar .sidebar-menu>li.active>a {
     background-color: rgba(0, 0, 0, 0.14)
 }
