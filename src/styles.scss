@@ -29635,50 +29635,24 @@ body.layout-3 .main-footer {
     cursor: pointer
 }
 
-.chat-app {
-    height: 690px
-}
 
-.chat-app .people-list {
-    width: 280px;
-    position: absolute;
-    left: 0;
-    top: 0;
-    padding: 20px
+.chat-scroll{
+    height: 500px!important;
+    overflow-y:scroll ;
 }
-
-.chat-app .chat {
-    border-left: 1px solid #e8e8e8
-}
-
-.chat-app .list_btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 9999;
-    padding: 0;
-    width: 40px;
-    height: 40px;
-    text-align: center;
-    line-height: 40px;
-    display: none;
-    -webkit-box-shadow: 0 10px 25px 0 rgba(0, 0, 0, 0.3);
-    -moz-box-shadow: 0 10px 25px 0 rgba(0, 0, 0, 0.3);
-    -ms-box-shadow: 0 10px 25px 0 rgba(0, 0, 0, 0.3);
-    box-shadow: 0 10px 25px 0 rgba(0, 0, 0, 0.3);
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    -ms-border-radius: 3px;
-    border-radius: 3px
-}
-
 .people-list {
-    transition: 0.5s
+    transition: 0.5s;
+    height: 570px!important;
+    padding:0 !important;
 }
 
 .people-list .chat-search {
-    margin: 10px
+    padding: 10px;
+    height: 65px;
+    border-bottom: 1px solid #eee;
+    border-radius: 0 0.55rem 0 0;
 }
+
 
 .people-list .chat-list li {
     padding: 10px 15px;
@@ -29733,12 +29707,15 @@ body.layout-3 .main-footer {
     font-size: 13px
 }
 
+.chat-body{
+    height: 570px; 
+}
 .chat .chat-header {
-    padding: 20px;
+    height: 65px;
+    padding: 10px;
     border-bottom: 1px solid #eee;
     border-radius: 0 0.55rem 0 0
 }
-
 .chat .chat-header img {
     float: left;
     -webkit-border-radius: 50%;
@@ -29903,7 +29880,7 @@ body.layout-3 .main-footer {
 
 .chat-box .chat-content {
     background-color: #f9f9f9 !important;
-    height: 400px;
+    height: 450px;
     overflow: hidden;
     padding-top: 25px !important
 }
