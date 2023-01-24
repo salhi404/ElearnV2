@@ -23,6 +23,8 @@ import { HomeBtnComponent } from './components/home-btn/home-btn.component';
 import { SceletonLoadComponent } from './components/sceleton-load/sceleton-load.component';
 import { ChatComponent } from './pages/chat/chat.component';
 import { InterfaceComponent } from './pages/interface/interface.component';
+import { CalendarComponent } from './pages/calendar/calendar.component';
+import { NotificationsComponent } from './pages/notifications/notifications.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -44,6 +46,8 @@ import { InterfaceComponent } from './pages/interface/interface.component';
     SceletonLoadComponent,
     ChatComponent,
     InterfaceComponent,
+    CalendarComponent,
+    NotificationsComponent,
   ],
   imports: [
     ReactiveFormsModule,

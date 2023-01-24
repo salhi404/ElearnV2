@@ -74,6 +74,7 @@ export class RootComponent implements OnInit, OnDestroy {
   subscription2: Subscription = new Subscription;
   subscription3: Subscription = new Subscription;
   subscription4: Subscription = new Subscription;
+  subscription5: Subscription = new Subscription;
   showMiniSideBar: boolean = false;
   isTabletMode: boolean = false;
   DarkTheme: boolean = false;
@@ -122,7 +123,16 @@ export class RootComponent implements OnInit, OnDestroy {
           this.events.changeInfoState(info);
         }
       })
-
+      this.subscription5=this.events.infostatusEvent.subscribe(state=>{
+        console.log(state);
+        if(state.unoppenedchatCount){
+          this.unoppenedchatCount=state.unoppenedchatCount;
+        }
+        if(state.unoppenedMailCount){
+          this.unoppenedMailCount=state.unoppenedMailCount;
+        }
+        
+      })
     }
     const pref = this.storageService.getPrefrences();
     this.DarkTheme = pref.darkTheme;
@@ -269,6 +279,9 @@ export class RootComponent implements OnInit, OnDestroy {
     });
     this.subscription.unsubscribe();
     this.subscription2.unsubscribe();
+    this.subscription3.unsubscribe();
+    this.subscription4.unsubscribe();
+    this.subscription5.unsubscribe();
     if (!this.state.remember && this.isLoggedIn) this.logout();
     this.socketService.disconnect();
   }

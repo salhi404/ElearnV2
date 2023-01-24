@@ -8,6 +8,8 @@ import { RootComponent } from './pages/root/root.component';
 import { ErrorsComponent } from './pages/errors/errors.component';
 import { ChatComponent } from './pages/chat/chat.component';
 import { InterfaceComponent } from './pages/interface/interface.component';
+import { CalendarComponent } from './pages/calendar/calendar.component';
+import { NotificationsComponent } from './pages/notifications/notifications.component';
 const routes: Routes = [
   {
     path: '', component: RootComponent,
@@ -17,18 +19,27 @@ const routes: Routes = [
         component:InterfaceComponent
       },
       {
-          path: 'home',
-          component: HomeComponent
+        path: 'home',
+        component: HomeComponent
       },
       {
-          path: 'email',
-          component: EmailComponent
+        path: 'email',
+        component: EmailComponent
       },
       {
         path: 'chat',
         component: ChatComponent
       },
+      {
+        path: 'calendar',
+        component: CalendarComponent
+    },
+    {
+      path: 'notifications',
+      component: NotificationsComponent
+    },
       
+
   ]
 },
 {path: 'login', component: LoginComponent},

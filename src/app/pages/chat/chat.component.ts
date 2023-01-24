@@ -24,6 +24,7 @@ interface ChatInfo{
 export class ChatComponent implements OnInit,OnDestroy {
   @ViewChild('target')
   private myScrollContainer!: ElementRef;
+  firstrecieveMsgfired:boolean=false;
   chats:Chat[]=[];
   timeout1:any;
   timeout2:any;
@@ -56,6 +57,11 @@ export class ChatComponent implements OnInit,OnDestroy {
     if (this.isLoggedIn) {
       this.user=this.storageService.getUser();
       this.subscription=this.socketService.recieveMsg.subscribe(data=>{
+        if(this.firstrecieveMsgfired)
+        {
+          console.log("recieveMsg fired ");
+        console.log(data);
+        
         if(data.code==1){
           console.log(data.data);
           const chat:Chat={msg:data.data.message,date:data.data.date,isSent:false,isoppened:false}
@@ -88,6 +94,8 @@ export class ChatComponent implements OnInit,OnDestroy {
             });
           }
           this.scrollToBottom();
+        }}else{
+          this.firstrecieveMsgfired=true;
         }
       })
     }else{
@@ -115,6 +123,11 @@ export class ChatComponent implements OnInit,OnDestroy {
       }, 20000);
       
     }
+    console.log("chaters");
+    console.log(this.chatters);
+    console.log("chatersinfo");
+    console.log(this.chattersinfo);
+    
   }
   getconnectedchaters(){
     this.authService.getconnectedchatters(this.chatters.map(e=>e.email)).subscribe({
