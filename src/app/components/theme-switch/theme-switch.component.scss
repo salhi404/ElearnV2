@@ -11,12 +11,12 @@
             border-color: rgba(66, 65, 65, 0.644);
             border-style: solid;
             border-color: #777777;
-			padding: 4px;
+			padding: 3.5px;
 			transition: all 0.4s ease;
 			outline: 0;
 			display: block;
-			width: 3.65em;
-			height: 1.8em;
+			width: 3.9em;
+			height: 2em;
 			position: relative;
 			cursor: pointer;
 			-webkit-user-select: none;
@@ -46,7 +46,7 @@
 		&:checked + .tgl-btn {
 			background: #f0f0f0!important;
 			&:after {
-				transform: translateX(150%);
+				transform: translateX(135%);
 				background: darken(#fff, 80%)!important;
 			}
 		}

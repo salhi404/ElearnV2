@@ -12,12 +12,12 @@
             <i-feather class="fnavIcon" name="align-justify"></i-feather>
         </a>
       </li >
-      <li *ngIf="!interfaceLayout">
+      <li  *ngIf="!interfaceLayout">
         <a (click)="toggleFullScreen()" class="nav-link  fullscreen-btn pointer">
             <i-feather class="fnavIcon" name="Maximize"></i-feather>
         </a>
       </li >
-        <app-theme-switch *ngIf="!interfaceLayout" [isChecked]="DarkTheme"></app-theme-switch>
+      <li><app-theme-switch  *ngIf="!interfaceLayout" [isChecked]="DarkTheme"></app-theme-switch></li>  
 
       <li *ngIf="!interfaceLayout">
         <form class="form-inline mr-auto" >
@@ -32,9 +32,9 @@
     </ul>
   </div>
   <ul class="navbar-nav navbar-right">
-    <app-msg-dd [mailCount]="mailCount" [mails]="mails" *ngIf="logged" ></app-msg-dd>
-    <app-ntf-dd *ngIf="logged" ></app-ntf-dd>
-    <app-user-dd *ngIf="logged" [username]="user.username" ></app-user-dd>
+    <app-msg-dd   [mailCount]="mailCount" [mails]="mails" *ngIf="logged" ></app-msg-dd>
+    <app-ntf-dd   *ngIf="logged" ></app-ntf-dd>
+    <app-user-dd  *ngIf="logged" [username]="user.username" ></app-user-dd>
     <a [ngClass]="{'authBtn joinBtn':interfaceLayout}" routerLink="/login" class="btn btn-icon icon-left btn-warning " *ngIf="!logged&&interfaceLayout" >
       <span>join</span>
     </a>

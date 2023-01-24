@@ -1,7 +1,7 @@
 .composeBtn{
     color: white!important;
-    font-weight: 400;
-    margin-right: 0;
+    font-weight: bold!important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 .DiscardBtn{
     color: white!important;
@@ -62,4 +62,11 @@
 }
 .mail-list{
     padding-top: 5px;
+}
+.hiddentr{
+    height: 5px!important;
+    visibility: hidden;
+}
+.hiddentr td{
+    height: 5px!important;
 }

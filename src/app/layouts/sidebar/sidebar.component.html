@@ -1,7 +1,8 @@
-<div [ngClass]="{'sidebar-gone-hide':!sideBarShow}" class="main-sidebar sidebar-style-2 scroller   ">
+<div [ngClass]="{'sidebar-gone-hide':!sideBarShow}" class="main-sidebar sidebar-style-1 scroller   ">
     <aside id="sidebar-wrapper ">
       <div  class="sidebar-brand">
-        <a   routerLink="/" class="pointer brand "> <img alt="image" src="assets/img/logo.png" class="header-logo" /> 
+        <a   routerLink="/" class="pointer brand "> 
+          <img alt="image" src="assets/img/logo.png" class="header-logo" /> 
           <span  class="logo-name">E-learn</span>
         </a>
         <a *ngIf="isTabletMode" (click)="sideBarShow=false" class="pointer sideClose"> 

@@ -2,18 +2,7 @@
 
 /* You can add global styles to this file, and also import other style files */
 @import 'material-icons/iconfont/material-icons.css';
-.main-navbar{
-    background-color: white  ;
-    box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1)!important;
-}
-.theme-black .main-navbar{
-    background-color: #353c48 ;
-}
-.fnavIcon{
-    color: rgb(65, 63, 63)!important;
-    width: 20px!important;
-    height: 20px!important;
-}
+
 .theme-black .fnavIcon{
     color: rgb(255, 255, 255)!important;
 
@@ -48,9 +37,17 @@
     width: 100%;
     text-align: center;
 }
-
-
-
+.navLi{
+    height: 100%;
+}
+.navLi a{
+    display: flex;
+    justify-content: center;
+}
+.navLi img{
+    height: 30px;
+    width: 25px;
+}
 
 
 
@@ -24507,31 +24504,31 @@ body.layout-3 .main-footer {
     margin-bottom: 40px
 }
 
-body:not(.sidebar-mini) .sidebar-style-1 .sidebar-menu li.active a {
+#body:not(.sidebar-mini) .sidebar-style-1 .sidebar-menu li.active a {
     background-color: #6777ef;
     color: #fff
 }
 
-body:not(.sidebar-mini) .sidebar-style-1 .sidebar-menu li.active ul.dropdown-menu li a {
+#body:not(.sidebar-mini) .sidebar-style-1 .sidebar-menu li.active ul.dropdown-menu li a {
     color: #e8ebfd
 }
 
-body:not(.sidebar-mini) .sidebar-style-1 .sidebar-menu li.active ul.dropdown-menu li a:hover {
+#body:not(.sidebar-mini) .sidebar-style-1 .sidebar-menu li.active ul.dropdown-menu li a:hover {
     background-color: #6777ef;
     color: #fff
 }
 
-body:not(.sidebar-mini) .sidebar-style-1 .sidebar-menu li.active ul.dropdown-menu li.active a {
+#body:not(.sidebar-mini) .sidebar-style-1 .sidebar-menu li.active ul.dropdown-menu li.active a {
     color: #fff
 }
 
-body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu>li.active>a {
+#body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu>li.active>a {
     padding-left: 20px;
     position: relative;
     color: #6777ef
 }
 
-body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-menu li a {
+#body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-menu li a {
     background-color: #fff
 }
 
@@ -25959,11 +25956,6 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
 
 .bell {
     display: block;
-    width: 40px;
-    height: 40px;
-    font-size: 40px;
-    margin: 5px auto 0;
-    color: #9e9e9e;
     -webkit-animation: ring 4s 0.7s ease-in-out infinite;
     -webkit-transform-origin: 50% 4px;
     -moz-animation: ring 4s 0.7s ease-in-out infinite;
@@ -26755,7 +26747,7 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
     background-color: #5864bd
 }
 
-.theme-purple body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu>li.active>a:before {
+.theme-purple #body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu>li.active>a:before {
     background-color: #5864bd
 }
 
@@ -27076,7 +27068,7 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
     background-color: #3dc9b3
 }
 
-.theme-cyan body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu>li.active>a:before {
+.theme-cyan #body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu>li.active>a:before {
     background-color: #3dc9b3
 }
 
@@ -27397,7 +27389,7 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
     background-color: #28c76f
 }
 
-.theme-green body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu>li.active>a:before {
+.theme-green #body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu>li.active>a:before {
     background-color: #28c76f
 }
 
@@ -27718,7 +27710,7 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
     background-color: #ea5455
 }
 
-.theme-red body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu>li.active>a:before {
+.theme-red #body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu>li.active>a:before {
     background-color: #ea5455
 }
 
@@ -28039,7 +28031,7 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
     background-color: #ffa117
 }
 
-.theme-orange body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu>li.active>a:before {
+.theme-orange #body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu>li.active>a:before {
     background-color: #ffa117
 }
 
@@ -28358,7 +28350,7 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
     background-color: #6777ef
 }
 
-.theme-white body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu>li.active>a:before {
+.theme-white #body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu>li.active>a:before {
     background-color: #6777ef
 }
 
@@ -28702,7 +28694,7 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
     background-color: #353c48
 }
 
-.theme-black body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu>li.active>a:before {
+.theme-black #body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu>li.active>a:before {
     background-color: #353c48
 }
 
@@ -32413,8 +32405,8 @@ tr:first-child>td>.fc-day-grid-event {
 }
 
 #mail-nav .btn-compose {
-    margin: 15px;
-    min-width: 87%
+    margin: 15px 0 ;
+    width: 100%
 }
 
 #mail-nav a {

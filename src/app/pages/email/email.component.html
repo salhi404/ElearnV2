@@ -76,22 +76,22 @@
         <div *ngIf="openedWindow==1" class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
           <div class="card">
             <div class="boxs mail_listing">
-              <div class="inbox-center table-responsive">
+              <div class="inbox-center ">
                 <table class="table table-hover">
                   <thead>
                     <tr>
-                      <th class="text-center">
-                        <label class="form-check-label">
+                      <th   class="flex-centerr "  >
+                        <label  class="form-check-label">
                           <input [(ngModel)]="selectAll" type="checkbox" (ngModelChange)="toggleSelectAll($event)" />
                           <span class="form-check-sign"></span>
                         </label>
                       </th>
-                      <th colspan="3">
-                        <div class="inbox-header">
+                      <th   style="padding-left: 8px;" colspan="3">
+                        <div  class="inbox-header">
                           <div class="mail-option">
-                            <div class="email-btn-group m-l-15">
+                            <div  class="email-btn-group">
                               
-                              <div (click)="refresh()" class="iconBtn flex-centerr">
+                              <div  (click)="refresh()" class="iconBtn flex-centerr">
                                 <div class="iconBtnBack flex-centerr">
                                   <a  class="col-dark-gray waves-effect m-r-20" title="Refresh"
                                     data-toggle="tooltip">
@@ -136,7 +136,7 @@
                                 </div>
                               </div>
 
-                              <a class=" m-r-20">
+                              <a class=" m-r-20 flex-centerr">
                                 <span *ngIf="chosenLabel!=-1" class="badge mr-2 {{labels[chosenLabel].bgColor}}">
                                   {{labels[chosenLabel].name}}</span>
                               </a>
@@ -153,7 +153,7 @@
                           </div>
                         </div>
                       </th>
-                      <th class="hidden-xs" colspan="2">
+                      <th    class="hidden-xs" colspan="2">
                         <div class="pull-right">
                           <div class="email-btn-group m-l-15">
                             <!--<a (click)="sync()" class="btn btn-info col-white pointer" *ngIf="modifiedMail.length>0">sync({{modifiedMail.length}})</a>-->
@@ -171,7 +171,7 @@
 
                   <tbody>
                     <tr *ngIf="loading" [ngClass]="{'hideMsg':false}">
-                      <td class="tbl-checkbox">
+                      <td >
                         <app-sceleton-load [type]="1" [height]="20" [width]="25" [border]="20"></app-sceleton-load>
                       </td>
                       <td class="hidden-xs">
@@ -194,19 +194,19 @@
                     <tr
                       [ngClass]="{'hideMsg':chosenLabel!=mail.label&&chosenLabel!=-1,'unoppened':!mail.tags.includes('oppened')&&mail.tags.includes('inbox')}"
                       *ngFor="let mail of filteredMail.slice().reverse() ; index as i" class="unread pointer">
-                      <td class="tbl-checkbox">
-                        <label class="form-check-label">
+                      <td class="flex-centerr"  >
+                        <label  class="form-check-label">
                           <input type="checkbox" [(ngModel)]="selected[i]" (ngModelChange)="test($event,mail.id)">
                           <span class="form-check-sign"></span>
                         </label>
                       </td>
-                      <td (click)="openMsg(i)" class="hidden-xs">
-                        <i *ngIf="slectedFilter!=4" (click)="ToggleStar(mail.id,false) ;$event.stopPropagation()"
+                      <td  (click)="openMsg(i)" class="hidden-xs">
+                        <i  (click)="ToggleStar(mail.id,false) ;$event.stopPropagation()"
                           class="material-icons no-pointer"
                           [ngClass]="{'text-warning':mail.tags.includes('starred')}">{{mail.tags.includes("starred")?'star':'star_border'}}</i>
                       </td>
-                      <td (click)="openMsg(i)" class="hidden-xs">{{mail.fromTo.username}}</td>
-                      <td (click)="openMsg(i)" class="max-texts">
+                      <td  (click)="openMsg(i)" class="hidden-xs">{{mail.fromTo.username}}</td>
+                      <td  (click)="openMsg(i)" class="max-texts">
                         <a>
                           <!--<span class="badge badge-primary">Work</span>-->
                           <span *ngIf="mail.label!=-1" class="badge mr-2 {{labels[mail.label].bgColor}}">
@@ -218,12 +218,27 @@
 
                         </a>
                       </td>
-                      <td (click)="openMsg(i)" class="hidden-xs">
+                      <td  (click)="openMsg(i)" class="hidden-xs">
                         <i class="material-icons">attach_file</i>
                       </td>
-                      <td (click)="openMsg(i)" class="text-right">{{datepipe.transform(mail.date, 'dd-MMM HH:mm')}}</td>
+                      <td  (click)="openMsg(i)" class="text-right">{{datepipe.transform(mail.date, 'dd-MMM HH:mm')}}</td>
                     </tr>
+                    <tr class="hiddentr">
+                      <td >
+                      </td>
+                      <td class="hidden-xs">
+                      </td>
+                      <td class="hidden-xs">
+                      </td>
+                      <td class="max-texts">
+                        temp temp temp temp temp temp temp temp temp temp 
+                      </td>
+                      <td class="hidden-xs">
 
+                      </td>
+                      <td class="text-right">
+                      </td>
+                    </tr>
 
                   </tbody>
                 </table>
@@ -244,7 +259,7 @@
                   <thead>
                     <tr>
                       
-                      <th  class="flex-centerr" style=" position: absolute; background-color: rgba(0, 0, 0, 0);">
+                      <th    class="flex-centerr" style=" position: absolute; background-color: rgba(0, 0, 0, 0);">
                         <div class="inbox-header">
                           <div (click)="backfromCompose()" class="iconBtn flex-centerr">
                             <div class="iconBtnBack flex-centerr">
@@ -255,7 +270,7 @@
                           </div>
                         </div>
                       </th>
-                      <th class="flex-centerr" ><span style="overflow: hidden;" >Compose New Message</span>
+                      <th   class="flex-centerr" ><span style="overflow: hidden;" >Compose New Message</span>
 
                       </th>
                     </tr>
