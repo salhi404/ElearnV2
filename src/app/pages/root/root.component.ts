@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy, ElementRef, ViewChild } from '@angular/core';
 import { EventsService } from 'src/app/services/events.service';
 import { StorageService } from 'src/app/_services/storage.service';
 import { AuthService } from '../../_services/auth.service';
@@ -14,6 +14,7 @@ import { SocketioService } from 'src/app/services/socketio.service';
   styleUrls: ['./root.component.scss']
 })
 export class RootComponent implements OnInit, OnDestroy {
+  elementfooterHeight:number=0;
   currentRoute:number = 0;
   interfaceLayout:boolean = false;
   unoppenedchatCount: number=0;
@@ -64,7 +65,8 @@ export class RootComponent implements OnInit, OnDestroy {
 
     });
   }
-  
+  width:number=0;
+  height:number=0;
   unoppenedMail: Mail[] = [];
   unoppenedMailCount: number = 0;
   showSettingPanel: boolean = false
@@ -81,7 +83,6 @@ export class RootComponent implements OnInit, OnDestroy {
   state: any = { user: this.user, islogged: false, remember: true };
   userSent: boolean = false;
   ngOnInit(): void {
-    //this.storageService.clearUser();
     this.onWindowResize();
     this.isLoggedIn = this.storageService.isLoggedIn();
     if (this.isLoggedIn) {
@@ -141,7 +142,7 @@ export class RootComponent implements OnInit, OnDestroy {
     })
 
   }
-  getMailUpdate() {
+  /*getMailUpdate() {
     this.authService.getMailUpdate().subscribe({
       next: mailUpdate => {
         console.log(mailUpdate.code);
@@ -161,7 +162,7 @@ export class RootComponent implements OnInit, OnDestroy {
 
       }
     })
-  }
+  }*/
   getnoppenedMail() {
     this.authService.getUnoppenedMail().subscribe({
       next: data => {
@@ -260,6 +261,8 @@ export class RootComponent implements OnInit, OnDestroy {
   }
   @HostListener('window:resize', ['$event'])
   onWindowResize() {
+    this.width=window.innerWidth;
+    this.height=window.innerHeight;
     if (window.innerWidth <= 1024) this.isTabletMode = true;
     else this.isTabletMode = false;
   }

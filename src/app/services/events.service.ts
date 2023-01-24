@@ -14,8 +14,8 @@ export class EventsService {
   currentchatEvent = this.chatEvent.asObservable();
   public loggingEvent = new BehaviorSubject(-1);
   loggingStatusEvent = this.loggingEvent.asObservable();
-  public updatesEvent = new BehaviorSubject(-1);
-  updatestatusEvent = this.updatesEvent.asObservable();
+  public infoEvent = new BehaviorSubject({});
+ infostatusEvent = this.infoEvent.asObservable();
   constructor() { }
   chngLayoutEvent(state: number) {
     this.layoutEvent.next(state)
@@ -26,7 +26,7 @@ export class EventsService {
   changeLoggingState(state: number) {
     this.loggingEvent.next(state)
   }
-  changeUpdateState(state: number) {
-    this.updatesEvent.next(state)
+  changeInfoState(state: any) {
+    this.infoEvent.next(state);
   }
 }
