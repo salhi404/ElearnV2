@@ -1,6 +1,10 @@
-<div class="navbar-bg"></div>
 <nav [ngClass]="{'interfaceLayout':interfaceLayout}"  class="navbar navbar-expand-lg main-navbar fixed absolute">
   <div class="form-inline mr-auto">
+    <div class="navBrand">
+        <img alt="image" src="assets/img/logo.png" class="" /> 
+        <span  class="logo-name">E-learn</span>
+    </div>
+
     <ul class="navbar-nav mr-3">
       <li *ngIf="!interfaceLayout">
         <a (click)="toggeleSideBarMini()" class="nav-link  collapse-btn pointer sidebar-toggle-1"> 
@@ -35,7 +39,7 @@
     <app-msg-dd   [mailCount]="mailCount" [mails]="mails" *ngIf="logged" ></app-msg-dd>
     <app-ntf-dd   *ngIf="logged" ></app-ntf-dd>
     <app-user-dd  *ngIf="logged" [username]="user.username" ></app-user-dd>
-    <a [ngClass]="{'authBtn joinBtn':interfaceLayout}" routerLink="/login" class="btn btn-icon icon-left btn-warning " *ngIf="!logged&&interfaceLayout" >
+    <a [ngClass]="{'authBtn joinBtn':interfaceLayout}" routerLink="/signup" class="btn btn-icon icon-left btn-warning " *ngIf="!logged&&interfaceLayout" >
       <span>join</span>
     </a>
     <a [ngClass]="{'authBtn loginBtn':interfaceLayout}" routerLink="/login" class="btn btn-icon icon-left btn-outline-primary " *ngIf="!logged" >

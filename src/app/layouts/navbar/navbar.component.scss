@@ -35,6 +35,7 @@
     left: 0px !important;
     transition: 0s;
     box-shadow:none!important;
+    top: 0;
     height: 100px;
   }
   .authBtn{
@@ -42,13 +43,36 @@
     margin-right: 5px;
     
   }
-  .authBtn i{
-    font-size: 16px;
-  }
   .authBtn span{
     font-size: 20px;
-    margin-left: 5px;
   }
   .joinBtn{
     margin-right: 15px;
   }
+  .navBrand {
+    margin-left: 20px;
+    display: flex;
+    align-items: flex-end;
+  }
+  .navBrand img{
+    width: 50px;
+    height: 50px;
+  }
+  .navBrand span {
+    color: rgb(71, 71, 71);
+    margin-left: 10px;
+    font-size: 26px;
+    font-weight: 600;
+  }
+  @media (max-width: 575.98px) {
+    .navBrand{
+      margin-left: 5px;
+    }
+    .authBtn{
+      padding: 8px 15px;
+      margin-right: 5px;
+    }
+    .authBtn span{
+      font-size: 15px;
+    }
+}

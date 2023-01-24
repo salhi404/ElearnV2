@@ -1,10 +1,35 @@
+.interfaceWraper{
+    background: white !important;
+}
+
 .topSection{
-    background-image: url("../../../assets/img/topImg12.svg");
+    background-image: url("../../../assets/img/topImg13.svg");
     background-size:cover;
     background-repeat:no-repeat;
-    background-position:center center;
-    height: 1024px;
+    background-position:center;
+    height: 600px;
+    display: flex;
+    padding: 20px;
+    align-items: center;
 }
-@media (max-width: 1024px) {
+@media (max-width: 575.98px) {
+    .topSection{
+        background-image: url("../../../assets/img/topImg14.svg");
+        padding: 5px;
+    }
+}
+.authBtn{
+    padding: 12px 28px;
+    margin-right: 5px;
+    
+  }
+  .authBtn i{
+    font-size: 16px;
+  }
+  .authBtn span{
+    font-size: 20px;
+    margin-left: 5px;
+  }
 
-}
+/*.topSectionText{
+}*/
