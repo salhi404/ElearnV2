@@ -4,25 +4,11 @@
 @import 'material-icons/iconfont/material-icons.css';
 
 
-/*.search-element {
-     background-color:rgba(227, 237, 252, 0.568)!important;
-     border:1px solid rgba(227, 237, 252, 0.568)!important;
-     border-radius: 4px;
-     
- }*/
- .theme-black .search-element input,.theme-black .search-element .btn{
-     background-color:unset!important;
- }
- .theme-black .search-element {
-    background-color:unset!important;
-    
-}
+
 .theme-black .sidebar-brand .logo-name{
     color: #a9b7d0;
 }
-.search-element input,.search-element .btn{
-    background-color:rgba(255, 255, 255, 0)!important;
-}
+
 .chosenLabel {
     background-color: #e6e6e6
 }
@@ -22514,7 +22500,8 @@ h6 .badge {
 }
 
 .navbar .form-inline .search-element .form-control {
-    border-radius: 5px 0 0 5px
+    border-radius: 5px 0 0 5px;
+    padding-right: 5px;
 }
 
 .navbar .form-inline .search-element .btn {
@@ -22728,7 +22715,7 @@ h6 .badge {
     .navbar .form-inline .search-element .form-control {
         float: left;
         border-radius: 3px 0 0 3px;
-        width: calc(100% - 43px) !important
+        width: calc(100% - 43px) !important;
     }
 
     .navbar .form-inline .search-element .btn {

@@ -368,8 +368,8 @@
                       </a>
                       <div class="media-body">
                         <span class="date pull-right">{{datepipe.transform(openedMail.date, 'HH:mm dd/MM/yyyy')}}</span>
-                        <h5 class="text-primary">{{openedMail.isSent?user.username:openedMail.fromTo.username}}</h5>
-                        <small class="text-muted">From: {{openedMail.isSent?user.email:openedMail.fromTo.email}}</small>
+                        <h5>{{openedMail.isSent?user.username:openedMail.fromTo.username}}</h5>
+                        <small class="">From: {{openedMail.isSent?user.email:openedMail.fromTo.email}}</small>
                       </div>
                     </div>
                   </div>
