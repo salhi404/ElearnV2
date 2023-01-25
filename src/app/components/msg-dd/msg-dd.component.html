@@ -11,7 +11,7 @@
         </div>-->
     </div>
     <div class="dropdown-list-content dropdown-list-message">
-      <a *ngFor="let mail of mails;index as i" class="dropdown-item">
+      <a (click)="open(i)" *ngFor="let mail of mails;index as i" class="dropdown-item">
         <span class="dropdown-item-avatar text-white">
           <img alt="image" src="assets/img/users/user-{{(i%5)+1}}.png" class="rounded-circle">
         </span>
@@ -25,7 +25,7 @@
       </a>
     </div>
     <div class="dropdown-footer text-center">
-      <a href="#">View All <i class="fas fa-chevron-right"></i></a>
+      <a class="pointer col-blue" > <span >View All </span><i style=" padding: 7px 0; " class="fas fa-chevron-right"></i></a>
     </div>
   </div>
 </li>

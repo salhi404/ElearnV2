@@ -7,6 +7,7 @@ import { EventsService } from 'src/app/services/events.service';
 import {  Router, NavigationExtras } from '@angular/router';
 import { User, UserPublic } from 'src/app/Interfaces/user';
 import { Subscription } from 'rxjs';
+
   interface  Mod{
   mail:string
   modType:number
@@ -18,14 +19,16 @@ import { Subscription } from 'rxjs';
 })
 export class EmailComponent implements OnInit,OnDestroy {
   labels:any[]=[{name:"Family",color:'col-red',bgColor:"badge-danger"},{name:"Work",color:'col-blue',bgColor:"badge-primary"},{name:"Shop",color:'col-orange',bgColor:"badge-orange"}
-                  ,{name:"Themeforest",color:'col-cyan',bgColor:"badge-cyan"},{name:"Google",color:'col-blue-grey',bgColor:"badge-blue-grey"}];
+,{name:"Themeforest",color:'col-cyan',bgColor:"badge-cyan"},{name:"Google",color:'col-blue-grey',bgColor:"badge-blue-grey"}];
   user:User=null as any;
+  markedAsOppen:Mail=null as any;
   reciepients:UserPublic[]=[];
   nmbrOfShowingMsgs:number=0;
   chosenLabel:number=-1;
   replacedBody:string[]=[];
   localSynced=false;
   navigationExtras: NavigationExtras = { state: null as any };
+  state: { openMail: boolean,  mail: Mail} = {openMail:false,mail:null as any};
   slectedFilter:number=1
   openedWindow:number=1;
   openedMail:Mail=null as any;
@@ -55,23 +58,63 @@ export class EmailComponent implements OnInit,OnDestroy {
     label:-1,
   };
   subscription: Subscription = new Subscription;
+  subscription1: Subscription = new Subscription;
   constructor(
     private router: Router,
     private authService: AuthService,
     private storageService: StorageService,
     private events:EventsService,
-  ) { }
+  ) { 
+    const navigation = this.router.getCurrentNavigation();
+    this.state = { openMail: false, mail: null as any };
+    if (navigation) {
+      if (navigation.extras.state) {
+        this.state = navigation.extras.state as {
+          openMail: boolean,
+          mail: Mail
+        };
+      }
+    }
+
+  }
   ngOnInit(): void {
+    console.log("state");
+    console.log(this.state);
+    if(this.state.openMail){
+      this.openWindow(3);
+      this.openedMail=this.state.mail;
+      this.markedAsOppen=this.openedMail;
+      console.log("markedAsOppen1");
+      console.log(this.markedAsOppen);
+      this.replacedBody=this.openedMail.body.split(/(\r\n|\r|\n)/g);
+      this.replacedBody.forEach;
+    }
+    this.subscription1=this.events.taskEvent.subscribe(state=>{
+      if(state.task==this.events.TASKOPENMAIL){
+        this.openWindow(3);
+        this.openedMail=state.data.mail;
+        this.markedAsOppen=this.openedMail;
+        if(this.markedAsOppen)this.markAsOppen(this.recievedMail.find(e=>e.id==this.markedAsOppen.id))
+        console.log("markedAsOppen2");
+        console.log(this.markedAsOppen);
+        this.replacedBody=this.openedMail.body.split(/(\r\n|\r|\n)/g);
+        this.replacedBody.forEach;
+      }
+
+    })
     this.isLoggedIn = this.storageService.isLoggedIn();
     if (this.isLoggedIn) {
-      this.getMail();
       this.user=this.storageService.getUser() ;
+      this.getMail();
+      
      /* this.subscription=this.events.updatestatusEvent.subscribe(state=>{
         //console.log("state"+state);
         if(state!=-1)this.refresh();
         
       });*/
+      
     }else{
+      
       this.navigationExtras={ state: {errorNbr:403}  };
       this.router.navigate(['/error'],this.navigationExtras);
     }
@@ -278,8 +321,8 @@ export class EmailComponent implements OnInit,OnDestroy {
     this.modifiedMail=[];
     this.storageService.clearModMail();
   }
-  chooseFilter(filter:number):void{
-    this.openWindow(1);
+  chooseFilter(filter:number,window:number):void{
+    this.openWindow(window);
     this.slectedFilter=filter;
     this.toggleSelectAll(false);
     this.selectAll=false;
@@ -369,7 +412,8 @@ export class EmailComponent implements OnInit,OnDestroy {
         this.synclocal();
         this.sync();
         this.resectionMail();
-        this.chooseFilter(this.slectedFilter);
+        this.chooseFilter(this.slectedFilter,this.openedWindow);
+        if(this.markedAsOppen)this.markAsOppen(this.recievedMail.find(e=>e.id==this.markedAsOppen.id))
         this.loading=false;
       },
       
@@ -378,6 +422,25 @@ export class EmailComponent implements OnInit,OnDestroy {
         console.log(err.error.message);
       }
     });
+  }
+  markAsOppen(mail:Mail|undefined)
+  {
+    console.log("mail");
+    console.log(mail);
+    
+    
+    if(typeof(mail)!="undefined"){
+      if(!mail.tags.includes("oppened")){
+        console.log("mak as oppened");
+        console.log(mail);
+        mail.tags.push("oppened");
+        this.modifiedMail.push({mail:mail.id,modType:3});
+        this.storageService.saveModMail(this.modifiedMail);
+        this.sync();//tempppp
+        this.markedAsOppen=null as any;
+      }
+    }
+    
   }
   resectionMail(){
     this.SentMail=[];
@@ -453,11 +516,7 @@ export class EmailComponent implements OnInit,OnDestroy {
   openMsg(ind:number){
     this.openWindow(3);
     this.openedMail=this.filteredMail[this.filteredMail.length-ind-1];
-    if(!this.openedMail.tags.includes("oppened")){
-      this.openedMail.tags.push("oppened");
-      this.modifiedMail.push({mail:this.openedMail.id,modType:3});
-      this.storageService.saveModMail(this.modifiedMail);
-    }
+    this.markAsOppen(this.openedMail);
     this.replacedBody=this.openedMail.body.split(/(\r\n|\r|\n)/g);
     this.replacedBody.forEach
   }
@@ -474,6 +533,15 @@ export class EmailComponent implements OnInit,OnDestroy {
   snedTo(email:string){
     this.form.email=email;
     this.openWindow(2);
+  }
+  discard(){
+    this.form = {
+      email: null,
+      subject: null,
+      body:null,
+      label:-1,
+    };
+    this.chooseFilter(1,1);
   }
   test(event:any,id:string){
     /*console.log("id");

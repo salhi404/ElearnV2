@@ -16,20 +16,20 @@
 
                 <ul class="" id="mail-folders">
                   <li [ngClass]="{'active':slectedFilter==1}">
-                    <a class=" pointer " (click)="chooseFilter(1)" title="Inbox">Inbox ({{InboxdMail.length}})
+                    <a class=" pointer " (click)="chooseFilter(1,1)" title="Inbox">Inbox ({{InboxdMail.length}})
                     </a>
                   </li>
                   <li [ngClass]="{'active':slectedFilter==2}">
-                    <a class=" pointer text-left" (click)="chooseFilter(2)">Sent</a>
+                    <a class=" pointer text-left" (click)="chooseFilter(2,1)">Sent</a>
                   </li>
                   <li [ngClass]="{'active':slectedFilter==3}">
-                    <a class=" pointer text-left" (click)="chooseFilter(3)">Draft</a>
+                    <a class=" pointer text-left" (click)="chooseFilter(3,1)">Draft</a>
                   </li>
                   <li [ngClass]="{'active':slectedFilter==4}">
-                    <a class=" pointer text-left" (click)="chooseFilter(4)">Bin</a>
+                    <a class=" pointer text-left" (click)="chooseFilter(4,1)">Bin</a>
                   </li>
                   <li [ngClass]="{'active':slectedFilter==5}">
-                    <a class=" pointer text-left" (click)="chooseFilter(5)">Starred</a>
+                    <a class=" pointer text-left" (click)="chooseFilter(5,1)">Starred</a>
                   </li>
                 </ul>
                 <h5 class="b-b p-10 text-strong">Labels</h5>
@@ -325,7 +325,7 @@
                       <span style="font-family: monospace;" *ngIf="!sending&&!ShowSeccesfull">Send</span>
                       <app-spinner *ngIf="sending" [type]="8" [height]="5" [width]="5" [size]="3"></app-spinner>
                     </button>
-                    <a (click)="chooseFilter(1)"
+                    <a (click)="discard()"
                       class="btn btn-danger btn-border-radius waves-effect DiscardBtn ">Discard</a>
 
                     <div class="invalid-feedback" *ngIf="isSentError">

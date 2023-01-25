@@ -6,3 +6,17 @@
     position: absolute;
     
 }
+
+.dropdown-footer:hover {
+    background-color: rgba(207, 207, 207, 0.329);
+}
+.dropdown-footer a:hover {
+    background-color: unset;
+}
+.dropdown-item-avatar img{
+    height: unset;
+}
+.dropdown-item{
+    cursor: pointer;
+    height: 50px;
+}

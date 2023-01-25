@@ -182,7 +182,9 @@ export class RootComponent implements OnInit, OnDestroy {
   getnoppenedMail() {
     this.authService.getUnoppenedMail().subscribe({
       next: data => {
-        if (data.mails) this.unoppenedMail = data.mails;
+        if (data.mails){
+          this.unoppenedMail = data.mails.map((e:any)=>{e['id']=e['_id'];delete e['_id'];return e });
+        }
         if (data.count){ 
           this.unoppenedMailCount = data.count;
           var info=this.events.infoEvent.getValue();
