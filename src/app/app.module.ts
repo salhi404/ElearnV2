@@ -25,6 +25,7 @@ import { ChatComponent } from './pages/chat/chat.component';
 import { InterfaceComponent } from './pages/interface/interface.component';
 import { CalendarComponent } from './pages/calendar/calendar.component';
 import { NotificationsComponent } from './pages/notifications/notifications.component';
+import { FullCalendarModule } from '@fullcalendar/angular';
 @NgModule({
   declarations: [
     AppComponent,
@@ -50,6 +51,7 @@ import { NotificationsComponent } from './pages/notifications/notifications.comp
     NotificationsComponent,
   ],
   imports: [
+    FullCalendarModule,
     ReactiveFormsModule,
     HttpClientModule,
     FormsModule,
