@@ -4,6 +4,35 @@
 @import 'material-icons/iconfont/material-icons.css';
 
 
+#calendar > div.fc-view-harness.fc-view-harness-active > div > table > thead > tr > th > div > div{
+    overflow: hidden!important;
+}
+.theme-black #calendar > div.fc-view-harness.fc-view-harness-active > div > table > thead > tr > th *{
+    color: white!important;
+}
+#calendar > div.fc-view-harness.fc-view-harness-active > div > table > tbody > tr:nth-child(1) > td > div > div{
+    overflow: hidden!important;
+}
+#calendar > div.fc-view-harness.fc-view-harness-active > div > table > tbody > tr.fc-scrollgrid-section.fc-scrollgrid-section-body.fc-scrollgrid-section-liquid > td > div > div::-webkit-scrollbar {
+    width:.7em;
+  }
+  
+  /* Track */
+  #calendar > div.fc-view-harness.fc-view-harness-active > div > table > tbody > tr.fc-scrollgrid-section.fc-scrollgrid-section-body.fc-scrollgrid-section-liquid > td > div > div::-webkit-scrollbar-track {
+    background: rgba(192, 192, 192,0.7);
+  }
+  
+  /* Handle */
+  #calendar > div.fc-view-harness.fc-view-harness-active > div > table > tbody > tr.fc-scrollgrid-section.fc-scrollgrid-section-body.fc-scrollgrid-section-liquid > td > div > div::-webkit-scrollbar-thumb {
+    background: rgba(88, 88, 88, 0.664);
+    border-radius: .5em ;
+  }
+  
+  /* Handle on hover */
+  #calendar > div.fc-view-harness.fc-view-harness-active > div > table > tbody > tr.fc-scrollgrid-section.fc-scrollgrid-section-body.fc-scrollgrid-section-liquid > td > div > div::-webkit-scrollbar-thumb:hover {
+    background: rgba(97, 97, 97,0.8);
+  }
+
 
 .theme-black .sidebar-brand .logo-name{
     color: #a9b7d0;
@@ -34,13 +63,6 @@
     height: 30px;
     width: 25px;
 }
-
-
-
-
-
-
-
 
 
 
@@ -29870,7 +29892,7 @@ body.layout-3 .main-footer {
 .chat-box .chat-content {
     background-color: #f9f9f9 !important;
     height: 450px;
-    overflow: scroll;
+    overflow-y: scroll;
     padding-top: 25px !important
 }
 

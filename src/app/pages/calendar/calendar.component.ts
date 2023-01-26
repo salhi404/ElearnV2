@@ -13,8 +13,8 @@ import { DateClickArg } from '@fullcalendar/interaction';
 })
 export class CalendarComponent implements OnInit {
   events:EventSourceInput=[
-    { title: 'event 1', date: '2023-01-01', },
-    { title: 'event 2', date: new Date() ,slotDuration: '02:00'}
+    /*{ title: 'event 1', date: '2023-01-01', },
+    { title: 'event 2', start: new Date() , end:'2023-01-30',color:'red'}*/
   ]
   event:EventInput={};
   calendarOptions: CalendarOptions = {
@@ -29,7 +29,7 @@ export class CalendarComponent implements OnInit {
     plugins: [dayGridPlugin,interactionPlugin,timeGridPlugin],
     headerToolbar:  {
       start: 'title', // will normally be on the left. if RTL, will be on the right
-      center: 'dayGridMonth timeGridWeek',
+      center: 'dayGridMonth timeGridWeek timeGridDay',
       end: 'today prev,next' // will normally be on the right. if RTL, will be on the left
     }
   };

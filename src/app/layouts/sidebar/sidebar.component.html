@@ -16,12 +16,12 @@
             <i-feather class="fsideIcons" name="monitor"></i-feather>
             <span>Home</span></a>
         </li>
-        <li [ngClass]="{'active2':router.url==='/email' }" class="dropdown">
+        <li [ngClass]="{'active2':router.url==='/email' }">
           <a (click)="toggleSideBarShow(false)" routerLink="/email" class="nav-link pointer">
             <i-feather class="fsideIcons" name="mail"></i-feather>
             <span>Email</span></a>
         </li>
-        <li [ngClass]="{'active2':router.url==='/chat' }" class="dropdown">
+        <li [ngClass]="{'active2':router.url==='/chat' }">
           <a (click)="toggleSideBarShow(false)" routerLink="/chat" class="nav-link pointer">
             <i-feather class="fsideIcons" name="message-circle"></i-feather> 
             <div *ngIf="unoppenedchatCount>0" class="badge badge-success badgesideBar " style="display: unset;"> {{unoppenedchatCount}}</div>
@@ -29,14 +29,13 @@
            
           </a>
         </li>
-        <li class="dropdown">
-          <a href="#" class="menu-toggle nav-link has-dropdown"><i-feather class="fsideIcons" name="Command"></i-feather><span>Apps</span></a>
-          <ul class="dropdown-menu">
-            <li><a class="nav-link" href="chat.html">Chat</a></li>
-            <li><a class="nav-link" href="portfolio.html">Portfolio</a></li>
-            <li><a class="nav-link" href="blog.html">Blog</a></li>
-            <li><a class="nav-link" href="calendar.html">Calendar</a></li>
-          </ul>
+        <li [ngClass]="{'active2':router.url==='/calendar' }">
+          <a (click)="toggleSideBarShow(false)" routerLink="/calendar" class="nav-link pointer">
+            <i-feather class="fsideIcons" name="calendar"></i-feather> 
+            <div *ngIf="unoppenedchatCount>0" class="badge badge-success badgesideBar " style="display: unset;"> {{unoppenedchatCount}}</div>
+            <span>calendar</span>
+           
+          </a>
         </li>
         
         <li class="menu-header">UI Elements</li>
