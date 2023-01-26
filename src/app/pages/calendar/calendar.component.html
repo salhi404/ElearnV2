@@ -2,11 +2,24 @@
     <section class="section">
         <div class="section-body ">
             <div class="card card-primary">
-                <div class="card-body">
-                    <full-calendar id="calendar" [options]="calendarOptions"></full-calendar>
+                <div class="card-header">
+                    <h4>{{calendarTitle}}</h4>
+                    
+                    <div class="card-header-action2">
+                        <a (click)="addevent()" class="btn btn-primary">add Event</a>
+                        <a (click)="nextView()" class="btn btn-primary">View : {{viewType==0?'Month':viewType==1?'Week':'Day'}}</a>
+                        <div class="btn-group">
+                            <a (click)="navigate(1)"  class="btn btn-primary">&lt;</a>
+                            <a (click)="navigate(-1)"class="btn btn-primary">Today</a>
+                            <a (click)="navigate(2)"class="btn btn-primary">&gt;</a>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            
+                <div class="card-body">
+                    <full-calendar id="calendar" [options]="calendarOptions" #calendar></full-calendar>
+                </div>
+            </div>
+
         </div>
     </section>
 </div>
