@@ -1,25 +1,62 @@
 <div class="main-content">
-    <section class="section">
-        <div class="section-body ">
-            <div class="card card-primary">
-                <div class="card-header">
-                    <h4>{{calendarTitle}}</h4>
-                    
-                    <div class="card-header-action2">
-                        <a (click)="addevent()" class="btn btn-primary">add Event</a>
-                        <a (click)="nextView()" class="btn btn-primary">View : {{viewType==0?'Month':viewType==1?'Week':'Day'}}</a>
-                        <div class="btn-group">
-                            <a (click)="navigate(1)"  class="btn btn-primary">&lt;</a>
-                            <a (click)="navigate(-1)"class="btn btn-primary">Today</a>
-                            <a (click)="navigate(2)"class="btn btn-primary">&gt;</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <full-calendar id="calendar" [options]="calendarOptions" #calendar></full-calendar>
-                </div>
-            </div>
+	<section class="section">
+		<div class="section-body ">
+			<div class="card card-primary">
+				<div class="card-header">
+					<h4>{{calendarTitle}}</h4>
 
-        </div>
-    </section>
+					<div class="card-header-action2">
+						<a (click)="addevent()" class="btn btn-primary">add Event</a>
+						<a (click)="nextView()" class="btn btn-primary">View :
+							{{viewType==0?'Month':viewType==1?'Week':'Day'}}</a>
+						<div class="btn-group">
+							<a (click)="navigate(1)" class="btn btn-primary">&lt;</a>
+							<a (click)="navigate(-1)" class="btn btn-primary">Today</a>
+							<a (click)="navigate(2)" class="btn btn-primary">&gt;</a>
+						</div>
+					</div>
+				</div>
+				<div class="card-body">
+					<full-calendar id="calendar" [options]="calendarOptions" #calendar></full-calendar>
+				</div>
+			</div>
+
+
+
+
+		</div>
+	</section>
+</div>
+<div [ngClass]="{'showModal':modelShowen,'fadeModel':fadeModel}" class="modal" id="modal">
+	<div class="modal-dialog " role="document" #modalDialog>
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="formModal">ADD Event</h5>
+				<button type="button" class="close" (click)="closeModel()">
+					<span>&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form class="">
+					<div class="form-group mb-2">
+						<label class="mb-1">Event : </label>
+						<input name="event" [(ngModel)]="form.event" type="text" class="form-control" placeholder="My Event">
+					</div>
+					<div class="form-group mb-2">
+						<label class="mb-1">From : </label>
+						<input name="startDate" [(ngModel)]="form.startDate" type="date" class="form-control">
+						<input name="startTime" [(ngModel)]="form.startTime" type="time" class="form-control">
+					</div>
+					<div class="form-group mb-1">
+						<label class="mb-1" >To : </label>
+						<input name="endDate" [(ngModel)]="form.endDate" type="date" class="form-control">
+						<input name="endTime" [(ngModel)]="form.endTime" type="time" class="form-control">
+					</div> 
+					<div class="d-flex align-items-center justify-content-center">
+						<button (click)="submitModal()" type="button" class="btn btn-primary m-t-15 waves-effect ">Submit</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 </div>
