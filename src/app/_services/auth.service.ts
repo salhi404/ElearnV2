@@ -13,6 +13,7 @@ import { Pref } from '../Interfaces/user';
 const URL_API = 'https://starter-express-api-production-816a.up.railway.app/';
 const AUTH_API = URL_API+'api/auth/';
 const DATA_API = URL_API+'api/data/';
+const USERDATA_API = URL_API+'api/userdata/';
 const INFO_API = URL_API+'api/info/';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -79,6 +80,14 @@ export class AuthService {
   sendPref(pref:Pref):Observable<any>{
     const token = this.storageService.getTokent();
     return this.http.post(DATA_API + 'sendPref', {pref,token}, httpOptions);
+  }
+  addEvent(event:any):Observable<any>{
+    const token = this.storageService.getTokent();
+    return this.http.post(USERDATA_API + 'addevent', {event,token}, httpOptions);
+  }
+  getEvents():Observable<any>{
+    const token = this.storageService.getTokent();
+    return this.http.post(USERDATA_API + 'getevents', {token}, httpOptions);
   }
   getMail():Observable<any>{
     const token = this.storageService.getTokent();

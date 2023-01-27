@@ -3,11 +3,10 @@ import { Calendar, CalendarOptions, DateSelectArg, EventInput, EventSourceInput 
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from "@fullcalendar/interaction"
-
 import { DateClickArg } from '@fullcalendar/interaction';
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import { DatePipe } from '@angular/common';
-
+import { AuthService } from '../../_services/auth.service';
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
@@ -31,6 +30,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   datepipe: DatePipe = new DatePipe('en-US');
   modelShowen:boolean=false;
   calendarTitle = "";
+  dateselected:boolean=false;
+  dateselectedhelper:boolean=false;
   fadeModel=false;
   viewType: number = 0;
   datSelectionArg:DateSelectArg=null as any;
@@ -39,19 +40,35 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     initialView: 'dayGridMonth',
     dateClick: this.handleDateClick, // MUST ensure `this` context is maintained
     events: this.events,
+    locale: 'en-GB',
+    eventTimeFormat: { // like '14:30:00'
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    },
     selectable: true,
     select:(arg)=>{
-      this.datSelectionArg=arg;
-      console.log("select");
-    },
-    unselect:()=>{
+      setTimeout(() => {
+        this.dateselected=true;
+        this.dateselectedhelper=true;
+        this.datSelectionArg=arg;
+        console.log("select");
+      }, 200);
+    }
+    ,
+    unselect:(arg)=>{
+      setTimeout(() => {
+        this.dateselected= this.dateselectedhelper;
+      }, 300);
       setTimeout(() => {
         this.datSelectionArg=null as any;
+        this.dateselectedhelper=false;
         console.log("unselect");
-      }, 200);      
+        console.log(arg);
+      }, 100);      
     },
     plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin],
-    headerToolbar: false
+    headerToolbar: false,
     /*{
       start: 'title', // will normally be on the left. if RTL, will be on the right
       center: 'dayGridMonth timeGridWeek timeGridDay',
@@ -62,7 +79,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   handleDateClick(args: DateClickArg) { 
 
   }
-  constructor(private cdr: ChangeDetectorRef) { }
+  constructor(private cdr: ChangeDetectorRef,private authService: AuthService) { }
   test() {
     console.log(this.calendarApi.view.title);
   }
@@ -76,6 +93,21 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.calendarApi = this.calendarElement.getApi();
     this.calendarTitle = this.calendarApi.view.title;
     this.cdr.detectChanges();
+    this.authService.getEvents().subscribe({
+      next:data=>{
+        console.log('data');
+        console.log(data.data);
+        data.data.forEach((element:any) => {
+        this.calendarApi.addEvent(this.parsEvent(element));
+        console.log(this.parsEvent(element));
+        
+        });
+      },
+      error:err=>{
+        console.log('err');
+        console.log(err);
+      }
+    });
   }
   navigate(opt: number) {
     switch (opt) {
@@ -118,8 +150,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       this.form.startDate=this.datepipe.transform(args.start,'yyyy-MM-dd')||'';
       this.form.endDate=this.datepipe.transform(args.end,'yyyy-MM-dd')||'';
       if(!args.allDay){
-        this.form.startTime=this.datepipe.transform(args.start,'hh:mm')||'';
-        this.form.endTime=this.datepipe.transform(args.end,'hh:mm')||'';
+        this.form.startTime=this.datepipe.transform(args.start,'HH:mm')||'';
+        this.form.endTime=this.datepipe.transform(args.end,'HH:mm')||'';
       }
 
       this.showModel();
@@ -145,13 +177,34 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   submitModal(){
     if(this.form.event==='')this.form.event="My Event";
     console.log(this.form);
-    const start:Date=new Date(this.form.startDate+'T'+(this.form.startTime!==''?this.form.startTime:'00:00'));
-    const end:Date=new Date(this.form.endDate+'T'+(this.form.endTime!==''?this.form.endTime:'00:00'));
-    const event:EventInput={ title: this.form.event,start:start,end:end,allDay:(this.form.startTime==''&&this.form.endTime=='') }
-    this.calendarApi.addEvent(event);
+    if(this.form.startDate=='')this.form.startTime=='';
+    if(this.form.endDate=='')this.form.endTime=='';
+    if(this.form.startDate===''&&this.form.endDate===''){
+      console.log("no date was provided");
+    }else{
+      if(this.form.startDate===''&&this.form.endDate!==''){
+        this.form.startDate=this.form.endDate;
+      }
+      const start:Date=new Date(this.form.startDate+'T'+(this.form.startTime!==''?this.form.startTime:'00:00'));
+      const end:Date=new Date(this.form.endDate+'T'+(this.form.endTime!==''?this.form.endTime:'00:00'));
+      const event:EventInput={ title: this.form.event,start:start,end:end,allDay:(this.form.startTime==''&&this.form.endTime=='') }
+      this.calendarApi.addEvent(this.parsEvent(event));
+      this.authService.addEvent(event).subscribe({
+        next:data=>{
+          console.log('data');
+          console.log(data);
+        },
+        error:err=>{
+          console.log('err');
+          console.log(err);
+        }
+      });
+      console.log("event");
+      console.log(event);
+    }
+    
     this.closeModel();
-    console.log("event");
-    console.log(event);
+
     
   }
   @HostListener('document:click', ['$event'])
@@ -159,5 +212,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     if(!this.modalDialog.nativeElement.contains(event.target)&&!this.blockHostListener){
       this.closeModel();
     }
+  }
+  parsEvent(data:any):EventInput{
+    return { title:data.title,start:data.start,end:data.end,allDay:data.allDay}
   }
 }
