@@ -32,9 +32,7 @@
         <li [ngClass]="{'active2':router.url==='/calendar' }">
           <a (click)="toggleSideBarShow(false)" routerLink="/calendar" class="nav-link pointer">
             <i-feather class="fsideIcons" name="calendar"></i-feather> 
-            <div *ngIf="unoppenedchatCount>0" class="badge badge-success badgesideBar " style="display: unset;"> {{unoppenedchatCount}}</div>
             <span>calendar</span>
-           
           </a>
         </li>
         
