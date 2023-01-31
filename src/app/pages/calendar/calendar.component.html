@@ -6,14 +6,30 @@
 					<h4>{{calendarTitle}}</h4>
 
 					<div class="card-header-action2">
-						<a (click)="addevent()" class="btn" [ngClass]="{'btn-primary':!dateselected,'btn-info':dateselected}" >add Event</a>
-						<a (click)="nextView()" class="btn btn-primary">View :
-							{{viewType==0?'Month':viewType==1?'Week':'Day'}}</a>
+						<!--<a (click)="addevent()" class="btn preventunselect" [ngClass]="{'btn-primary':!dateselected,'btn-info':dateselected}" ><span>add Event</span></a>-->
+						<a (click)="nextView()" class="btn btn-primary"><span>View :
+							{{viewType==0?'Month':viewType==1?'Week':'Day'}}</span></a>
 						<div class="btn-group">
-							<a (click)="navigate(1)" class="btn btn-primary">&lt;</a>
-							<a (click)="navigate(-1)" class="btn btn-primary">Today</a>
-							<a (click)="navigate(2)" class="btn btn-primary">&gt;</a>
+							<a (click)="navigate(1)" class="btn btn-primary"><span><i class="material-icons">chevron_left</i></span></a>
+							<a (click)="navigate(-1)" class="btn btn-primary"><span>Today</span></a>
+							<a (click)="navigate(2)" class="btn btn-primary"><span><i class="material-icons">chevron_right</i></span></a>
 						</div>
+						<div class="dropdown preventunselect" >
+							<div (click)="ShowDD()" class="iconBtn">
+                                <div class="iconBtnBack ">
+                                  <a class="col-dark-gray waves-effect">
+                                    <i class="material-icons">more_vert</i>
+                                  </a>
+                                </div>
+                              </div>
+							<div [ngClass]="{'showDD':showDD}" class="dropdown-menu dropdown-menu-right" #moreDD>
+							  <a (click)="addevent()" class="dropdown-item has-icon col-black"><i class="fas fa-plus"></i>add event</a>
+							  <a  class="dropdown-item has-icon col-black"><i class="far fa-edit"></i> Edit</a>
+							  <div class="dropdown-divider"></div>
+							  <a class="dropdown-item has-icon text-danger"><i class="far fa-trash-alt"></i>
+								Delete</a>
+							</div>
+						  </div>
 					</div>
 				</div>
 				<div class="card-body">

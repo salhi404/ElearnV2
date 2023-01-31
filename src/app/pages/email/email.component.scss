@@ -17,16 +17,20 @@
     background-color: rgba(120, 199, 236, 0.37)!important;
 }
 .hiddenLabel{visibility: hidden;}
-.flex-centerr{
+
+.iconBtn{
     display: flex;
     align-items: center;
     justify-content: center;
-}
-.iconBtn{
     cursor: pointer;
     height: 42px;
     width: 42px;
     border-radius: 21px;
+}
+.iconBtn >div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .iconBtnBack{
     position: absolute;

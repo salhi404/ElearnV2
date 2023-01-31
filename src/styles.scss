@@ -32,6 +32,45 @@
   #calendar > div.fc-view-harness.fc-view-harness-active > div > table > tbody > tr.fc-scrollgrid-section.fc-scrollgrid-section-body.fc-scrollgrid-section-liquid > td > div > div::-webkit-scrollbar-thumb:hover {
     background: rgba(97, 97, 97,0.8);
   }
+  .iconBtn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    height: 42px;
+    width: 42px;
+    border-radius: 21px;
+}
+.iconBtn >div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.iconBtnBack{
+    position: absolute;
+    border-radius: 21px;
+    height: 35px;
+    width: 35px;
+}
+.iconBtn:hover .iconBtnBack{
+    height: 42px;
+    width: 42px;
+    background-color: rgba(173, 173, 173, 0.37);
+    transition: 0.2s;
+}
+.iconBtn a {
+    margin: 0;
+    padding: 0;
+    height: 25px;
+    width: 25px;
+}
+.iconBtn i{
+    margin: 0;
+    padding: 0;
+    font-size: 24px;
+
+}
+
 
 
 .theme-black .sidebar-brand .logo-name{

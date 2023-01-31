@@ -51,11 +51,15 @@
 }
 
 .card-header-action2 .btn{
-    font-size: 18px;
+    font-size: 14px;
     border-radius: 30px !important;
-    padding: 8px 15px !important;
-}
+    padding: 4px 14px !important;
 
+}
+.card-header-action2 .btn span{
+  position: relative;
+  top: 4px;
+}
 .card-header-action2 .btn.active{
     box-shadow: 0 2px 6px #acb5f6;
     background-color: #6777ef;
@@ -123,6 +127,12 @@
 
 .showModal{
   display: flex;
+}
+.showDD{
+  display: block;
+}
+.dropdown-menu{
+  width: 60px;
 }
 .fadeModel{
   background: rgba(20, 20, 20, 0.7);

@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  SOCKET_ENDPOINTLOCAL: 'http://192.168.1.101:3000',
+  SOCKET_ENDPOINTLOCAL: 'http://192.168.1.103:3000',
   SOCKET_ENDPOINT:'https://starter-express-api-production-816a.up.railway.app'
 };
 

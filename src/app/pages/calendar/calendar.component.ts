@@ -15,6 +15,7 @@ import { AuthService } from '../../_services/auth.service';
 export class CalendarComponent implements OnInit, AfterViewInit {
   @ViewChild(FullCalendarComponent) calendarElement!: FullCalendarComponent;
   @ViewChild("modalDialog") modalDialog!: ElementRef;
+  @ViewChild("moreDD") moreDD!: ElementRef;
   blockHostListener:boolean=false;
   events: EventSourceInput = [
     /*{ title: 'event 1', date: '2023-01-01', },
@@ -29,9 +30,10 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
   datepipe: DatePipe = new DatePipe('en-US');
   modelShowen:boolean=false;
+  showDD:boolean=false;
+  blockcloseDD:boolean=false;
   calendarTitle = "";
   dateselected:boolean=false;
-  dateselectedhelper:boolean=false;
   fadeModel=false;
   viewType: number = 0;
   datSelectionArg:DateSelectArg=null as any;
@@ -47,25 +49,16 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       hour12: false
     },
     selectable: true,
+    unselectCancel:'.preventunselect'
+    ,
     select:(arg)=>{
-      setTimeout(() => {
-        this.dateselected=true;
-        this.dateselectedhelper=true;
-        this.datSelectionArg=arg;
-        console.log("select");
-      }, 200);
+      this.dateselected=true;
+      this.datSelectionArg=arg;
     }
     ,
-    unselect:(arg)=>{
-      setTimeout(() => {
-        this.dateselected= this.dateselectedhelper;
-      }, 300);
-      setTimeout(() => {
-        this.datSelectionArg=null as any;
-        this.dateselectedhelper=false;
-        console.log("unselect");
-        console.log(arg);
-      }, 100);      
+    unselect:()=>{
+      this.datSelectionArg=null as any;
+      this.dateselected=false;
     },
     plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin],
     headerToolbar: false,
@@ -141,11 +134,13 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.calendarTitle = this.calendarApi.view.title;
   }
   addevent(){
+    this.showDD=false;
     console.log(this.datSelectionArg);
     const args=this.datSelectionArg;
     if(!args){
       console.log("select a date range");
-      
+      this.form.startDate=this.datepipe.transform(new Date(),'yyyy-MM-dd')||'';
+      this.form.endDate=this.datepipe.transform(new Date(),'yyyy-MM-dd')||'';
     }else{
       this.form.startDate=this.datepipe.transform(args.start,'yyyy-MM-dd')||'';
       this.form.endDate=this.datepipe.transform(args.end,'yyyy-MM-dd')||'';
@@ -153,9 +148,17 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         this.form.startTime=this.datepipe.transform(args.start,'HH:mm')||'';
         this.form.endTime=this.datepipe.transform(args.end,'HH:mm')||'';
       }
-
-      this.showModel();
     }
+      this.showModel();
+    
+  }
+
+  ShowDD(){
+    this.showDD=!this.showDD;
+    this.blockcloseDD=true;
+    setTimeout(() => {
+      this.blockcloseDD=false;
+    }, 300);
   }
   showModel(){
     this.blockHostListener=true;
@@ -211,6 +214,12 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   clickout(event:any) {
     if(!this.modalDialog.nativeElement.contains(event.target)&&!this.blockHostListener){
       this.closeModel();
+    }
+    console.log("click");
+    
+    if(!this.moreDD.nativeElement.contains(event.target)&&!this.blockcloseDD){
+      this.showDD=false;
+      console.log("click blocked");
     }
   }
   parsEvent(data:any):EventInput{
