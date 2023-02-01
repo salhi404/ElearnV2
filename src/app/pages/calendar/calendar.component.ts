@@ -30,6 +30,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     endDate:'',
     endTime:'',
   }
+  tempId:string='';
   tests:EventImpl=null as any;
   allEvents:any[]=[];
   colorInput:string='#007bff';
@@ -286,12 +287,15 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       const start:Date=new Date(this.form.startDate+'T'+(this.form.startTime!==''?this.form.startTime:'00:00'));
       const end:Date=new Date(this.form.endDate+'T'+(this.form.endTime!==''?this.form.endTime:'00:00'));
       const event:EventInput={ title: this.form.event,start:start,end:end,allDay:(this.form.startTime==''&&this.form.endTime==''),color:this.colorInput }
+      this.tempId=this.datepipe.transform(new Date(),'MM_dd_hh_mm_ss')||'temp123';
+      const tempevent:EventInput={ title: this.form.event,start:start,end:end,allDay:(this.form.startTime==''&&this.form.endTime==''),color:this.colorInput,id:this.tempId }
       if(this.addnotEditEvent){
+        this.calendarApi.addEvent(this.parsEvent(tempevent));
         this.authService.addEvent(event).subscribe({
           next:data=>{
             console.log('data addEvent');
             console.log(data);
-            this.calendarApi.addEvent(this.parsEvent(data.event));
+            this.calendarApi.getEventById(this.tempId)?.setProp('id',data.event.id);
           },
           error:err=>{
             console.log('err');
