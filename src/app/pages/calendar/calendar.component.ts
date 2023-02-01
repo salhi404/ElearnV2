@@ -34,8 +34,12 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   allEvents:any[]=[];
   colorInput:string='#007bff';
   DeleteclickedEvent=false;
+  addnotEditEvent=true;
   clicktodelete=false;
-  eventToDelete:string='-1'
+  eventToDelete:string='-1';
+  EditclickedEvent=false;
+  clicktoEdit=false;
+  eventToEdit:string='-1';
   datepipe: DatePipe = new DatePipe('en-US');
   modelShowen:boolean=false;
   showDD:boolean=false;
@@ -51,6 +55,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   calendarOptions: CalendarOptions = {
     initialView: 'dayGridMonth',
     eventClick: this.handleEventClick(), // MUST ensure `this` context is maintained
+    eventMouseEnter:this.handleEventEnter(),
+    eventMouseLeave:this.handleEventLeave(),
     events: this.events,
     locale: 'en-GB',
     eventTimeFormat: { // like '14:30:00'
@@ -87,10 +93,42 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         context.eventToDelete=args.event.id;
         context.showDeleteModal();
       }
+      if(this.EditclickedEvent){
+        context.eventToEdit=args.event.id;
+        console.log("ediiiiit"+context.eventToEdit);
+        this.form.event=args.event.title;
+        this.form.startDate=this.datepipe.transform(args.event.start,'yyyy-MM-dd')||'';
+        this.form.endDate=this.datepipe.transform(args.event.end,'yyyy-MM-dd')||'';
+        if(!args.event.allDay){
+          this.form.startTime=this.datepipe.transform(args.event.start,'HH:mm')||'';
+          this.form.endTime=this.datepipe.transform(args.event.end,'HH:mm')||'';
+        }
+        this.colorInput=args.event.backgroundColor;
+        this.addnotEditEvent=false;
+        this.showModel(1);
+       // context.showDeleteModal();
+      }
   
     }
   }
-
+  handleEventEnter(){
+    const context=this;
+    return (args:any ) =>{ 
+      if(this.DeleteclickedEvent){
+        console.log("enteer");
+      }
+  
+    }
+  }
+  handleEventLeave(){
+    const context=this;
+    return (args:any) =>{ 
+      if(this.DeleteclickedEvent){
+        console.log("leave");
+      }
+  
+    }
+  }
   constructor(private cdr: ChangeDetectorRef,private authService: AuthService) { }
   test() {
     console.log(this.calendarApi.view.title);
@@ -152,6 +190,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.showDD=false;
     console.log(this.datSelectionArg);
     const args=this.datSelectionArg;
+    
     if(!args){
       console.log("select a date range");
       this.form.startDate=this.datepipe.transform(new Date(),'yyyy-MM-dd')||'';
@@ -164,7 +203,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         this.form.endTime=this.datepipe.transform(args.end,'HH:mm')||'';
       }
     }
-      this.showModel(1);
+    this.addnotEditEvent=true;
+    this.showModel(1);
     
   }
   showDeleteModal(){
@@ -227,8 +267,10 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       });
       this.closeModelDelete();
     }
-
-
+  }
+  editEvent(){
+    this.EditclickedEvent=true;
+    this.showDD=false;
   }
   submitModal(){
     if(this.form.event==='')this.form.event="My Event";
@@ -244,21 +286,42 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       const start:Date=new Date(this.form.startDate+'T'+(this.form.startTime!==''?this.form.startTime:'00:00'));
       const end:Date=new Date(this.form.endDate+'T'+(this.form.endTime!==''?this.form.endTime:'00:00'));
       const event:EventInput={ title: this.form.event,start:start,end:end,allDay:(this.form.startTime==''&&this.form.endTime==''),color:this.colorInput }
-      
-      this.authService.addEvent(event).subscribe({
-        next:data=>{
-          console.log('data addEvent');
-          console.log(data);
-          this.calendarApi.addEvent(this.parsEvent(data.event));
-        },
-        error:err=>{
-          console.log('err');
-          console.log(err);
-        }
-      });
-      console.log("event");
-      console.log(event);
-    }
+      if(this.addnotEditEvent){
+        this.authService.addEvent(event).subscribe({
+          next:data=>{
+            console.log('data addEvent');
+            console.log(data);
+            this.calendarApi.addEvent(this.parsEvent(data.event));
+          },
+          error:err=>{
+            console.log('err');
+            console.log(err);
+          }
+        });
+        console.log("event");
+        console.log(event);
+      }else{
+        console.log("submi edit event");
+        console.log(event);
+        console.log("id :"+this.eventToEdit);
+        this.calendarApi.getEventById(this.eventToEdit)?.setProp('title',event.title);
+        if(event.start)this.calendarApi.getEventById(this.eventToEdit)?.setStart(event.start);
+        if(event.end)this.calendarApi.getEventById(this.eventToEdit)?.setEnd(event.end);
+        this.calendarApi.getEventById(this.eventToEdit)?.setProp('allDay',event.allDay);
+        this.calendarApi.getEventById(this.eventToEdit)?.setProp('color',event.color);
+        this.authService.editEvent(event,this.eventToEdit).subscribe({
+          next:data=>{
+            console.log('data EditEvent');
+            console.log(data);
+          },
+          error:err=>{
+            console.log('err');
+            console.log(err);
+          }
+        });
+      }
+      }
+
     
     this.closeModel();
 
@@ -282,6 +345,13 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     }
     setTimeout(() => {
       if(this.DeleteclickedEvent)this.clicktodelete=true;
+    }, 100);
+    if(this.clicktoEdit){
+      this.clicktoEdit=false;
+      this.EditclickedEvent=false;
+    }
+    setTimeout(() => {
+      if(this.EditclickedEvent)this.clicktoEdit=true;
     }, 100);
 
   }

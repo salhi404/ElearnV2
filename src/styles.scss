@@ -15,18 +15,20 @@
 }
 #calendar > div.fc-view-harness.fc-view-harness-active > div > table > tbody > tr.fc-scrollgrid-section.fc-scrollgrid-section-body.fc-scrollgrid-section-liquid > td > div > div::-webkit-scrollbar {
     width:.7em;
-  }
-  
+}
+/*#calendar  .fc-event{
+    cursor: pointer;
+}*/
   /* Track */
-  #calendar > div.fc-view-harness.fc-view-harness-active > div > table > tbody > tr.fc-scrollgrid-section.fc-scrollgrid-section-body.fc-scrollgrid-section-liquid > td > div > div::-webkit-scrollbar-track {
+#calendar > div.fc-view-harness.fc-view-harness-active > div > table > tbody > tr.fc-scrollgrid-section.fc-scrollgrid-section-body.fc-scrollgrid-section-liquid > td > div > div::-webkit-scrollbar-track {
     background: rgba(192, 192, 192,0.7);
-  }
+}
   
   /* Handle */
-  #calendar > div.fc-view-harness.fc-view-harness-active > div > table > tbody > tr.fc-scrollgrid-section.fc-scrollgrid-section-body.fc-scrollgrid-section-liquid > td > div > div::-webkit-scrollbar-thumb {
+#calendar > div.fc-view-harness.fc-view-harness-active > div > table > tbody > tr.fc-scrollgrid-section.fc-scrollgrid-section-body.fc-scrollgrid-section-liquid > td > div > div::-webkit-scrollbar-thumb {
     background: rgba(88, 88, 88, 0.664);
     border-radius: .5em ;
-  }
+}
   
   /* Handle on hover */
   #calendar > div.fc-view-harness.fc-view-harness-active > div > table > tbody > tr.fc-scrollgrid-section.fc-scrollgrid-section-body.fc-scrollgrid-section-liquid > td > div > div::-webkit-scrollbar-thumb:hover {

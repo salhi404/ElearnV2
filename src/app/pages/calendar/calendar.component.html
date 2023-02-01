@@ -3,7 +3,7 @@
 		<div class="section-body ">
 			
 			<div class=" calendarCard card card-primary">
-				<div *ngIf="clicktodelete" class="clickAlert">
+				<div *ngIf="clicktodelete||clicktoEdit" class="clickAlert">
 					<div *ngIf="true" class="alert alert-info   ">
 						click an event 
 					</div>
@@ -30,7 +30,7 @@
                               </div>
 							<div [ngClass]="{'showDD':showDD}" class="dropdown-menu dropdown-menu-right" #moreDD>
 							  <a (click)="addevent()" class="dropdown-item has-icon col-black"><i class="fas fa-plus"></i>add event</a>
-							  <a  class="dropdown-item has-icon col-black"><i class="far fa-edit"></i> Edit</a>
+							  <a (click)="editEvent()"  class="dropdown-item has-icon col-black"><i class="far fa-edit"></i> Edit</a>
 							  <div class="dropdown-divider"></div>
 							  <a (click)="showDeleteModal()" class="dropdown-item has-icon text-danger"><i class="far fa-trash-alt"></i>
 								Delete</a>
@@ -97,7 +97,7 @@
                         </div>
                     </div>
 					<div class="d-flex align-items-center justify-content-center">
-						<button (click)="submitModal()" type="button" class="btn btn-primary m-t-15 waves-effect ">Submit</button>
+						<button (click)="submitModal()" type="button" class="btn btn-primary m-t-15 waves-effect ">{{addnotEditEvent?'Add Event':'Edit Event'}}</button>
 					</div>
 				</form>
 			</div>
