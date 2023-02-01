@@ -7,6 +7,7 @@ import { DateClickArg } from '@fullcalendar/interaction';
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import { DatePipe } from '@angular/common';
 import { AuthService } from '../../_services/auth.service';
+import { EventImpl } from '@fullcalendar/core/internal';
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
@@ -15,6 +16,7 @@ import { AuthService } from '../../_services/auth.service';
 export class CalendarComponent implements OnInit, AfterViewInit {
   @ViewChild(FullCalendarComponent) calendarElement!: FullCalendarComponent;
   @ViewChild("modalDialog") modalDialog!: ElementRef;
+  @ViewChild("modalDialogDelete") modalDialogDelete!: ElementRef;
   @ViewChild("moreDD") moreDD!: ElementRef;
   blockHostListener:boolean=false;
   events: EventSourceInput = [
@@ -28,6 +30,10 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     endDate:'',
     endTime:'',
   }
+  tests:EventImpl=null as any;
+  allEvents:any[]=[];
+  colorInput:string='#007bff';
+  eventToDelete:string='-1'
   datepipe: DatePipe = new DatePipe('en-US');
   modelShowen:boolean=false;
   showDD:boolean=false;
@@ -35,6 +41,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   calendarTitle = "";
   dateselected:boolean=false;
   fadeModel=false;
+  modelShowenDelete=false;
+  fadeModelDelete=false;
   viewType: number = 0;
   datSelectionArg:DateSelectArg=null as any;
   calendarApi: Calendar = null as any;
@@ -77,7 +85,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     console.log(this.calendarApi.view.title);
   }
   ngOnInit(): void {
-
     //this.calendarApi=this.calendarComponent.getApi();
     //console.log(this.calendarApi.view);
 
@@ -88,11 +95,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.cdr.detectChanges();
     this.authService.getEvents().subscribe({
       next:data=>{
-        console.log('data');
-        console.log(data.data);
         data.data.forEach((element:any) => {
         this.calendarApi.addEvent(this.parsEvent(element));
-        console.log(this.parsEvent(element));
         
         });
       },
@@ -149,10 +153,16 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         this.form.endTime=this.datepipe.transform(args.end,'HH:mm')||'';
       }
     }
-      this.showModel();
+      this.showModel(1);
     
   }
-
+  Deleteevent(){
+    this.showDD=false;
+    this.allEvents=this.calendarApi.getEvents();
+    console.log(this.allEvents);
+      this.showModel(2);
+    
+  }
   ShowDD(){
     this.showDD=!this.showDD;
     this.blockcloseDD=true;
@@ -160,11 +170,13 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       this.blockcloseDD=false;
     }, 300);
   }
-  showModel(){
+  showModel(ind:number){
     this.blockHostListener=true;
-    this.modelShowen=true;
+    if(ind==1)this.modelShowen=true;
+    if(ind==2)this.modelShowenDelete=true;
     setTimeout(() => {
-      this.fadeModel=true;
+      if(ind==1)this.fadeModel=true;
+      if(ind==2)this.fadeModelDelete=true;
     }, 10);
     setTimeout(() => {
       this.blockHostListener=false;
@@ -175,6 +187,13 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.form={event:'',startDate:'',startTime:'',endDate:'',endTime:'',}
     setTimeout(() => {
       this.modelShowen=false;
+    }, 150);
+  }
+  closeModelDelete(){
+    this.fadeModelDelete=false;
+    this.form={event:'',startDate:'',startTime:'',endDate:'',endTime:'',}
+    setTimeout(() => {
+      this.modelShowenDelete=false;
     }, 150);
   }
   submitModal(){
@@ -190,9 +209,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       }
       const start:Date=new Date(this.form.startDate+'T'+(this.form.startTime!==''?this.form.startTime:'00:00'));
       const end:Date=new Date(this.form.endDate+'T'+(this.form.endTime!==''?this.form.endTime:'00:00'));
-      const event:EventInput={ title: this.form.event,start:start,end:end,allDay:(this.form.startTime==''&&this.form.endTime=='') }
+      const event:EventInput={ title: this.form.event,start:start,end:end,allDay:(this.form.startTime==''&&this.form.endTime==''),color:this.colorInput }
       this.calendarApi.addEvent(this.parsEvent(event));
-      this.authService.addEvent(event).subscribe({
+      this.authService.addEvent(this.parsEvent(event)).subscribe({
         next:data=>{
           console.log('data');
           console.log(data);
@@ -215,6 +234,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     if(!this.modalDialog.nativeElement.contains(event.target)&&!this.blockHostListener){
       this.closeModel();
     }
+    if(!this.modalDialogDelete.nativeElement.contains(event.target)&&!this.blockHostListener){
+      this.closeModelDelete();
+    }
     console.log("click");
     
     if(!this.moreDD.nativeElement.contains(event.target)&&!this.blockcloseDD){
@@ -223,6 +245,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     }
   }
   parsEvent(data:any):EventInput{
-    return { title:data.title,start:data.start,end:data.end,allDay:data.allDay}
+    return { title:data.title,start:data.start,end:data.end,allDay:data.allDay,color:data.color}
   }
 }
