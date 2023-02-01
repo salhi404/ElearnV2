@@ -89,6 +89,10 @@ export class AuthService {
     const token = this.storageService.getTokent();
     return this.http.post(USERDATA_API + 'getevents', {token}, httpOptions);
   }
+  DeleteEvent(eventId:String):Observable<any>{
+    const token = this.storageService.getTokent();
+    return this.http.post(USERDATA_API + 'deleteevent', {token,eventId}, httpOptions);
+  }
   getMail():Observable<any>{
     const token = this.storageService.getTokent();
     const id=this.storageService.getId();

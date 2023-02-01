@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef, HostListener, ElementRef } from '@angular/core';
-import { Calendar, CalendarOptions, DateSelectArg, EventInput, EventSourceInput } from '@fullcalendar/core'; // useful for typechecking
+import { Calendar, CalendarOptions, DateSelectArg, EventClickArg, EventInput, EventSourceInput } from '@fullcalendar/core'; // useful for typechecking
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from "@fullcalendar/interaction"
@@ -33,6 +33,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   tests:EventImpl=null as any;
   allEvents:any[]=[];
   colorInput:string='#007bff';
+  DeleteclickedEvent=false;
+  clicktodelete=false;
   eventToDelete:string='-1'
   datepipe: DatePipe = new DatePipe('en-US');
   modelShowen:boolean=false;
@@ -48,7 +50,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   calendarApi: Calendar = null as any;
   calendarOptions: CalendarOptions = {
     initialView: 'dayGridMonth',
-    dateClick: this.handleDateClick, // MUST ensure `this` context is maintained
+    eventClick: this.handleEventClick(), // MUST ensure `this` context is maintained
     events: this.events,
     locale: 'en-GB',
     eventTimeFormat: { // like '14:30:00'
@@ -77,9 +79,18 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     }*/
   };
 
-  handleDateClick(args: DateClickArg) { 
-
+  handleEventClick(){
+    const context=this;
+    return (args: EventClickArg) =>{ 
+      if(this.DeleteclickedEvent){
+        console.log("deleeeeeet");
+        context.eventToDelete=args.event.id;
+        context.showDeleteModal();
+      }
+  
+    }
   }
+
   constructor(private cdr: ChangeDetectorRef,private authService: AuthService) { }
   test() {
     console.log(this.calendarApi.view.title);
@@ -156,7 +167,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       this.showModel(1);
     
   }
-  Deleteevent(){
+  showDeleteModal(){
     this.showDD=false;
     this.allEvents=this.calendarApi.getEvents();
     console.log(this.allEvents);
@@ -191,16 +202,39 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
   closeModelDelete(){
     this.fadeModelDelete=false;
-    this.form={event:'',startDate:'',startTime:'',endDate:'',endTime:'',}
+    
     setTimeout(() => {
       this.modelShowenDelete=false;
+      this.eventToDelete='-1';
     }, 150);
+  }
+  DeleteEvent(isSelect:boolean){
+    if(isSelect){
+      this.DeleteclickedEvent=true;
+      this.closeModelDelete();
+    }else{
+      const id=this.eventToDelete;
+      this.calendarApi.getEventById(id)?.remove();
+      this.authService.DeleteEvent(id).subscribe({
+        next:data=>{
+          console.log('data delete');
+          console.log(data);
+        },
+        error:err=>{
+          console.log('err delete');
+          console.log(err);
+        }
+      });
+      this.closeModelDelete();
+    }
+
+
   }
   submitModal(){
     if(this.form.event==='')this.form.event="My Event";
     console.log(this.form);
-    if(this.form.startDate=='')this.form.startTime=='';
-    if(this.form.endDate=='')this.form.endTime=='';
+    if(this.form.startDate==='')this.form.startTime==='';
+    if(this.form.endDate==='')this.form.endTime==='';
     if(this.form.startDate===''&&this.form.endDate===''){
       console.log("no date was provided");
     }else{
@@ -210,11 +244,12 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       const start:Date=new Date(this.form.startDate+'T'+(this.form.startTime!==''?this.form.startTime:'00:00'));
       const end:Date=new Date(this.form.endDate+'T'+(this.form.endTime!==''?this.form.endTime:'00:00'));
       const event:EventInput={ title: this.form.event,start:start,end:end,allDay:(this.form.startTime==''&&this.form.endTime==''),color:this.colorInput }
-      this.calendarApi.addEvent(this.parsEvent(event));
-      this.authService.addEvent(this.parsEvent(event)).subscribe({
+      
+      this.authService.addEvent(event).subscribe({
         next:data=>{
-          console.log('data');
+          console.log('data addEvent');
           console.log(data);
+          this.calendarApi.addEvent(this.parsEvent(data.event));
         },
         error:err=>{
           console.log('err');
@@ -231,20 +266,26 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
   @HostListener('document:click', ['$event'])
   clickout(event:any) {
-    if(!this.modalDialog.nativeElement.contains(event.target)&&!this.blockHostListener){
+    if(!this.modalDialog.nativeElement.contains(event.target)&&!this.blockHostListener&&!this.modelShowenDelete){
       this.closeModel();
     }
-    if(!this.modalDialogDelete.nativeElement.contains(event.target)&&!this.blockHostListener){
+    if(!this.modalDialogDelete.nativeElement.contains(event.target)&&!this.blockHostListener&&!this.modelShowen){
       this.closeModelDelete();
     }
-    console.log("click");
     
     if(!this.moreDD.nativeElement.contains(event.target)&&!this.blockcloseDD){
       this.showDD=false;
-      console.log("click blocked");
     }
+    if(this.clicktodelete){
+      this.clicktodelete=false;
+      this.DeleteclickedEvent=false;
+    }
+    setTimeout(() => {
+      if(this.DeleteclickedEvent)this.clicktodelete=true;
+    }, 100);
+
   }
   parsEvent(data:any):EventInput{
-    return { title:data.title,start:data.start,end:data.end,allDay:data.allDay,color:data.color}
+    return { title:data.title,start:data.start,end:data.end,allDay:data.allDay,color:data.color,id:data.id}
   }
 }

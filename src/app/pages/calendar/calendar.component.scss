@@ -30,6 +30,9 @@
 .card .card-body {
   padding-top:0 ;
 }
+.calendarCard{
+  margin-top: 10px;
+}
 .card-header h4{
   font-size: 28px;
 }
@@ -140,4 +143,17 @@
 .fadeModel .modal-dialog{
   -webkit-transform: translate(0, 0px);
     transform: translate(0, 0px)
+}
+.clickAlert{
+  text-align: center;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  top: -54px;
+  width: 100%;
+}
+.clickAlert>div{
+  height: 50px;
+  width: 125px;
+  white-space: nowrap;
 }

@@ -1,10 +1,16 @@
 <div class="main-content">
 	<section class="section">
 		<div class="section-body ">
-			<div class="card card-primary">
+			
+			<div class=" calendarCard card card-primary">
+				<div *ngIf="clicktodelete" class="clickAlert">
+					<div *ngIf="true" class="alert alert-info   ">
+						click an event 
+					</div>
+				</div>
+
 				<div class="card-header">
 					<h4>{{calendarTitle}}</h4>
-
 					<div class="card-header-action2">
 						<!--<a (click)="addevent()" class="btn preventunselect" [ngClass]="{'btn-primary':!dateselected,'btn-info':dateselected}" ><span>add Event</span></a>-->
 						<a (click)="nextView()" class="btn btn-primary"><span>View :
@@ -26,7 +32,7 @@
 							  <a (click)="addevent()" class="dropdown-item has-icon col-black"><i class="fas fa-plus"></i>add event</a>
 							  <a  class="dropdown-item has-icon col-black"><i class="far fa-edit"></i> Edit</a>
 							  <div class="dropdown-divider"></div>
-							  <a (click)="Deleteevent()" class="dropdown-item has-icon text-danger"><i class="far fa-trash-alt"></i>
+							  <a (click)="showDeleteModal()" class="dropdown-item has-icon text-danger"><i class="far fa-trash-alt"></i>
 								Delete</a>
 							</div>
 						  </div>
@@ -36,10 +42,6 @@
 					<full-calendar id="calendar" [options]="calendarOptions" #calendar></full-calendar>
 				</div>
 			</div>
-
-
-
-
 		</div>
 	</section>
 </div>
@@ -81,12 +83,6 @@
                             <span class="colorinput-color bg-secondary"></span>
                           </label>
                         </div>
-                        <!--<div class="col-auto">
-                          <label class="colorinput">
-                            <input [(ngModel)]="colorInput" name="color" type="radio" value="danger" class="colorinput-input" />
-                            <span class="colorinput-color bg-danger"></span>
-                          </label>
-                        </div>-->
                         <div class="col-auto">
                           <label class="colorinput">
                             <input [(ngModel)]="colorInput" name="color" type="radio" value="#ffc107" class="colorinput-input" />
@@ -99,12 +95,6 @@
                             <span class="colorinput-color bg-info"></span>
                           </label>
                         </div>
-                        <!--<div class="col-auto">
-                          <label class="colorinput">
-                            <input [(ngModel)]="colorInput" name="color" type="radio" value="success" class="colorinput-input" />
-                            <span class="colorinput-color bg-success"></span>
-                          </label>
-                        </div>-->
                     </div>
 					<div class="d-flex align-items-center justify-content-center">
 						<button (click)="submitModal()" type="button" class="btn btn-primary m-t-15 waves-effect ">Submit</button>
@@ -127,12 +117,12 @@
 				<form class="">
 					<div class="form-group">
 						<div class="input-group">
-						  <select class="custom-select"  [(ngModel)]="eventToDelete" #DeleteSelect="ngModel" name="DeleteSelect">
-							<option value="-1"  >choose an event or select from calendar</option>
-							<option *ngFor="let event of allEvents" [ngValue]="event.id" >{{event.title}}</option>
+						  <select class="custom-select" [ngClass]="{'border-danger':eventToDelete!=='-1'}"  [(ngModel)]="eventToDelete" #DeleteSelect="ngModel" name="DeleteSelect">
+							<option value="-1"  >click select then click an event or choose from this list </option>
+							<option *ngFor="let event of allEvents" [ngValue]="event.id" >"{{event.title}}" from:{{datepipe.transform(event.start,'dd-MM-yyyy HH:mm')}} to:{{datepipe.transform(event.end,'dd-MM-yyyy HH:mm')}}</option>
 						  </select>
 						  <div class="input-group-append">
-							<button class="btn btn-primary" type="button">Button</button>
+							<button (click)="DeleteEvent(eventToDelete==='-1')" class="btn {{eventToDelete==='-1'?'btn-primary':'btn-danger'}}" type="button">{{eventToDelete==='-1'?'Select':'Delete'}}</button>
 						  </div>
 						</div>
 					  </div>

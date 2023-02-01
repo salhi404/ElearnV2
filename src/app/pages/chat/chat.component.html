@@ -15,7 +15,7 @@
                     <div class="form-group">
                       <div class="input-group mb-3">
                         <input type="email" name="email" [(ngModel)]="emailAdd"  required email
-                        #email="ngModel" class="form-control" placeholder="email" aria-label="ddd" [ngClass]="{'is-invalid2':(emailAddErrors>0&&emailAddErrors<4)&&(emailAddErrorString==emailAdd)}" >
+                        #email="ngModel" class="form-control" placeholder="email" aria-label="ddd" [ngClass]="{'border-danger':(emailAddErrors>0&&emailAddErrors<4)&&(emailAddErrorString==emailAdd)}" >
                         
                         <div class="input-group-append">
                           <button (click)="addchatter(email.errors)" class="btn {{(emailAddErrors>0&&emailAddErrors<4)&&(emailAddErrorString==emailAdd)?'btn-danger':'btn-primary'}} addBtn "  type="button"><i class="material-icons addicon">add</i></button>
