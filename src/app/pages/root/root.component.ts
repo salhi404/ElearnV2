@@ -52,6 +52,7 @@ export class RootComponent implements OnInit, OnDestroy {
           break;
         case "/home":
           this.currentRoute=1;
+          this.getTodeyCalender();
           break;
         case "/email":
           this.currentRoute=2;
@@ -191,6 +192,38 @@ export class RootComponent implements OnInit, OnDestroy {
           info.unoppenedMailCount=data.count;
           this.events.changeInfoState(info);
         }
+      },
+      error: err => {
+
+      }
+    })
+  }
+  getTodeyCalender() {
+    this.authService.geteventsDates().subscribe({
+      next: data => {
+        const todayDate = new Date();
+        let todeyCount=0;
+        let nextDate:Date=null as any;
+        let date:Date;
+        data.data.forEach((datee:Date)=>{
+          date=new Date(datee);
+          if (
+            date.getDate() === todayDate.getDate() &&
+            date.getMonth() === todayDate.getMonth() &&
+            date.getFullYear() === todayDate.getFullYear()
+          )todeyCount++;
+          if(date.getTime()>todayDate.getTime()){
+            if(!nextDate||date.getTime()<nextDate.getTime())nextDate=date;
+          }
+        })
+        var info=this.events.infoEvent.getValue();
+        info.TodayEventsCount=todeyCount;
+        info.nextEvent=nextDate;
+        this.events.changeInfoState(info);
+        console.log("calendar dates");
+        
+        console.log(data);
+        
       },
       error: err => {
 

@@ -15,7 +15,7 @@ export class EventsService {
   currentchatEvent = this.chatEvent.asObservable();
   public loggingEvent = new BehaviorSubject(-1);
   loggingStatusEvent = this.loggingEvent.asObservable();
-  public infoEvent = new BehaviorSubject({unoppenedchatCount:0,unoppenedMailCount:0});
+  public infoEvent = new BehaviorSubject({unoppenedchatCount:0,unoppenedMailCount:0,TodayEventsCount:0,  nextEvent:null as any});
   infostatusEvent = this.infoEvent.asObservable();
   public taskEvent = new BehaviorSubject({task:-1,data:{}as any});
   taskstatusEvent = this.taskEvent.asObservable();

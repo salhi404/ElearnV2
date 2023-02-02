@@ -33,6 +33,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   tempId:string='';
   tests:EventImpl=null as any;
   allEvents:any[]=[];
+  dateIsSelected:boolean=false;
   colorInput:string='#007bff';
   DeleteclickedEvent=false;
   addnotEditEvent=true;
@@ -191,7 +192,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.showDD=false;
     console.log(this.datSelectionArg);
     const args=this.datSelectionArg;
-    
+    this.dateIsSelected=!args;
     if(!args){
       console.log("select a date range");
       this.form.startDate=this.datepipe.transform(new Date(),'yyyy-MM-dd')||'';
