@@ -87,14 +87,18 @@ export class StorageService {
     }
     return false;
   }
-  parseUser(json:any) :User{
-    var user:User={username:"null",email:"null",roles:[],verified:false,pref:{darkTheme:false,miniSideBar:false},contacts:[]}
+  parseUser(json:any) :User{//alterauthuserdata 
+    var user:User={username:"null",email:"null",roles:[],verified:false,pref:{darkTheme:false,miniSideBar:false},contacts:[],fName:'',lName:'', birthDate:new Date(0),grade:-1}
     user.username=json.username?json.username:user.username;
     user.email=json.email?json.email:user.email;
     user.roles=json.roles?json.roles:user.roles;
     user.verified=json.verified?json.verified:user.verified;
     user.pref=json.configs?json.configs:user.pref;
     user.contacts=json.contacts?json.contacts:user.contacts;
+    user.fName=json.fName?json.fName:user.fName;
+    user.lName=json.lName?json.lName:user.lName;
+    user.birthDate=json.birthDate?json.birthDate:user.birthDate;
+    user.grade=json.grade?json.grade:user.grade;
     return user;
   }
   public saveModMail(mod:any[]){

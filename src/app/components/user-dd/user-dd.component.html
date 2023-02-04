@@ -5,7 +5,7 @@
     </a>
     <div [ngClass]="{'show':showuserDD}" class="dropdown-menu dropdown-menu-right pullDown">
       <div class="dropdown-title">Hello {{username}}</div>
-      <a class="dropdown-item pointer has-icon"> 
+      <a routerLink="/profile" (click)="showuserDD=!showuserDD" class="dropdown-item pointer has-icon"> 
         <i class="far fa-user"></i> Profile
       </a> 
       <a class="dropdown-item pointer has-icon "> 

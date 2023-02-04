@@ -26,6 +26,7 @@ import { InterfaceComponent } from './pages/interface/interface.component';
 import { CalendarComponent } from './pages/calendar/calendar.component';
 import { NotificationsComponent } from './pages/notifications/notifications.component';
 import { FullCalendarModule } from '@fullcalendar/angular';
+import { ProfileComponent } from './pages/profile/profile.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -49,6 +50,7 @@ import { FullCalendarModule } from '@fullcalendar/angular';
     InterfaceComponent,
     CalendarComponent,
     NotificationsComponent,
+    ProfileComponent,
   ],
   imports: [
     FullCalendarModule,

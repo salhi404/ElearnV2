@@ -2731,7 +2731,6 @@ textarea.form-control.is-valid {
 }
 
 .invalid-feedback {
-    display: none;
     width: 100%;
     margin-top: .25rem;
     font-size: 80%;
@@ -2770,13 +2769,6 @@ textarea.form-control.is-valid {
     box-shadow: 0 0 0 .2rem rgba(220, 53, 69, .25)
 }
 
-.form-control.is-invalid~.invalid-feedback,
-.form-control.is-invalid~.invalid-tooltip,
-.was-validated .form-control:invalid~.invalid-feedback,
-.was-validated .form-control:invalid~.invalid-tooltip {
-    display: block
-}
-
 .was-validated textarea.form-control:invalid,
 textarea.form-control.is-invalid {
     padding-right: calc(1.5em + .75rem);
@@ -2796,33 +2788,10 @@ textarea.form-control.is-invalid {
     -webkit-box-shadow: 0 0 0 .2rem rgba(220, 53, 69, .25);
     box-shadow: 0 0 0 .2rem rgba(220, 53, 69, .25)
 }
-
-.custom-select.is-invalid~.invalid-feedback,
-.custom-select.is-invalid~.invalid-tooltip,
-.was-validated .custom-select:invalid~.invalid-feedback,
-.was-validated .custom-select:invalid~.invalid-tooltip {
-    display: block
-}
-
-.form-control-file.is-invalid~.invalid-feedback,
-.form-control-file.is-invalid~.invalid-tooltip,
-.was-validated .form-control-file:invalid~.invalid-feedback,
-.was-validated .form-control-file:invalid~.invalid-tooltip {
-    display: block
-}
-
 .form-check-input.is-invalid~.form-check-label,
 .was-validated .form-check-input:invalid~.form-check-label {
     color: #dc3545
 }
-
-.form-check-input.is-invalid~.invalid-feedback,
-.form-check-input.is-invalid~.invalid-tooltip,
-.was-validated .form-check-input:invalid~.invalid-feedback,
-.was-validated .form-check-input:invalid~.invalid-tooltip {
-    display: block
-}
-
 .custom-control-input.is-invalid~.custom-control-label,
 .was-validated .custom-control-input:invalid~.custom-control-label {
     color: #dc3545
@@ -2831,13 +2800,6 @@ textarea.form-control.is-invalid {
 .custom-control-input.is-invalid~.custom-control-label::before,
 .was-validated .custom-control-input:invalid~.custom-control-label::before {
     border-color: #dc3545
-}
-
-.custom-control-input.is-invalid~.invalid-feedback,
-.custom-control-input.is-invalid~.invalid-tooltip,
-.was-validated .custom-control-input:invalid~.invalid-feedback,
-.was-validated .custom-control-input:invalid~.invalid-tooltip {
-    display: block
 }
 
 .custom-control-input.is-invalid:checked~.custom-control-label::before,
@@ -2861,14 +2823,6 @@ textarea.form-control.is-invalid {
 .was-validated .custom-file-input:invalid~.custom-file-label {
     border-color: #dc3545
 }
-
-.custom-file-input.is-invalid~.invalid-feedback,
-.custom-file-input.is-invalid~.invalid-tooltip,
-.was-validated .custom-file-input:invalid~.invalid-feedback,
-.was-validated .custom-file-input:invalid~.invalid-tooltip {
-    display: block
-}
-
 .custom-file-input.is-invalid:focus~.custom-file-label,
 .was-validated .custom-file-input:invalid:focus~.custom-file-label {
     border-color: #dc3545;

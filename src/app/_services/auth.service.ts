@@ -36,7 +36,7 @@ export class AuthService {
     );
   }
 
-  register(username: string, email: string, password: string): Observable<any> {
+  register(username: string, email: string, password: string,fName:string,lName:string,birthDate:string,grade:number ): Observable<any> {
     //const roles=["user", "admin", "moderator"];
     return this.http.post(
       AUTH_API + 'signup',
@@ -44,11 +44,25 @@ export class AuthService {
         username,
         email,
         password,
+        fName,
+        lName,
+        birthDate,
+        grade
       },
       httpOptions
     );
   }
-
+  verifyDuplicated(username: string, email: string,): Observable<any> {
+    //const roles=["user", "admin", "moderator"];
+    return this.http.post(
+      AUTH_API + 'verifyDuplicated',
+      {
+        username,
+        email,
+      },
+      httpOptions
+    );
+  }
   logout(): Observable<any> {
     console.log("Logging out auth");
     return this.http.post(AUTH_API + 'signout', { }, httpOptions);

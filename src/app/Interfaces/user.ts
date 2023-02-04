@@ -1,4 +1,4 @@
-
+//alterauthuserdata
 export interface User{
     username:string;
     email:string;
@@ -6,6 +6,10 @@ export interface User{
     verified:boolean;
     pref:Pref;
     contacts:[];
+    fName:string,
+    lName:string,
+    birthDate:Date,
+    grade:number,
     //fromTo:User
 }
 export interface UserPublic{

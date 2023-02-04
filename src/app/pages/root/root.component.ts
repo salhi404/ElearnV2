@@ -60,6 +60,14 @@ export class RootComponent implements OnInit, OnDestroy {
         case "/chat":
           this.currentRoute=3;
           break;
+        case "/profile":
+        this.currentRoute=4;
+        break;
+        default:
+          if(this.storageService.isLoggedIn())this.router.navigate(["/home"]);
+          this.currentRoute=0;
+          this.interfaceLayout=true;
+        break
       } 
       console.log(event);
       console.log(this.currentRoute);
@@ -101,6 +109,8 @@ export class RootComponent implements OnInit, OnDestroy {
       this.user = this.state.user;
     }
     if (this.isLoggedIn) {
+      console.log("user");
+      console.log(this.user);
       this.prepsubscription();
       this.socketService.setupSocketConnection(this.storageService.getTokent());
       this.socketService.getMsg();

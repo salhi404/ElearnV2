@@ -10,21 +10,13 @@
               </div>
               <div class="card-body">
                 <form 
+                *ngIf="stageOne"
                   name="form" 
-                  (ngSubmit)="f.form.valid && onSubmit()" 
+                  (ngSubmit)="f.form.valid && nextinfo()" 
                   #f="ngForm"
                   novalidate>
-                  <!--<div class="row">
-                    <div class="form-group col-6">
-                      <label for="frist_name">First Name</label>
-                      <input id="frist_name" type="text" class="form-control" name="frist_name" autofocus>
-                    </div>
-                    <div class="form-group col-6">
-                      <label for="last_name">Last Name</label>
-                      <input id="last_name" type="text" class="form-control" name="last_name">
-                    </div>
-                  </div>-->
-                  <div class="form-group">
+
+                  <div class="form-group ">
                     <label for="username">Username</label>
                     <input 
                       class="form-control"
@@ -54,7 +46,7 @@
                       Username is already in use!
                     </div>
                   </div>
-                  <div class="form-group">
+                  <div class="form-group ">
                     <label for="email">Email</label>
                     <input 
                       class="form-control"
@@ -128,7 +120,7 @@
                   </div>
                   <div class="form-group">
                     <button class=" registerBtn btn btn-primary btn-lg btn-block" >
-                      <span>Register</span>
+                      <span>Next</span>
                       <span class="mx-2"></span>
                       <app-spinner *ngIf="loading" [type]="1"></app-spinner>
                     </button>
@@ -137,6 +129,127 @@
                   </div>
                   </div>
                 </form>
+                <form 
+                *ngIf="!stageOne"
+                name="form2" 
+                (ngSubmit)="f2.form.valid && onSubmit()" 
+                #f2="ngForm"
+                novalidate>
+                <div class="row">
+                  <div class="form-group col-6 ">
+                    <label for="frist_name">First Name</label>
+                    <input 
+                      id="frist_name" 
+                      type="text" 
+                      class="form-control" 
+                      name="frist_name"  
+                      [(ngModel)]="form.frist_name"
+                      required
+                      minlength="3"
+                      maxlength="20"
+                      #frist_name="ngModel"
+                      placeholder="First Name" 
+                      type="text" 
+                      autocomplete="off"
+                      [ngClass]="{'is-invalid':(frist_name.errors && f2.submitted)}"
+                    >
+                    <div class="invalid-feedback"  *ngIf="frist_name.errors && f2.submitted">
+                      <div *ngIf="frist_name.errors['required']">First Name is required</div>
+                    <div *ngIf="frist_name.errors['minlength']">
+                      First Name must be at least 3 characters
+                    </div>
+                    <div *ngIf="frist_name.errors['maxlength']">
+                      First Name must be at most 20 characters
+                    </div>
+                    </div>
+                  </div>
+                  <div class="form-group col-6 ">
+                    <label for="last_name">Last Name</label>
+                    <input 
+                      id="last_name" 
+                      type="text" 
+                      class="form-control" 
+                      name="last_name"  
+                      [(ngModel)]="form.last_name"
+                      required
+                      minlength="3"
+                      maxlength="20"
+                      #last_name="ngModel"
+                      placeholder="Last Name" 
+                      type="text" 
+                      autocomplete="off"
+                      [ngClass]="{'is-invalid':(last_name.errors && f2.submitted)}"
+                    >
+                    <div class="invalid-feedback"  *ngIf="last_name.errors && f2.submitted">
+                      <div *ngIf="last_name.errors['required']">Last Name is required</div>
+                    <div *ngIf="last_name.errors['minlength']">
+                      Last Name must be at least 3 characters
+                    </div>
+                    <div *ngIf="last_name.errors['maxlength']">
+                      Last Name must be at most 20 characters
+                    </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="frist_name">Birth date</label>
+                  <input 
+                    id="birth_date" 
+                    type="text" 
+                    class="form-control" 
+                    name="birth_date"  
+                    [(ngModel)]="form.birth_date"
+                    required
+                    #birth_date="ngModel"
+                    type="date" 
+                    [ngClass]="{'border-danger':(birth_date.errors && f2.submitted)}"
+                  >
+                  <div class="invalid-feedback"  *ngIf="birth_date.errors && f2.submitted">
+                    <div *ngIf="birth_date.errors['required']">Birth date is required</div>
+                  </div>
+                </div>
+                <div class="form-group ">
+                  <label for="username">Grade</label>
+                  <select 
+                    class="form-control"
+                    [(ngModel)]="form.grade"
+                    required
+                    #grade="ngModel"
+                    placeholder="Username" 
+                    type="text" 
+                    name="grade" 
+                    id="grade" 
+                    autocomplete="off"
+                    [ngClass]="{'border-danger':(grade.errors && f2.submitted)}"
+                    (change)="userExisted=false;changed=true"
+                  >
+                    <option value="1">primary(1-2-3-4-5-6)</option>
+                    <option value="7">7ème (middle school)</option>
+                    <option value="8">8ème (middle school)</option>
+                    <option value="9">9ème (middle school)</option>
+                    <option value="11">5ème science </option>
+                    <option value="12">5ème lettre </option>
+                    <option value="13">1 bac science </option>
+                    <option value="14">1 bac lettre </option>
+                    <option value="15">2 bac science </option>
+                    <option value="16">2 bac lettre </option>
+                    <option value="17">other</option>
+                  </select>
+                  <div class="invalid-feedback"  *ngIf="(grade.errors && f2.submitted)">
+                    <div >grade date is required</div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <button class=" registerBtn btn btn-primary btn-lg btn-block" >
+                    <span>Register</span>
+                    <span class="mx-2"></span>
+                    <app-spinner *ngIf="loading" [type]="1"></app-spinner>
+                  </button>
+                  <div class="invalid-feedback" *ngIf="f2.submitted && isSignUpFailed&&!emailExisted&&!userExisted&&!changed">
+                    Signup failed!<br />{{ errorMessage }}
+                </div>
+                </div>
+              </form>    
                 <div class="my-2 text-muted text-center">
                   Already Registered? <a routerLink="/login">Login</a>
                 </div>

@@ -44,18 +44,15 @@ export class LoginComponent implements OnInit {
     console.log("remember");
     console.log(remember);
     this.authService.login(username, password).subscribe({
-      next: data => {
-        console.log("sdsdsd"+remember);
+      next: data => {//alterauthuserdata
         this.storageService.saveUser(data);
         this.isLoginFailed = false;
         this.isLoggedIn = true;
         try {
           this.storageService.setPrefrences(JSON.parse(data.configs));
           this.storageService.saveChatters(data.contacts);
-          console.log("JSON.parse(data.contacts)");
           console.log(data.contacts);
         } catch (error) {
-          console.log("contacts eroooooooooor");
           console.log(error);
           
         }
