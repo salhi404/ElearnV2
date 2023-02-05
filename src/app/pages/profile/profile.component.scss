@@ -1,0 +1,9 @@
+.fadetab {
+    -webkit-transition: opacity .35s  ease-in-out;
+    transition: opacity  .35s  ease-in-out;
+    opacity: 1;
+}
+
+.unfadetab{
+    opacity: 0
+}

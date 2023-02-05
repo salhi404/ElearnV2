@@ -3661,8 +3661,8 @@ input[type=submit].btn-block {
 }
 
 .fade {
-    -webkit-transition: opacity .9s linear;
-    transition: opacity .9s linear
+    -webkit-transition: opacity 1 .9s linear;
+    transition: opacity 1 .9s linear
 }
 
 @media(prefers-reduced-motion:reduce) {

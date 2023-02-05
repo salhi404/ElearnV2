@@ -98,6 +98,14 @@ export class AuthService {
     const token = this.storageService.getTokent();
     return this.http.post(USERDATA_API + 'addevent', {event,token}, httpOptions);
   }
+  setUserData(key:string, data:any):Observable<any>{
+    const token = this.storageService.getTokent();
+    return this.http.post(USERDATA_API + 'setData', {key,data,token}, httpOptions);
+  }
+  getUserData(key:string):Observable<any>{
+    const token = this.storageService.getTokent();
+    return this.http.post(USERDATA_API + 'getData', {key,token}, httpOptions);
+  }
   getEvents():Observable<any>{
     const token = this.storageService.getTokent();
     return this.http.post(USERDATA_API + 'getevents', {token}, httpOptions);

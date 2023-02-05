@@ -60,8 +60,11 @@ export class RootComponent implements OnInit, OnDestroy {
         case "/chat":
           this.currentRoute=3;
           break;
-        case "/profile":
+        case "/calendar":
         this.currentRoute=4;
+        break;
+        case "/profile":
+        this.currentRoute=5;
         break;
         default:
           if(this.storageService.isLoggedIn())this.router.navigate(["/home"]);
