@@ -1,3 +1,42 @@
+<div [ngClass]="{'showModal':modelShowen,'fadeModel':fadeModel}" class="modal" id="modal">
+  <div class="modal-dialog " role="document" #modalDialog>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="formModal"> profile picture</h5>
+        <button type="button" class="close" (click)="closeModel()">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="">
+          <div class="form-group ">
+            <div class="d-flex align-items-center flex-column  justify-content-center">
+              <div class="alert alert-primary alert-has-icon">
+                <div class="d-flex align-items-center mr-1">
+                  <div class="alert-icon"><i class="fas fa-user-friends"></i></div>
+                  <div class="alert-body">
+                      this image is Visible for the public 
+                  </div>
+                </div>
+                
+              </div>
+              <figure class="avatar mr-2 avatar-xl ">
+                <input #profileInput  hidden type="file"  name="profileInput"  (change)="getProfileInput($event)"  >
+                <img class="avatar" [src]="imageSrc || 'assets/img/users/user-1.png'" alt="...">
+              </figure>
+              
+            </div>
+           
+            <div class="d-flex align-items-center justify-content-center">
+              <button (click)="profileInput.click()" class="btn btn-primary m-t-15 waves-effect mr-2 " type="button">change</button>
+              <button *ngIf="formData" (click)="uploadImage()" class="btn btn-info m-t-15 waves-effect " type="button">Upload</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="main-content">
     <section class="section">
       <div class="section-body">
@@ -6,7 +45,14 @@
             <div class="card author-box">
               <div class="card-body">
                 <div class="author-box-center">
-                  <img alt="image" src="assets/img/users/user-1.png" class="rounded-circle author-box-picture">
+                  <div>
+                    <figure class="avatar mr-2 avatar-xl">
+                      <img [src]="'assets/img/users/user-1.png'" alt="...">
+                      <a (click)="showModel(1)"   class="avatar-icon2 pointer"><i  class="material-icons  photo_camera ">photo_camera</i></a>
+                      <i class="avatar-icon2-back" ></i>
+                    </figure>
+                  </div>
+
                   <div class="clearfix"></div>
                   <div class="author-box-name">
                     <a >{{user.fName}} {{user.lName}}</a>
