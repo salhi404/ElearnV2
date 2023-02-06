@@ -28,6 +28,7 @@ import { NotificationsComponent } from './pages/notifications/notifications.comp
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { FileUploadModule } from 'ng2-file-upload';
+import { ImageCropperModule } from 'ngx-image-cropper';
 @NgModule({
   declarations: [
     AppComponent,
@@ -61,7 +62,8 @@ import { FileUploadModule } from 'ng2-file-upload';
     IconsModule,
     BrowserModule,
     AppRoutingModule,
-    FileUploadModule
+    FileUploadModule,
+    ImageCropperModule
   ],
   providers: [],
   bootstrap: [AppComponent]
