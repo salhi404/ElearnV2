@@ -7,12 +7,18 @@ import { retry, Subscription } from 'rxjs';
 import { AuthService } from '../../_services/auth.service';
 import { EventsService } from 'src/app/services/events.service';
 import { parsegrade } from 'src/app/functions/parsers';
+import { FileUploader } from 'ng2-file-upload'; 
+
+const URL_API = 'http://192.168.1.103:3000/'; 
+const USERDATA_API = URL_API+'api/userdata/';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
+
+  
   user:User=null as any;
   roles:string[]=[];
   mainRole:String='';
@@ -33,7 +39,11 @@ export class ProfileComponent implements OnInit {
   @ViewChild("modalDialog") modalDialog!: ElementRef;
   formData: FormData|null=null;
   constructor(private storageService: StorageService,private authService: AuthService,private events:EventsService,private router: Router,) { }
-
+  public uploader: FileUploader = new FileUploader({
+    url: USERDATA_API+ 'profileImage',
+    itemAlias: 'profileInput',
+    headers: [{ name: 'foofoo', value: 'passengerslivesmatter' }]
+  });
   ngOnInit(): void {
     this.isLoggedIn = this.storageService.isLoggedIn();
     if (this.isLoggedIn) {
@@ -49,6 +59,17 @@ export class ProfileComponent implements OnInit {
       }
     })
     this.user=this.storageService.getUser();
+    this.uploader.onAfterAddingFile = (file) => {
+      file.withCredentials = false;
+    };
+    this.uploader.authToken=this.storageService.getTokent();
+    this.uploader.onCompleteItem = (item: any, status: any) => {
+      const data=JSON.parse(status)
+      this.storageService.alterUser('profileImage',data.url)
+      this.user=this.storageService.getUser();
+      console.log('Uploaded File Details:', item);
+      this.closeModel();
+    };
       this.roles=this.user.roles.map(rl=>{switch (rl) {
         case "ROLE_USER":
           return 'Student';
@@ -101,18 +122,8 @@ export class ProfileComponent implements OnInit {
     }, 10);
   }
   uploadImage(){
-    console.log("formData up");
-    console.log(this.formData);
-    const upload$ = this.authService.uploadImage(this.formData);
-    upload$.subscribe({
-      next:(data)=>{
-      console.log(data);
-    },
-    error:(err)=>{
-      console.log(err);
-      
-    }
-  });
+    console.log("image upload");
+    this.uploader.uploadAll();
     
   }
   @HostListener('document:click', ['$event'])
@@ -123,6 +134,7 @@ export class ProfileComponent implements OnInit {
   }
   closeModel(){
     this.fadeModel=false;
+    this.formData=null
     setTimeout(() => {
       this.modelShowen=false;
     }, 150);

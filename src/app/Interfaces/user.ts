@@ -10,6 +10,7 @@ export interface User{
     lName:string,
     birthDate:Date,
     grade:number,
+    profileImage:string,
     //fromTo:User
 }
 export interface UserPublic{

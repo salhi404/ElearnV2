@@ -20,16 +20,16 @@
                 </div>
                 
               </div>
-              <figure class="avatar mr-2 avatar-xl ">
-                <input #profileInput  hidden type="file"  name="profileInput"  (change)="getProfileInput($event)"  >
-                <img class="avatar" [src]="imageSrc || 'assets/img/users/user-1.png'" alt="...">
+              <figure class="avatar mr-2 avatar-xl "  [ngClass]="{'avatarInitials':!imageSrc&&user.profileImage.length==2}" [attr.data-initial]="user.profileImage">
+                <input #profileInput  hidden type="file"  name="profileInput"   ng2FileSelect [uploader]="uploader"  accept="image/x-png,image/gif,image/jpeg" (change)="getProfileInput($event)"  >
+                <img *ngIf="imageSrc||user.profileImage.length>2" class="avatar" [src]="imageSrc || user.profileImage" alt="...">
               </figure>
               
             </div>
            
             <div class="d-flex align-items-center justify-content-center">
               <button (click)="profileInput.click()" class="btn btn-primary m-t-15 waves-effect mr-2 " type="button">change</button>
-              <button *ngIf="formData" (click)="uploadImage()" class="btn btn-info m-t-15 waves-effect " type="button">Upload</button>
+              <button  *ngIf="formData" (click)="uploadImage()" class="btn btn-info m-t-15 waves-effect " type="button">Upload</button>
             </div>
           </div>
         </form>
@@ -46,8 +46,8 @@
               <div class="card-body">
                 <div class="author-box-center">
                   <div>
-                    <figure class="avatar mr-2 avatar-xl">
-                      <img [src]="'assets/img/users/user-1.png'" alt="...">
+                    <figure class="avatar mr-2 avatar-xl"  [ngClass]="{'avatarInitials':user.profileImage.length==2}" [attr.data-initial]="user.profileImage" >
+                      <img *ngIf="user.profileImage.length>2" [src]="user.profileImage" alt="...">
                       <a (click)="showModel(1)"   class="avatar-icon2 pointer"><i  class="material-icons  photo_camera ">photo_camera</i></a>
                       <i class="avatar-icon2-back" ></i>
                     </figure>

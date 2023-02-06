@@ -27,6 +27,7 @@ import { CalendarComponent } from './pages/calendar/calendar.component';
 import { NotificationsComponent } from './pages/notifications/notifications.component';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { FileUploadModule } from 'ng2-file-upload';
 @NgModule({
   declarations: [
     AppComponent,
@@ -59,7 +60,8 @@ import { ProfileComponent } from './pages/profile/profile.component';
     FormsModule,
     IconsModule,
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FileUploadModule
   ],
   providers: [],
   bootstrap: [AppComponent]

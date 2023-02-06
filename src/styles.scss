@@ -31827,7 +31827,7 @@ tr:first-child>td>.fc-day-grid-event {
     background: #ffa426
 }
 
-.avatar[data-initial]::before {
+.avatarInitials::before {
     color: currentColor;
     content: attr(data-initial);
     left: 50%;
