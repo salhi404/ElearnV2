@@ -7,7 +7,7 @@ import {  Router, NavigationExtras } from '@angular/router';
 import { SocketioService } from 'src/app/services/socketio.service';
 import { Subscription, take } from 'rxjs';
 import { AuthService } from '../../_services/auth.service';
-import { EventsService } from 'src/app/services/events.service';
+import { EventsService } from 'src/app/services/events.service';  
 
 interface ChatInfo{
   chatter:UserPublic;
@@ -78,7 +78,7 @@ export class ChatComponent implements OnInit,OnDestroy {
               }
             } 
           }else{
-            this.chatters.push({username:data.data.username,email:data.data.email,OnlineStat:-1});
+            this.chatters.push({username:data.data.username,email:data.data.email,OnlineStat:-1,profileImage:data.data.profileImage});
             this.chattersinfo.push({chatter:this.chatters[this.chatters.length-1],chat:[chat],chatroom:this.chatters[this.chatters.length-1].email,loaded:true,unoppenedcount:1})
             this.getchat(this.chattersinfo[this.chattersinfo.length-1]);
             this.storageService.saveChatters(this.chatters);
@@ -105,7 +105,7 @@ export class ChatComponent implements OnInit,OnDestroy {
     this.chatters=this.storageService.getChatters();
     if (this.isLoggedIn) {
       this.chatters=this.chatters.filter(chatter=>chatter.email!=this.user.email);
-      this.chatters.unshift({username:this.user.username+'(you)',email:this.user.email,OnlineStat:-1});
+      this.chatters.unshift({username:this.user.username+'(you)',email:this.user.email,OnlineStat:-1,profileImage:this.user.profileImage});
     }
     /*for (let index = 0; index < 10; index++) {
       this.chats.push({msg:'message '+index,date:new Date(),isSent:index%3==0})
@@ -249,8 +249,7 @@ export class ChatComponent implements OnInit,OnDestroy {
         next: data => {
           console.log('recieved data mail : ');
           console.log(data);
-          
-            this.chatters.push({username:data.username,email:data.email,OnlineStat:-1});
+            this.chatters.push({username:data.username,email:data.email,OnlineStat:-1,profileImage:data.profileImage});
             this.chattersinfo.push({chatter:this.chatters[this.chatters.length-1],chat:[],chatroom:this.chatters[this.chatters.length-1].email,loaded:true,unoppenedcount:0})
             this.storageService.saveChatters(this.chatters);
             if(this.chatters.length>1){

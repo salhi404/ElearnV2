@@ -1,6 +1,9 @@
 <li class="dropdown navLi">
     <a (click)="showuserDD=!showuserDD" class="nav-link dropdown-toggle  nav-link-user pointer"> 
-      <img  alt="image" src="assets/img/user.png" class="user-img-radious-style"> 
+      <figure class="avatar "   [ngClass]="{'avatarInitials':profileImage.length==2}" [attr.data-initial]="profileImage" >
+        <img class="avatarImg" *ngIf="profileImage.length>2" [src]="profileImage" alt="...">
+      </figure>
+
       <span class="d-sm-none d-lg-inline-block"></span>
     </a>
     <div [ngClass]="{'show':showuserDD}" class="dropdown-menu dropdown-menu-right pullDown">

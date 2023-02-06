@@ -38,7 +38,7 @@
   <ul class="navbar-nav navbar-right">
     <app-msg-dd   [mailCount]="mailCount" [mails]="mails" *ngIf="logged" ></app-msg-dd>
     <app-ntf-dd   *ngIf="logged" ></app-ntf-dd>
-    <app-user-dd  *ngIf="logged" [username]="user.username" ></app-user-dd>
+    <app-user-dd  *ngIf="logged" [username]="user.username" [profileImage]="user.profileImage" ></app-user-dd>
     <a [ngClass]="{'authBtn joinBtn':interfaceLayout}" routerLink="/signup" class="btn btn-icon icon-left btn-warning " *ngIf="!logged&&interfaceLayout" >
       <span>join</span>
     </a>

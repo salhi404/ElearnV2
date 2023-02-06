@@ -18,6 +18,7 @@ export interface UserPublic{
     email:string;
     status?:number;
     OnlineStat?:number;
+    profileImage:string,
 }
 export interface Pref{
     darkTheme:boolean;

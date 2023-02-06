@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 })
 export class SocketioService {
   socket:any;
-  public recievedMsgEvent = new BehaviorSubject({code:-1,data:{ email:'', username:'',date:new Date(),message:''}});
+  public recievedMsgEvent = new BehaviorSubject({code:-1,data:{ email:'', username:'',date:new Date(),message:'',profileImage:''}});
   recieveMsg = this.recievedMsgEvent.asObservable();
   constructor() { }
   changerecievedMsg(state: number,chat:any) {

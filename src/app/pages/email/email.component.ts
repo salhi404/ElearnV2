@@ -5,12 +5,17 @@ import { StorageService } from 'src/app/_services/storage.service';
 import { DatePipe } from '@angular/common';
 import { EventsService } from 'src/app/services/events.service';
 import {  Router, NavigationExtras } from '@angular/router';
-import { User, UserPublic } from 'src/app/Interfaces/user';
+import { User } from 'src/app/Interfaces/user';
 import { Subscription } from 'rxjs';
 
   interface  Mod{
   mail:string
   modType:number
+}
+interface  PublicUser
+{
+  username:string;
+  email:string;
 }
 @Component({
   selector: 'app-email',
@@ -22,7 +27,7 @@ export class EmailComponent implements OnInit,OnDestroy {
 ,{name:"Themeforest",color:'col-cyan',bgColor:"badge-cyan"},{name:"Google",color:'col-blue-grey',bgColor:"badge-blue-grey"}];
   user:User=null as any;
   markedAsOppen:Mail=null as any;
-  reciepients:UserPublic[]=[];
+  reciepients:PublicUser[]=[];
   nmbrOfShowingMsgs:number=0;
   chosenLabel:number=-1;
   replacedBody:string[]=[];
@@ -367,6 +372,7 @@ export class EmailComponent implements OnInit,OnDestroy {
     this.slectedFilter=-this.slectedFilter;
     this.openWindow(1);
   }
+  /*
   sendMail(){
     const mail:Mail={
       id:this.storageService.getId(),
@@ -390,7 +396,7 @@ export class EmailComponent implements OnInit,OnDestroy {
         
       }
     });
-  }
+  }*/
    recieveMail():void{
     this.loading=true;
     this.authService.getMail().subscribe({
@@ -453,7 +459,7 @@ export class EmailComponent implements OnInit,OnDestroy {
       if(element.tags.includes("inbox")&&!element.tags.includes("bin"))this.InboxdMail.push(element);
       if(element.tags.includes("starred")&&!element.tags.includes("bin"))this.StarredMail.push(element);
       if(element.tags.includes("bin"))this.BinMail.push(element);
-      if(this.reciepients.filter(e=>e.email==element.fromTo.email).length==0)this.reciepients.push(element.fromTo); 
+      if(this.reciepients.filter(e=>e.email==element.fromTo.email).length==0)this.reciepients.push(element.fromTo as PublicUser); 
     });
   }
   getMail():Mail[]{
