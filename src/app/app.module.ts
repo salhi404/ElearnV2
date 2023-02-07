@@ -29,6 +29,8 @@ import { FullCalendarModule } from '@fullcalendar/angular';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { FileUploadModule } from 'ng2-file-upload';
 import { ImageCropperModule } from 'ngx-image-cropper';
+import { ProfileSettingComponent } from './components/profile-setting/profile-setting.component';
+import { ProfileImageComponent } from './components/profile-image/profile-image.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -53,6 +55,8 @@ import { ImageCropperModule } from 'ngx-image-cropper';
     CalendarComponent,
     NotificationsComponent,
     ProfileComponent,
+    ProfileSettingComponent,
+    ProfileImageComponent,
   ],
   imports: [
     FullCalendarModule,

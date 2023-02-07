@@ -1,60 +1,4 @@
-<div [ngClass]="{'showModal':modelShowen,'fadeModel':fadeModel}" class="modal" id="modal">
-  <div class="modal-dialog " role="document" #modalDialog>
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="formModal"> profile picture</h5>
-        <button type="button" class="close" (click)="closeModel()">
-          <span>&times;</span>
-        </button>
-      </div>
-      <div class="modal-body modalstyle">
-        <form class="">
-          <div class="form-group ">
-            <div class="d-flex align-items-center flex-column  justify-content-center">
-              <h6><i class="fas fa-user-friends mr-1"></i>this image is Visible for the public </h6>
-              <div *ngIf="imageUploadErr" class="alert alert-danger alert-has-icon">
-                <div class="d-flex align-items-center mr-1">
-                  <div class="alert-icon"><i class="fas fa-user-friends"></i></div>
-                  <div class="alert-body">
-                      {{imageUploadErrMsg}}
-                  </div>
-                </div>
-                
-              </div>
-              <figure class="avatar mr-2 avatar-xl "  [ngClass]="{'avatarInitials':!croppedImage&&previewImaurl.length==2}" [attr.data-initial]="previewImaurl">
-                <input [(ngModel)]="imageForm" #profileInput  hidden type="file"  name="profileInput"    accept="image/x-png,image/gif,image/jpeg" (change)="getProfileInput($event)"  >
-                <img *ngIf="croppedImage||previewImaurl.length>2" class="avatar" [src]="croppedImage || previewImaurl" alt="...">
-              </figure>
-              <image-cropper
-              id="cropper"
-              style="max-height: 100px;"
-              style="max-width: 250px;"
-              [imageChangedEvent]="imageChangedEvent"
-              [maintainAspectRatio]="true"
-              [aspectRatio]="1 / 1"
-              [onlyScaleDown]="true"
-              [roundCropper]="false"
-              [alignImage]="'center'"
-              [style.display]="showCropper ? null : 'none'"
-              format="png"
-              (imageCropped)="imageCropped($event)"
-              (imageLoaded)="imageLoaded()"
-              (cropperReady)="cropperReady($event)"
-              (loadImageFailed)="loadImageFailed()"
-          ></image-cropper>
-            </div>
-           
-            <div class="d-flex align-items-center justify-content-center">
-              <button (click)="profileInput.click()" class="btn btn-primary m-t-15 waves-effect mr-2 " type="button">change</button>
-              <button (click)="deleteImage()" class="btn btn-danger m-t-15 waves-effect " type="button">delete</button>
-            </div>
-            <div class="d-flex align-items-center justify-content-center m-t-5"><button  *ngIf="croppedImage||deletedImage" (click)="uploadImage()" class="btn btn-info m-t-3 waves-effect d-flex justify-content-center align-items-center" type="button"> <span>Upload</span>  <app-spinner  class="ml-2" *ngIf="loading" [type]="1"></app-spinner></button></div>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
+<app-profile-image [modalEvent]="modalEvent.asObservable()" [user]="user"  ></app-profile-image  >
 <div class="main-content">
     <section class="section">
       <div class="section-body">
@@ -128,7 +72,7 @@
                 </div>
               </div>
             </div>
-            <div class="card">
+            <!--<div class="card">
               <div class="card-header">
                 <h4>Skills</h4>
               </div>
@@ -166,7 +110,7 @@
                   </li>
                 </ul>
               </div>
-            </div>
+            </div>-->
           </div>
           <div class="col-12 col-md-12 col-lg-8">
             <div class="card">
@@ -189,66 +133,29 @@
                         <p class="text-muted">{{user.fName}} {{user.lName}}</p>
                       </div>
                       <div class="col-md-3 col-6 b-r">
-                        <strong>Mobile</strong>
+                        <strong>Status</strong>
                         <br>
-                        <p class="text-muted">(123) 456 7890</p>
+                        <p class="text-muted">{{mainRole}}</p>
                       </div>
                       <div class="col-md-3 col-6 b-r">
                         <strong>Email</strong>
                         <br>
-                        <p class="text-muted">johndeo@example.com</p>
+                        <p class="text-muted">{{user.email}}</p>
                       </div>
                       <div class="col-md-3 col-6">
                         <strong>Location</strong>
                         <br>
-                        <p class="text-muted">India</p>
+                        <p class="text-muted">Morocco</p>
                       </div>
                     </div>
-                    <p class="m-t-30">Completed my graduation in Arts from the well known and
-                      renowned institution
-                      of India – SARDAR PATEL ARTS COLLEGE, BARODA in 2000-01, which was
-                      affiliated
-                      to M.S. University. I ranker in University exams from the same
-                      university
-                      from 1996-01.</p>
-                    <p>Worked as Professor and Head of the department at Sarda Collage, Rajkot,
-                      Gujarat
-                      from 2003-2015 </p>
-                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting
-                      industry. Lorem
-                      Ipsum has been the industry's standard dummy text ever since the 1500s,
-                      when
-                      an unknown printer took a galley of type and scrambled it to make a
-                      type
-                      specimen book. It has survived not only five centuries, but also the
-                      leap
-                      into electronic typesetting, remaining essentially unchanged.</p>
-                    <div class="section-title">Education</div>
+                    <p class="m-t-30"></p>
+                    <p></p>
+                    <p></p>
+                    <div class="section-title"></div>
                     <ul>
-                      <li>B.A.,Gujarat University, Ahmedabad,India.</li>
-                      <li>M.A.,Gujarat University, Ahmedabad, India.</li>
-                      <li>P.H.D., Shaurashtra University, Rajkot</li>
                     </ul>
-                    <div class="section-title">Experience</div>
-                    <ul>
-                      <li>One year experience as Jr. Professor from April-2009 to march-2010
-                        at B.
-                        J. Arts College, Ahmedabad.</li>
-                      <li>Three year experience as Jr. Professor at V.S. Arts &amp; Commerse
-                        Collage
-                        from April - 2008 to April - 2011.</li>
-                      <li>Lorem Ipsum is simply dummy text of the printing and typesetting
-                        industry.
-                      </li>
-                      <li>Lorem Ipsum is simply dummy text of the printing and typesetting
-                        industry.
-                      </li>
-                      <li>Lorem Ipsum is simply dummy text of the printing and typesetting
-                        industry.
-                      </li>
-                      <li>Lorem Ipsum is simply dummy text of the printing and typesetting
-                        industry.
-                      </li>
+                    <div class="section-title"></div>
+                    <ul>  
                     </ul>
                   </div>
                   <div class="tab-pane " [ngClass]="{'show active':showenTab==1,'fadetab':showenTabFade==1,'unfadetab':showenTabFade!=1 }" >

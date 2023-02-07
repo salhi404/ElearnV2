@@ -1,0 +1,119 @@
+
+.avatar .avatar-icon2 {
+    background: none;
+    border: none;
+    bottom: 14.64%;
+    height: 50%;
+    padding: 0.1rem;
+    position: absolute;
+    right: 14.64%;
+    transform: translate(50%, 50%);
+    width: 50%;
+    z-index: 2
+}
+.avatar .avatar-icon2-back {
+    bottom: 14.64%;
+    height: 15%;
+    padding: 0.1rem;
+    position: absolute;
+    right: 14.64%;
+    transform: translate(50%, 50%);
+    width: 15%;
+    z-index: 1;
+    background: #fff;
+}
+.photo_camera{
+    color: #444;
+}
+.avatar-icon2:hover .photo_camera{
+    scale: 1.1;
+    transition: scale .07s  ease-out ;
+}
+.profileInput{
+    display: none;
+}
+
+//duplicates
+.modalstyle{
+  max-height: 500px;
+  overflow-y: auto;
+}
+.scroller {
+  overflow-y: scroll;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+  
+
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(192, 192, 192,0);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgba(97, 97, 97, 0.753);
+  border-radius: 5px ;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(97, 97, 97,0.8);
+}
+#cropper {
+  display: flex ;
+  justify-content: center;
+}
+.modal {
+    background: rgba(20, 20, 20, 0.2);
+    transition: .2s;
+  }
+  .modal-dialog{
+    min-width: 30%;
+    margin-top: 10px;
+    transition: -webkit-transform .2s ease-out;
+      -webkit-transition: -webkit-transform .2s ease-out;
+      transition: transform .2s ease-out;
+      transition: transform .2s ease-out, -webkit-transform .2s ease-out;
+      transition: transform .2s ease-out, -webkit-transform .2s ease-out;
+      -webkit-transform: translate(0, -10px);
+      transform: translate(0, -10px)
+  }
+  @media(max-width:1100px) {
+    .modal-dialog{
+      min-width: 40%;
+    }
+  }
+  @media(max-width:800px) {
+    .modal-dialog{
+      min-width: 60%;
+    }
+    .card-header-action2  .btn{
+      padding: 5px 12px!important;
+      font-size: 15px!important;
+    }
+  }
+  @media(max-width:576px) {
+    .modal-dialog{
+      min-width: 90%;
+    }
+    .card-header-action2  .btn{
+      padding: 4px 9px!important;
+      font-size: 12px!important;
+    }
+  }
+  
+  .showModal{
+    display: flex;
+  }
+  .fadeModel{
+    background: rgba(20, 20, 20, 0.7);
+  }
+  .fadeModel .modal-dialog{
+    -webkit-transform: translate(0, 0px);
+      transform: translate(0, 0px)
+  }
