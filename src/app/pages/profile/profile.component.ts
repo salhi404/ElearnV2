@@ -67,7 +67,8 @@ export class ProfileComponent implements OnInit {
   file:File|null=null;
   reader = new FileReader();
   loading:boolean=false;
-
+  previewImaurl='';
+  deletedImage=false;
   @ViewChild("modalDialog") modalDialog!: ElementRef;
   formData: FormData|null=null;
   constructor(private imageCompress: NgxImageCompressService,private storageService: StorageService,private authService: AuthService,private events:EventsService,private router: Router,) { }
@@ -92,6 +93,7 @@ export class ProfileComponent implements OnInit {
       }
     })
     this.user=this.storageService.getUser();
+    this.previewImaurl=this.user.profileImage;
    /* this.uploader.onAfterAddingFile = (file) => {
       file.withCredentials = false;
     };
@@ -171,40 +173,62 @@ export class ProfileComponent implements OnInit {
   uploadImage(){
       console.log("image upload");
       this.loading=true;
-      var promise = new Promise((resolve, reject) => { 
-        this.compressFile(resolve, reject);
-    }) 
-    
-    promise.then((success) => { 
-            console.log(success); 
-            if(this.imgResult!==''){
-              console.log(this.imgResult);  
-              this.authService.uploadImage(this.imgResult).subscribe({
-                next:data=>{
-                  console.log(data);
-                  this.storageService.alterUser('profileImage',data.url)
-                  this.user=this.storageService.getUser();
-                  this.events.changeupdateState(this.events.UPDATEUSER);
-                  this.loading=false;
-                  this.closeModel();
-                },
-                error:err=>{
-                  this.clearImage();
-                  this.imageUploadErr=true;
-                  this.imageUploadErrMsg='server error';
-                  console.log(err);
-                  this.loading=false;
-                }
-              });
-            }else{
-              this.imageUploadErr=true;
-              this.imageUploadErrMsg='no image found';
-            }
+      if(this.deletedImage){
+        this.authService.deleteprofileImage().subscribe({
+          next:data=>{
+            console.log(data);
+            this.storageService.alterUser('profileImage',data.url)
+            this.user.profileImage=data.url;
+            this.previewImaurl=this.user.profileImage;
+            this.events.changeupdateState(this.events.UPDATEUSER);
+            this.loading=false;
+            this.closeModel();
+          },
+          error:err=>{
+            this.clearImage();
+            this.imageUploadErr=true;
+            this.imageUploadErrMsg='server error';
+            console.log(err);
+            this.loading=false;
+          }
+        });
+      }else{
+        var promise = new Promise((resolve, reject) => { 
+          this.compressFile(resolve, reject);
+      }) 
+      promise.then((success) => { 
+              console.log(success); 
+              if(this.imgResult!==''){
+                console.log(this.imgResult);  
+                this.authService.uploadImage(this.imgResult).subscribe({
+                  next:data=>{
+                    console.log(data);
+                    this.storageService.alterUser('profileImage',data.url)
+                    this.user.profileImage=data.url;
+                    this.previewImaurl=this.user.profileImage;
+                    this.events.changeupdateState(this.events.UPDATEUSER);
+                    this.loading=false;
+                    this.closeModel();
+                  },
+                  error:err=>{
+                    this.clearImage();
+                    this.imageUploadErr=true;
+                    this.imageUploadErrMsg='server error';
+                    console.log(err);
+                    this.loading=false;
+                  }
+                });
+              }else{
+                this.imageUploadErr=true;
+                this.imageUploadErrMsg='no image found';
+              }
+  
+          }) 
+          .catch((error) => { 
+              console.log(error); 
+          }); 
+      }
 
-        }) 
-        .catch((error) => { 
-            console.log(error); 
-        }); 
       
 
     
@@ -214,7 +238,6 @@ export class ProfileComponent implements OnInit {
   imageCropped(event: ImageCroppedEvent) {
     this.croppedImage = event.base64;
     console.log("croppedImage  trigerred");
-    
     if(event.base64)console.log(event, base64ToFile(event.base64));
 }
 
@@ -241,9 +264,12 @@ clearImage(){
   this.showCropper = false;
   this.croppedImage='';
   this.imageChangedEvent='';
+  this.deletedImage=false;
 }
 deleteImage(){
-  
+  this.clearImage();
+  this.previewImaurl=this.user.fName[0].toUpperCase()+this.user.lName[0].toUpperCase();
+  this.deletedImage=true;
 }
   @HostListener('document:click', ['$event'])
   clickout(event:any) {
@@ -253,7 +279,6 @@ deleteImage(){
   }
   closeModel(){
     this.fadeModel=false;
-    
     setTimeout(() => {
       this.modelShowen=false;
       this.clearImage();

@@ -21,9 +21,9 @@
                 </div>
                 
               </div>
-              <figure class="avatar mr-2 avatar-xl "  [ngClass]="{'avatarInitials':!croppedImage&&user.profileImage.length==2}" [attr.data-initial]="user.profileImage">
+              <figure class="avatar mr-2 avatar-xl "  [ngClass]="{'avatarInitials':!croppedImage&&previewImaurl.length==2}" [attr.data-initial]="previewImaurl">
                 <input [(ngModel)]="imageForm" #profileInput  hidden type="file"  name="profileInput"    accept="image/x-png,image/gif,image/jpeg" (change)="getProfileInput($event)"  >
-                <img *ngIf="croppedImage||user.profileImage.length>2" class="avatar" [src]="croppedImage || user.profileImage" alt="...">
+                <img *ngIf="croppedImage||previewImaurl.length>2" class="avatar" [src]="croppedImage || previewImaurl" alt="...">
               </figure>
               <image-cropper
               id="cropper"
@@ -48,7 +48,7 @@
               <button (click)="profileInput.click()" class="btn btn-primary m-t-15 waves-effect mr-2 " type="button">change</button>
               <button (click)="deleteImage()" class="btn btn-danger m-t-15 waves-effect " type="button">delete</button>
             </div>
-            <div class="d-flex align-items-center justify-content-center"><button  *ngIf="croppedImage" (click)="uploadImage()" class="btn btn-info m-t-3 waves-effect d-flex justify-content-center align-items-center" type="button"> <span>Upload</span>  <app-spinner  class="ml-2" *ngIf="loading" [type]="1"></app-spinner></button></div>
+            <div class="d-flex align-items-center justify-content-center m-t-5"><button  *ngIf="croppedImage||deletedImage" (click)="uploadImage()" class="btn btn-info m-t-3 waves-effect d-flex justify-content-center align-items-center" type="button"> <span>Upload</span>  <app-spinner  class="ml-2" *ngIf="loading" [type]="1"></app-spinner></button></div>
           </div>
         </form>
       </div>

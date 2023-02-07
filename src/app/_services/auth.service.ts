@@ -179,7 +179,10 @@ uploadImage(image:any): Observable<any> {
   const token = this.storageService.getTokent();
   return this.http.post(USERDATA_API + 'profileImage', {image,token}, httpOptions);
 }
-
+deleteprofileImage(): Observable<any> {
+  const token = this.storageService.getTokent();
+  return this.http.post(USERDATA_API + 'deleteprofileImage', {token}, httpOptions);
+}
 
   
 }
