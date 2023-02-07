@@ -9,6 +9,7 @@ import { EventsService } from 'src/app/services/events.service';
 import { parsegrade } from 'src/app/functions/parsers';
 //import { FileUploader } from 'ng2-file-upload'; 
 import { base64ToFile, Dimensions, ImageCroppedEvent } from 'ngx-image-cropper';
+import { NgxImageCompressService } from 'ngx-image-compress';
 
 const URL_API = 'http://192.168.1.103:3000/'; 
 const USERDATA_API = URL_API+'api/userdata/';
@@ -18,6 +19,28 @@ const USERDATA_API = URL_API+'api/userdata/';
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
+  imgoriginal: string = "";
+  imgResult: string = "";
+  compressFile() {
+        this.imgoriginal = this.croppedImage;
+        console.log("Size in bytes of the uploaded image was:", this.imageCompress.byteCount(this.croppedImage));
+        if(this.imageCompress.byteCount(this.croppedImage)>500000){
+          const ratio=500000/this.imageCompress.byteCount(this.croppedImage)
+          console.log("ratio");
+          console.log(ratio);
+          this.imageCompress
+          .compressFile(this.croppedImage, ratio*500, ratio*500) // 50% ratio, 50% quality
+          .then(
+            (compressedImage) => {
+              this.imgResult = compressedImage;
+              console.log("Size in bytes after compression is now:", this.imageCompress.byteCount(compressedImage));
+              console.log(this.imgResult);
+              
+            }
+          );
+        }
+      
+  }
   
   imageForm:any=null;
   user:User=null as any;
@@ -41,11 +64,11 @@ export class ProfileComponent implements OnInit {
   imageChangedEvent:any='';
   file:File|null=null;
   reader = new FileReader();
-  
+  loading:boolean=false;
 
   @ViewChild("modalDialog") modalDialog!: ElementRef;
   formData: FormData|null=null;
-  constructor(private storageService: StorageService,private authService: AuthService,private events:EventsService,private router: Router,) { }
+  constructor(private imageCompress: NgxImageCompressService,private storageService: StorageService,private authService: AuthService,private events:EventsService,private router: Router,) { }
  /* public uploader: FileUploader = new FileUploader({
     url: USERDATA_API+ 'profileImage',
     itemAlias: 'profileInput',
@@ -138,12 +161,14 @@ export class ProfileComponent implements OnInit {
   }
   uploadImage(){
     console.log("image upload");
-
+    this.loading=true;
     this.authService.uploadImage( this.croppedImage).subscribe({
       next:data=>{
         console.log(data);
         this.storageService.alterUser('profileImage',data.url)
         this.user=this.storageService.getUser();
+        this.events.changeupdateState(this.events.UPDATEUSER);
+        this.loading=false;
         this.closeModel();
       },
       error:err=>{
@@ -159,7 +184,7 @@ export class ProfileComponent implements OnInit {
     //this.readImageEvent(event.base64)
     console.log(event);
     console.log(this.imageForm);
-    
+   // this.compressFile();
     if(event.base64)console.log(event, base64ToFile(event.base64));
 }
 

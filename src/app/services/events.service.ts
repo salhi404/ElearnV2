@@ -9,6 +9,7 @@ export class EventsService {
   public DARKTHEMELIGHT=4;
   public DARKTHEMEDARK=5;
   public TASKOPENMAIL=1;
+  public UPDATEUSER=1;
   public layoutEvent = new BehaviorSubject(-1);
   currentLayoutEvent = this.layoutEvent.asObservable();
   public chatEvent = new BehaviorSubject(-1);
@@ -19,6 +20,8 @@ export class EventsService {
   infostatusEvent = this.infoEvent.asObservable();
   public taskEvent = new BehaviorSubject({task:-1,data:{}as any});
   taskstatusEvent = this.taskEvent.asObservable();
+  public updateEvent = new BehaviorSubject(-1);
+  updatestatusEvent = this.updateEvent.asObservable();
   constructor() { }
   chngLayoutEvent(state: number) {
     this.layoutEvent.next(state)
@@ -34,5 +37,8 @@ export class EventsService {
   }
   changeTaskState(state: any) {
     this.taskEvent.next(state);
+  }
+  changeupdateState(state: any) {
+    this.updateEvent.next(state);
   }
 }

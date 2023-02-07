@@ -73,7 +73,11 @@
 
 }
 
-
+#cropper > div{
+    display: flex ;
+    justify-content: center;
+    border:2px solid red
+  }
 
 .theme-black .sidebar-brand .logo-name{
     color: #a9b7d0;

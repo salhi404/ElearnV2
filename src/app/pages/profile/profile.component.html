@@ -7,7 +7,7 @@
           <span>&times;</span>
         </button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body modalstyle">
         <form class="">
           <div class="form-group ">
             <div class="d-flex align-items-center flex-column  justify-content-center">
@@ -25,15 +25,15 @@
                 <img *ngIf="croppedImage||user.profileImage.length>2" class="avatar" [src]="croppedImage || user.profileImage" alt="...">
               </figure>
               <image-cropper
+              id="cropper"
+              style="max-height: 100px;"
+              style="max-width: 250px;"
               [imageChangedEvent]="imageChangedEvent"
               [maintainAspectRatio]="true"
               [aspectRatio]="1 / 1"
-              [resizeToWidth]="256"
-              [cropperMinWidth]="128"
               [onlyScaleDown]="true"
               [roundCropper]="false"
-
-              [alignImage]="'left'"
+              [alignImage]="'center'"
               [style.display]="showCropper ? null : 'none'"
               format="png"
               (imageCropped)="imageCropped($event)"
@@ -45,7 +45,7 @@
            
             <div class="d-flex align-items-center justify-content-center">
               <button (click)="profileInput.click()" class="btn btn-primary m-t-15 waves-effect mr-2 " type="button">change</button>
-              <button  *ngIf="croppedImage" (click)="uploadImage()" class="btn btn-info m-t-15 waves-effect " type="button">Upload</button>
+              <button  *ngIf="croppedImage" (click)="uploadImage()" class="btn btn-info m-t-15 waves-effect d-flex justify-content-center align-items-center" type="button"> <span>Upload</span>  <app-spinner  class="ml-2" *ngIf="loading" [type]="1"></app-spinner></button>
             </div>
           </div>
         </form>

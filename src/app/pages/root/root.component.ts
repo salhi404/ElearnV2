@@ -87,6 +87,7 @@ export class RootComponent implements OnInit, OnDestroy {
   subscription3: Subscription = new Subscription;
   subscription4: Subscription = new Subscription;
   subscription5: Subscription = new Subscription;
+  subscription6: Subscription = new Subscription;
   showMiniSideBar: boolean = false;
   isTabletMode: boolean = false;
   DarkTheme: boolean = false;
@@ -135,6 +136,11 @@ export class RootComponent implements OnInit, OnDestroy {
           var info=this.events.infoEvent.getValue();
           info.unoppenedchatCount=this.unoppenedchatCount;
           this.events.changeInfoState(info);
+        }
+      })
+      this.subscription6 = this.events.updateEvent.subscribe(state => {
+        if (state == this.events.UPDATEUSER) {
+          this.user = this.storageService.getUser();
         }
       })
       this.subscription5=this.events.infostatusEvent.subscribe(state=>{
@@ -330,6 +336,7 @@ export class RootComponent implements OnInit, OnDestroy {
     this.subscription3.unsubscribe();
     this.subscription4.unsubscribe();
     this.subscription5.unsubscribe();
+    this.subscription6.unsubscribe();
     if (!this.state.remember && this.isLoggedIn) this.logout();
     this.socketService.disconnect();
   }
