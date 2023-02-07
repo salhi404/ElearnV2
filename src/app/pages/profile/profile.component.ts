@@ -21,27 +21,29 @@ const USERDATA_API = URL_API+'api/userdata/';
 export class ProfileComponent implements OnInit {
   imgoriginal: string = "";
   imgResult: string = "";
-  compressFile() {
-        this.imgoriginal = this.croppedImage;
-        console.log("Size in bytes of the uploaded image was:", this.imageCompress.byteCount(this.croppedImage));
-        if(this.imageCompress.byteCount(this.croppedImage)>500000){
-          const ratio=500000/this.imageCompress.byteCount(this.croppedImage)
-          console.log("ratio");
-          console.log(ratio);
+   formatBytes(a:number,b=2){if(!+a)return"0 Bytes";const c=0>b?0:b,d=Math.floor(Math.log(a)/Math.log(1024));return`${parseFloat((a/Math.pow(1024,d)).toFixed(c))} ${["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"][d]}`}
+
+  compressFile(resolve:any, reject:any) {
+        const byteCount=this.imageCompress.byteCount(this.croppedImage);
+        console.log("compress from ",this.formatBytes(byteCount) );
+        if(byteCount>500000){
           this.imageCompress
-          .compressFile(this.croppedImage, ratio*500, ratio*500) // 50% ratio, 50% quality
+          .compressFile(this.croppedImage,25, 25) // 50% ratio, 50% quality
           .then(
             (compressedImage) => {
-              this.imgResult = compressedImage;
-              console.log("Size in bytes after compression is now:", this.imageCompress.byteCount(compressedImage));
+              this.imgResult = compressedImage.slice();
+              console.log("compress To ",this.formatBytes(this.imageCompress.byteCount(compressedImage)) );
               console.log(this.imgResult);
-              
+              resolve()
             }
           );
+        }else{
+          this.imgResult=this.croppedImage.slice();
+          resolve();
         }
-      
   }
-  
+  imageUploadErr:boolean=false
+  imageUploadErrMsg:string='';
   imageForm:any=null;
   user:User=null as any;
   roles:string[]=[];
@@ -119,9 +121,16 @@ export class ProfileComponent implements OnInit {
     }
   }
   getProfileInput(event:any){
+    //this.clearImage();
     console.log("event");
     console.log(event);
-    this.imageChangedEvent=event;
+    if(event.target.files[0].size>5000000){
+      this.imageUploadErr=true;
+      this.imageUploadErrMsg='image is too large (>5mb)';
+    }else{
+      this.imageChangedEvent=event;
+      console.log(event.target.files[0].size);
+    }
     /*this.file = event.target.files[0];
     if (this.file) {
         this.fileName = this.file.name;
@@ -160,31 +169,52 @@ export class ProfileComponent implements OnInit {
     }, 10);
   }
   uploadImage(){
-    console.log("image upload");
-    this.loading=true;
-    this.authService.uploadImage( this.croppedImage).subscribe({
-      next:data=>{
-        console.log(data);
-        this.storageService.alterUser('profileImage',data.url)
-        this.user=this.storageService.getUser();
-        this.events.changeupdateState(this.events.UPDATEUSER);
-        this.loading=false;
-        this.closeModel();
-      },
-      error:err=>{
-        console.log(err);
-        
-      }
-    });
+      console.log("image upload");
+      this.loading=true;
+      var promise = new Promise((resolve, reject) => { 
+        this.compressFile(resolve, reject);
+    }) 
+    
+    promise.then((success) => { 
+            console.log(success); 
+            if(this.imgResult!==''){
+              console.log(this.imgResult);  
+              this.authService.uploadImage(this.imgResult).subscribe({
+                next:data=>{
+                  console.log(data);
+                  this.storageService.alterUser('profileImage',data.url)
+                  this.user=this.storageService.getUser();
+                  this.events.changeupdateState(this.events.UPDATEUSER);
+                  this.loading=false;
+                  this.closeModel();
+                },
+                error:err=>{
+                  this.clearImage();
+                  this.imageUploadErr=true;
+                  this.imageUploadErrMsg='server error';
+                  console.log(err);
+                  this.loading=false;
+                }
+              });
+            }else{
+              this.imageUploadErr=true;
+              this.imageUploadErrMsg='no image found';
+            }
+
+        }) 
+        .catch((error) => { 
+            console.log(error); 
+        }); 
+      
+
+    
     //this.uploader.uploadAll();
     
   }
   imageCropped(event: ImageCroppedEvent) {
     this.croppedImage = event.base64;
-    //this.readImageEvent(event.base64)
-    console.log(event);
-    console.log(this.imageForm);
-   // this.compressFile();
+    console.log("croppedImage  trigerred");
+    
     if(event.base64)console.log(event, base64ToFile(event.base64));
 }
 
@@ -200,7 +230,21 @@ cropperReady(sourceImageDimensions: Dimensions) {
 loadImageFailed() {
     console.log('Load failed');
 }
-
+clearImage(){
+  this.imageUploadErr=false;
+  this.imageUploadErrMsg='';
+  this.formData=null;
+  this.imageForm=null;
+  this.fileName ='';
+  this.imgResult='';
+  this.imageSrc =null;
+  this.showCropper = false;
+  this.croppedImage='';
+  this.imageChangedEvent='';
+}
+deleteImage(){
+  
+}
   @HostListener('document:click', ['$event'])
   clickout(event:any) {
     if(!this.modalDialog.nativeElement.contains(event.target)&&!this.blockHostListener){
@@ -212,13 +256,7 @@ loadImageFailed() {
     
     setTimeout(() => {
       this.modelShowen=false;
-      this.formData=null;
-      this.imageForm=null;
-      this.fileName ='';
-      this.imageSrc =null;
-      this.showCropper = false;
-      this.croppedImage='';
-      this.imageChangedEvent='';
+      this.clearImage();
     }, 150);
   }
 }
