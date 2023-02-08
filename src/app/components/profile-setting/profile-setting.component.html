@@ -182,7 +182,13 @@
     </div>
   </div>
   </div>
-
+  <div class="card-footer text-right">
+    <button class=" registerBtn btn btn-primary ml-auto" >
+        <span>Save Changes</span>
+        <span *ngIf="loading" class="mx-2"></span>
+        <app-spinner *ngIf="loading" [type]="1"></app-spinner>
+      </button>
+  </div>
 </form>
 <div class="passwordBox">
     <form
@@ -239,7 +245,7 @@
             <div >
               <button class=" registerBtn btn btn-primary ml-auto" >
                 <span>Change password</span>
-                <span class="mx-2"></span>
+                <span *ngIf="loading2" class="mx-2"></span>
                 <app-spinner *ngIf="loading2" [type]="1"></app-spinner>
               </button>
             </div> 

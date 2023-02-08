@@ -25,8 +25,8 @@ export class ProfileComponent implements OnInit,OnDestroy {
   isLoggedIn:boolean=false;
   navigationExtras: NavigationExtras = { state: null as any };
   datepipe: DatePipe = new DatePipe('en-US');
-  showenTab:number=0;
-  showenTabFade:number=0;
+  showenTab:number=1  ;
+  showenTabFade:number=1  ;
   blockHostListener: boolean=false;
   grade:string='';
   modalEvent: Subject<number> = new Subject<number>();
