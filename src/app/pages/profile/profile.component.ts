@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild,OnDestroy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { User } from 'src/app/Interfaces/user';
 import { StorageService } from 'src/app/_services/storage.service';
@@ -15,12 +15,13 @@ import { NgxImageCompressService } from 'ngx-image-compress';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit,OnDestroy {
   user:User=null as any;
   roles:string[]=[];
   mainRole:String='';
   userdetails:any={bio:''};
   subscription: Subscription = new Subscription();
+  subscription2: Subscription = new Subscription();
   isLoggedIn:boolean=false;
   navigationExtras: NavigationExtras = { state: null as any };
   datepipe: DatePipe = new DatePipe('en-US');
@@ -31,6 +32,10 @@ export class ProfileComponent implements OnInit {
   modalEvent: Subject<number> = new Subject<number>();
 
   constructor(private imageCompress: NgxImageCompressService,private storageService: StorageService,private authService: AuthService,private events:EventsService,private router: Router,) { }
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+    this.subscription2.unsubscribe();
+  }
  /* public uploader: FileUploader = new FileUploader({
     url: USERDATA_API+ 'profileImage',
     itemAlias: 'profileInput',
@@ -40,19 +45,7 @@ export class ProfileComponent implements OnInit {
     //this.reader.onload = e => this.imageSrc = this.reader.result;
     this.isLoggedIn = this.storageService.isLoggedIn();
     if (this.isLoggedIn) {
-      this.subscription=this.authService.getUserData('USERDETAILS').subscribe({
-      next:data=>{
-        console.log('USERDETAILS');
-        console.log(data);  
-        if(data.data)this.userdetails=data.data;     
-      },
-      error:err=>{
-        console.log('USERDETAILS err');
-        console.log(err);
-      }
-    })
     this.user=this.storageService.getUser();
-    
    /* this.uploader.onAfterAddingFile = (file) => {
       file.withCredentials = false;
     };
@@ -64,6 +57,11 @@ export class ProfileComponent implements OnInit {
       console.log('Uploaded File Details:', item);
       this.closeModel();
     };*/
+      this.subscription2 = this.events.updateEvent.subscribe(state => {
+        if (state == this.events.UPDATEUSER) {
+          this.user = this.storageService.getUser();
+        }
+      })
       this.roles=this.user.roles.map(rl=>{switch (rl) {
         case "ROLE_USER":
           return 'Student';

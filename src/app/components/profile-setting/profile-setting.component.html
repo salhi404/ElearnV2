@@ -1,1 +1,230 @@
-<p>profile-setting works!</p>
+<form 
+  name="form" 
+  (ngSubmit)="f.form.valid && onSubmit()" 
+  #f="ngForm"
+  novalidate
+  >
+  <div class="card-header">
+    <h4>Edit Profile</h4>
+  </div>
+  <div class="card-body">
+    <div class="row">
+        <div class="form-group col-6 ">
+          <label for="frist_name">First Name</label>
+          <input 
+            id="frist_name" 
+            type="text" 
+            class="form-control" 
+            name="frist_name"  
+            [(ngModel)]="form.frist_name"
+            required
+            minlength="3"
+            maxlength="20"
+            #frist_name="ngModel"
+            placeholder="First Name" 
+            type="text" 
+            autocomplete="off"
+            [ngClass]="{'is-invalid':(frist_name.errors && f.submitted)}"
+          >
+          <div class="invalid-feedback"  *ngIf="frist_name.errors && f.submitted">
+            <div *ngIf="frist_name.errors['required']">First Name is required</div>
+          <div *ngIf="frist_name.errors['minlength']">
+            First Name must be at least 3 characters
+          </div>
+          <div *ngIf="frist_name.errors['maxlength']">
+            First Name must be at most 20 characters
+          </div>
+          </div>
+        </div>
+        <div class="form-group col-6 ">
+          <label for="last_name">Last Name</label>
+          <input 
+            id="last_name" 
+            type="text" 
+            class="form-control" 
+            name="last_name"  
+            [(ngModel)]="form.last_name"
+            required
+            minlength="3"
+            maxlength="20"
+            #last_name="ngModel"
+            placeholder="Last Name" 
+            type="text" 
+            autocomplete="off"
+            [ngClass]="{'is-invalid':(last_name.errors && f.submitted)}"
+          >
+          <div class="invalid-feedback"  *ngIf="last_name.errors && f.submitted">
+            <div *ngIf="last_name.errors['required']">Last Name is required</div>
+          <div *ngIf="last_name.errors['minlength']">
+            Last Name must be at least 3 characters
+          </div>
+          <div *ngIf="last_name.errors['maxlength']">
+            Last Name must be at most 20 characters
+          </div>
+          </div>
+        </div>
+      </div>
+  <!--<div class="form-group ">
+    <label for="username">Username</label>
+    <input 
+      class="form-control"
+      [(ngModel)]="form.username"
+      required
+      minlength="3"
+      maxlength="20"
+      #username="ngModel"
+      placeholder="Username" 
+      type="text" 
+      name="username" 
+      id="username" 
+      autocomplete="off"
+      [ngClass]="{'is-invalid':(username.errors && f.submitted)||userExisted}"
+      (change)="userExisted=false;changed=true"
+    >
+    <div class="invalid-feedback"  *ngIf="username.errors && f.submitted">
+      <div *ngIf="username.errors['required']">Username is required</div>
+    <div *ngIf="username.errors['minlength']">
+      Username must be at least 3 characters
+    </div>
+    <div *ngIf="username.errors['maxlength']">
+      Username must be at most 20 characters
+    </div>
+    </div>
+    <div class="invalid-feedback" role="alert" *ngIf="userExisted">
+      Username is already in use!
+    </div>
+  </div>
+  <div class="form-group ">
+    <label for="email">Email</label>
+    <input 
+      class="form-control"
+      placeholder="Email" 
+      type="email" 
+      id="email" 
+      class="form-control"
+      name="email"
+      [(ngModel)]="form.email"
+      required
+      email
+      #email="ngModel"
+      [ngClass]="{'is-invalid':(email.errors && f.submitted)||emailExisted}"
+      (change)="emailExisted=false;changed=true"
+    >
+    <div class="invalid-feedback" *ngIf="email.errors && f.submitted">
+      <div *ngIf="email.errors['required']">Email is required</div>
+      <div *ngIf="email.errors['email']">
+        Email must be a valid email address
+      </div>
+    </div>
+    <div class="invalid-feedback" role="alert" *ngIf="emailExisted">
+      Email is already in use!
+    </div>
+  </div>-->
+<div class="form-group">
+  <label for="frist_name">Birth date</label>
+  <input 
+    id="birth_date" 
+    type="text" 
+    class="form-control" 
+    name="birth_date"  
+    [(ngModel)]="form.birth_date"
+    required
+    #birth_date="ngModel"
+    type="date" 
+    [ngClass]="{'border-danger':(birth_date.errors && f.submitted)}"
+  >
+  <div class="invalid-feedback"  *ngIf="birth_date.errors && f.submitted">
+    <div *ngIf="birth_date.errors['required']">Birth date is required</div>
+  </div>
+</div>
+<div class="form-group ">
+  <label for="username">Grade</label>
+  <select 
+    class="form-control"
+    [(ngModel)]="form.grade"
+    required
+    #grade="ngModel"
+    placeholder="Username" 
+    type="text" 
+    name="grade" 
+    id="grade" 
+    autocomplete="off"
+    [ngClass]="{'border-danger':(grade.errors && f.submitted)}"
+    (change)="userExisted=false;changed=true"
+  >
+    <option value="1">primary(1-2-3-4-5-6)</option>
+    <option value="7">7ème (middle school)</option>
+    <option value="8">8ème (middle school)</option>
+    <option value="9">9ème (middle school)</option>
+    <option value="11">5ème science </option>
+    <option value="12">5ème lettre </option>
+    <option value="13">1 bac science </option>
+    <option value="14">1 bac lettre </option>
+    <option value="15">2 bac science </option>
+    <option value="16">2 bac lettre </option>
+    <option value="17">other</option>
+  </select>
+  <div class="invalid-feedback"  *ngIf="(grade.errors && f.submitted)">
+    <div >grade date is required</div>
+  </div>
+</div>
+<div class="row">
+    <div class="form-group col-12">
+      <label>Bio</label>
+      <textarea
+        class="form-control"
+        [(ngModel)]="form.bio"
+        #bio="ngModel" 
+        name="bio" 
+        id="bio" 
+        [ngClass]="{'border-danger':(bio.errors && f.submitted)}"
+        class="form-control summernote-simple"></textarea>
+    </div>
+  </div>
+  </div>
+<div class="card-footer text-right">
+    <button class=" registerBtn btn btn-primary ml-auto" >
+        <span>Save Changes</span>
+        <span class="mx-2"></span>
+        <app-spinner *ngIf="loading" [type]="1"></app-spinner>
+      </button>
+  </div>
+</form>
+<div class="passwordBox">
+    <form
+        name="form2" 
+        (ngSubmit)="f2.form.valid && onSubmitpass()" 
+        #f2="ngForm"
+        novalidate>
+        <div class="row">
+            <div class="form-group col-12">
+                <h5>Password</h5>
+              <div class="input-group">
+                <input 
+                class="form-control" 
+                placeholder="Password" 
+                type="password" 
+                name="password" 
+                id="password" 
+                [(ngModel)]="form.password"
+                required
+                minlength="6"
+                #password="ngModel"
+                [ngClass]="{'is-invalid':password.errors && f2.submitted}"
+                
+               >
+                <div class="input-group-append">
+                  <button class="btn btn-primary" type="button">change</button>
+                </div>
+              </div>
+              
+               <div class="invalid-feedback"  *ngIf="password.errors && f2.submitted">
+                <div *ngIf="password.errors['required']">Password is required</div>
+                <div *ngIf="password.errors['minlength']">
+                  Password must be at least 6 characters
+                </div>
+               </div>
+            </div>
+          </div>
+    </form>
+</div>

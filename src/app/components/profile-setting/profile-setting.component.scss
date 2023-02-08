@@ -1,0 +1,13 @@
+.passwordBox{
+    border: 2px solid  #dc3545;
+    border-radius: 5px;
+    padding: 10px 20px;
+}
+.registerBtn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+.registerBtn span {
+    display: inline-block;
+}

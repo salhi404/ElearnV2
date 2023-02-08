@@ -173,15 +173,4 @@ export class RegisterComponent implements OnInit {
     }
     
   }
-  onSubmit2(): void {
-    if (this.storageService.isLoggedIn()) {
-      this.router.navigate(["/home"]);
-    }
-    this.userExisted=false;
-    this.emailExisted=false;
-    if(!this.loading){
-      this.loading=true;
-      this.register(1)
-    }
-  }
 }

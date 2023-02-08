@@ -119,7 +119,7 @@ uploadImage(){
       this.authService.deleteprofileImage().subscribe({
         next:data=>{
           console.log(data);
-          this.storageService.alterUser('profileImage',data.url)
+          this.storageService.alterUser({profileImage:data.url});
           this.user.profileImage=data.url;
           this.previewImaurl=this.user.profileImage;
           this.events.changeupdateState(this.events.UPDATEUSER);
@@ -145,7 +145,7 @@ uploadImage(){
               this.authService.uploadImage(this.imgResult).subscribe({
                 next:data=>{
                   console.log(data);
-                  this.storageService.alterUser('profileImage',data.url)
+                  this.storageService.alterUser({profileImage:data.url})
                   this.user.profileImage=data.url;
                   this.previewImaurl=this.user.profileImage;
                   this.events.changeupdateState(this.events.UPDATEUSER);

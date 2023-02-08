@@ -37,7 +37,6 @@ export class StorageService {
     }
     return pref;
   }
-
   public setPrefrences(pref:Pref){
     if(this.isLoggedIn()){
       localStorage.setItem(PREFRENCES_KEY+"_user", JSON.stringify(pref));
@@ -53,17 +52,20 @@ export class StorageService {
     localStorage.removeItem(USER_KEY);
     localStorage.setItem(USER_KEY, JSON.stringify(user));
   }
-  public alterUser(key: string,value:any): void {
+  public alterUser(toadd:any): void {
     const temp = localStorage.getItem(USER_KEY);
     if(temp){
-      console.log("alterrr"+value);
-      
       let user= JSON.parse(temp);
-      user[key]=value;
+      for (const key in toadd) {
+        if (toadd.hasOwnProperty(key)) {
+          user[key]=toadd[key]
+        }
+      }
       localStorage.setItem(USER_KEY, JSON.stringify(user));
     }
 
   }
+
   public verify(): void {
     let user =this.getUser();
     user.verified=true;
@@ -98,8 +100,9 @@ export class StorageService {
     }
     return false;
   }
-  parseUser(json:any) :User{//alterauthuserdata 
-    var user:User={username:"null",email:"null",roles:[],verified:false,pref:{darkTheme:false,miniSideBar:false},profileImage:'??',contacts:[],fName:'',lName:'', birthDate:new Date(0),grade:-1}
+  parseUser(json:any) :User{//alterauthuserdata   
+    var user:User={username:"null",email:"null",roles:[],verified:false,pref:{darkTheme:false,miniSideBar:false},
+      profileImage:'??',USERDETAILS:{},contacts:[],fName:'',lName:'', birthDate:new Date(0),grade:-1}
     user.username=json.username?json.username:user.username;
     user.email=json.email?json.email:user.email;
     user.roles=json.roles?json.roles:user.roles;
@@ -111,6 +114,7 @@ export class StorageService {
     user.birthDate=json.birthDate?json.birthDate:user.birthDate;
     user.grade=json.grade?json.grade:user.grade;
     user.profileImage=json.profileImage?json.profileImage:user.profileImage;
+    user.USERDETAILS=json.USERDETAILS?json.USERDETAILS:user.USERDETAILS;
     return user;
   }
   public saveModMail(mod:any[]){

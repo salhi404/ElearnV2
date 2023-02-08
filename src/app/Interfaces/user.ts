@@ -11,6 +11,7 @@ export interface User{
     birthDate:Date,
     grade:number,
     profileImage:string,
+    USERDETAILS:any,
     //fromTo:User
 }
 export interface UserPublic{
