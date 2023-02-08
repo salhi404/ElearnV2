@@ -15,20 +15,23 @@ export class ProfileSettingComponent implements OnInit {
   form: any = {
    /* username: null,
     email: null,*/
-    password: null,
     agree:null,
     frist_name:null,
     last_name:null,
     birth_date:null,
     grade:null,
     bio:null,
+    Oldpassword: null,
+    Newpassword: null,
   };
   userExisted=false;
+  wrongPassword=false;
   emailExisted=false;
   isSuccessful = false;
   isSignUpFailed = false;
   errorMessage = '';
   loading:boolean=false;
+  loading2:boolean=false;
   changed=false;
   stageOne=true;
   datepipe: DatePipe = new DatePipe('en-US');
@@ -54,7 +57,7 @@ export class ProfileSettingComponent implements OnInit {
   }
   register():void{
     console.log("on submit trigered");
-    const {/* username,email,*/password,frist_name,last_name,birth_date,grade,bio} = this.form;
+    const {/* username,email,password,*/frist_name,last_name,birth_date,grade,bio} = this.form;
     this.authService.updateInfo(/*username,email,password,*/frist_name,last_name,birth_date,+grade,{bio:bio}).subscribe({
       next: data => {
         console.log("secsess");
@@ -77,47 +80,25 @@ export class ProfileSettingComponent implements OnInit {
       }
     });
   }
-  register2(attempt:number):void{
-    console.log("next trigered");
-    const { username, email } = this.form;
-    this.authService.verifyDuplicated(username, email).subscribe({
+  register2():void{
+    const Oldpassword=this.form.Oldpassword;
+    const Newpassword =this.form.Newpassword;
+    this.authService.changepassword(Oldpassword,Newpassword).subscribe({
       next: data => {
         console.log(data);
-        this.isSuccessful = true;
-        this.isSignUpFailed = false;
-        this.loading=false;
-        this.stageOne=false;
+        this.wrongPassword = false;
+        this.loading2=false;
       },
       error: err => {
-        if(err.status==457)this.userExisted=true;
-        if(err.status==458)this.emailExisted=true;
-        if(err.status==500 && attempt<6){
-          var time=0;
-          switch (attempt) {
-            case 1:
-              time=5000;
-              break;
-            case 2:
-              time=10000;
-              break;
-            case 3:
-              time = 15000;
-              break;
-            default: time=20000;
-              break;
-          }
-          this.errorMessage = err.error.message+" attempting again ("+(attempt+1)+"/6) in "+(time/1000)+"s";
-          this.isSignUpFailed = true;
-          setTimeout (() => {
-            this.register2(attempt+1);
-         }, time);
-        }else{
+
+        if(err.status==455){
+          this.wrongPassword=true;
+        }
           this.errorMessage = err.error.message;
           console.log(err.error);
-          this.loading=false;
+          this.loading2=false;
           this.isSignUpFailed = true;
-        }
-        this.changed=false;
+          this.changed=false;
       }
     });
   }
@@ -131,19 +112,12 @@ export class ProfileSettingComponent implements OnInit {
      
     }
   }
-  nextinfo(){
-    if (this.storageService.isLoggedIn()) {
-      this.router.navigate(["/home"]);
-    }
-    this.userExisted=false;
-    this.emailExisted=false;
-    if(!this.loading){
-      this.loading=true;
-      this.register2(1)
-    }
-    
-  }
   onSubmitpass(){
-    
+    this.wrongPassword=false;
+    if(!this.loading2){
+      this.loading2=true;
+      this.register2();
+     console.log("submit");
+    }
   }
 }
