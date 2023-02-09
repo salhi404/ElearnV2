@@ -132,6 +132,8 @@ export class StorageService {
     localStorage.removeItem(MODMAIL_KEY);
   }
   public saveChatters(list:any[]){
+    console.log("chatters ");
+    console.log(list);
     localStorage.removeItem(Chatters_KEY);
     localStorage.setItem(Chatters_KEY, JSON.stringify(list));
   }

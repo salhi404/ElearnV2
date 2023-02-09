@@ -187,6 +187,10 @@ export class AuthService {
     const token = this.storageService.getTokent();
     return this.http.post(DATA_API + 'putcontacts', {contacts,token}, httpOptions);
   }
+  getcontacts(): Observable<any> {
+    const token = this.storageService.getTokent();
+    return this.http.post(DATA_API + 'getcontacts', {token}, httpOptions);
+  }
   putConfigs(configs:string): Observable<any> {
     const token = this.storageService.getTokent();
     return this.http.put(AUTH_API + 'putconfig', {configs,token}, httpOptions);

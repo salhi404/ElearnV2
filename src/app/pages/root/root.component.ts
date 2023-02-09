@@ -114,6 +114,7 @@ export class RootComponent implements OnInit, OnDestroy {
     if (this.isLoggedIn) {
       console.log("user");
       console.log(this.user);
+
       this.prepsubscription();
       this.socketService.setupSocketConnection(this.storageService.getTokent());
       this.socketService.getMsg();
@@ -123,6 +124,7 @@ export class RootComponent implements OnInit, OnDestroy {
       }, 12000);*/
       this.getnoppenedMail();
       this.getnoppenedchat();
+      this.updateContacts();
       this.subscription3 = this.socketService.recieveMsg.subscribe(data => {
         if (data.code == 1) this.unoppenedchatCount++;
         var info=this.events.infoEvent.getValue();
@@ -317,6 +319,14 @@ export class RootComponent implements OnInit, OnDestroy {
       this.showModeratorBoard = this.roles.includes('ROLE_MODERATOR');
       */
     }
+  }
+  updateContacts(){
+    this.authService.getcontacts().subscribe({next:data=>{
+      if(data.contacts)this.storageService.saveChatters(data.contacts);
+    },error:err=>{
+      if(!err.verified)this.logout();
+      
+    }});
   }
   @HostListener('window:beforeunload')
   ngOnDestroy() {

@@ -55,7 +55,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   activeChatter: ChatInfo = null as any;
   constructor(private storageService: StorageService, private router: Router, private socketService: SocketioService, private authService: AuthService, private events: EventsService,) { }
   datepipe: DatePipe = new DatePipe('en-US');
-
   ngOnInit(): void {
     this.isLoggedIn = this.storageService.isLoggedIn();
     if (this.isLoggedIn) {
@@ -118,6 +117,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       this.chattersinfo.push({ chatter: element, chat: [...this.chats], chatroom: element.email, loaded: true, unoppenedcount: 0 });
     }
     this.chattersinfo.forEach(el => this.getchat(el));
+    
     if (this.chattersinfo.length > 0) {
       this.openChat(0, this.chattersinfo[0]);
       this.getconnectedchaters();
