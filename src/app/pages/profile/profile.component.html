@@ -10,7 +10,7 @@
                   <div>
                     <figure class="avatar mr-2 avatar-xl"  [ngClass]="{'avatarInitials':user.profileImage.length==2}" [attr.data-initial]="user.profileImage" >
                       <img *ngIf="user.profileImage.length>2" [src]="user.profileImage" alt="...">
-                      <a (click)="showModel(1)"   class="avatar-icon2 pointer"><i  class="material-icons  photo_camera ">photo_camera</i></a>
+                      <a (click)="showModel(1)"   class="avatar-icon2 pointer"><i  class="material-icons photo_camera lightIcon">photo_camera</i></a>
                       <i class="avatar-icon2-back" ></i>
                     </figure>
                   </div>
@@ -117,7 +117,7 @@
               <div class="padding-20">
                 <ul class="nav nav-tabs">
                   
-                  <li  class="nav-item">
+                  <li  class="nav-item"  >
                     <a (click)="showTab(0)" class="nav-link pointer " [ngClass]="{'show active':showenTab==0}">About</a>
                   </li>
                   <li class="nav-item">

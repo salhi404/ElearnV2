@@ -92,6 +92,10 @@ export class AuthService {
     //const token = this.storageService.getTokent();
     return this.http.post(AUTH_API + 'verifymail', {mail/*,token*/}, httpOptions);
   }
+  verifyUsername(username:string): Observable<any> {
+    //const token = this.storageService.getTokent();
+    return this.http.post(AUTH_API + 'verifyUsername', {username/*,token*/}, httpOptions);
+  }
   verify(id:string,token:string): Observable<any> {
     return this.http.put(AUTH_API + 'verify', {id,token}, httpOptions);
   }

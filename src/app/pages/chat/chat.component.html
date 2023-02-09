@@ -1,24 +1,20 @@
-
-
 <div class="main-content">
-  
     <section class="section">
-      
       <div class="section-body">
         <div class="row">
           <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3 ">
             <div class="card">
               <div class="body">
                 <div id="plist"  class="people-list">
-                  
                   <div class="chat-search">
                     <div class="form-group">
                       <div class="input-group mb-3">
-                        <input type="email" name="email" [(ngModel)]="emailAdd"  required email
-                        #email="ngModel" class="form-control" placeholder="email" aria-label="ddd" [ngClass]="{'border-danger':(emailAddErrors>0&&emailAddErrors<4)&&(emailAddErrorString==emailAdd)}" >
-                        
+                        <!--<input type="email" name="email" [(ngModel)]="emailAdd"  required email
+                        #email="ngModel" class="form-control" placeholder="email" aria-label="ddd" [ngClass]="{'border-danger':(emailAddErrors>0&&emailAddErrors<4)&&(emailAddErrorString==emailAdd)}" >--> 
+                        <input type="username" name="username" [(ngModel)]="usernameAdd"  required username
+                        #username="ngModel" class="form-control" placeholder="username" aria-label="ddd" [ngClass]="{'border-danger':(usernameAddErrors>0&&usernameAddErrors<4)&&(usernameAddErrorString==usernameAdd)}" >
                         <div class="input-group-append">
-                          <button (click)="addchatter(email.errors)" class="btn {{(emailAddErrors>0&&emailAddErrors<4)&&(emailAddErrorString==emailAdd)?'btn-danger':'btn-primary'}} addBtn "  type="button"><i class="material-icons addicon">add</i></button>
+                          <button (click)="addchatterByUsername(username.errors)" class="btn {{(usernameAddErrors>0&&usernameAddErrors<4)&&(usernameAddErrorString==usernameAdd)?'btn-danger':'btn-primary'}} addBtn "  type="button"><i class="material-icons addicon">add</i></button>
                         </div>
                       </div>
                     </div>
@@ -28,7 +24,7 @@
                       <button  class="close closeBtn" (click)="dismissAlert(true)">
                         <span style="height:30px;">&times;</span>
                       </button>
-                      {{emailAddErrormsg}}
+                      {{usernameAddErrormsg}}
                     </div>
                   </div>
                   <div >
@@ -73,8 +69,12 @@
                   <div class="chat-box" id="mychatbox" >
                     <div *ngIf="activeChat!=-1" class="card-body chat-content" #target >
                         <div *ngFor="let chat of activeChatter.chat;index as i" class="chat-item {{chat.isSent?'chat-right':'chat-left'}}" >
-                        <figure class="avatar "   [ngClass]="{'avatarInitials':activeChatter.chatter.profileImage.length==2}" [attr.data-initial]="activeChatter.chatter.profileImage" >
+
+                        <figure *ngIf="!chat.isSent" class="avatar "   [ngClass]="{'avatarInitials':activeChatter.chatter.profileImage.length==2}" [attr.data-initial]="activeChatter.chatter.profileImage" >
                           <img class="avatarImg" *ngIf="activeChatter.chatter.profileImage.length>2" [src]="activeChatter.chatter.profileImage" alt="...">
+                        </figure>
+                        <figure *ngIf="chat.isSent" class="avatar "   [ngClass]="{'avatarInitials':user.profileImage.length==2}" [attr.data-initial]="user.profileImage" >
+                          <img class="avatarImg" *ngIf="user.profileImage.length>2" [src]="user.profileImage" alt="...">
                         </figure>
                         <div class="chat-details">
                         <div class="chat-text"> {{chat.msg}} </div>

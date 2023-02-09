@@ -27,22 +27,22 @@ export class StorageService {
        }else{
         localStorage.setItem(PREFRENCES_KEY+"_user", JSON.stringify(pref));
        }
-    }else{
+    }/*else{
       const data = localStorage.getItem(PREFRENCES_KEY+"_global");
        if(data){
         pref=JSON.parse(data);
        }else{
         localStorage.setItem(PREFRENCES_KEY+"_global", JSON.stringify(pref));
        }
-    }
+    }*/
     return pref;
   }
   public setPrefrences(pref:Pref){
     if(this.isLoggedIn()){
       localStorage.setItem(PREFRENCES_KEY+"_user", JSON.stringify(pref));
-    }else{
+    }/*else{
       localStorage.setItem(PREFRENCES_KEY+"_global", JSON.stringify(pref));
-    }
+    }*/
   }
   public clearUser():void{
     localStorage.removeItem(USER_KEY);
