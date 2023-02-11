@@ -31,6 +31,7 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { ProfileSettingComponent } from './components/profile-setting/profile-setting.component';
 import { ProfileImageComponent } from './components/profile-image/profile-image.component';
+import { ModDashboardComponent } from './pages/mod-dashboard/mod-dashboard.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -57,6 +58,7 @@ import { ProfileImageComponent } from './components/profile-image/profile-image.
     ProfileComponent,
     ProfileSettingComponent,
     ProfileImageComponent,
+    ModDashboardComponent,
   ],
   imports: [
     FullCalendarModule,

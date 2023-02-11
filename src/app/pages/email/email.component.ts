@@ -64,6 +64,7 @@ export class EmailComponent implements OnInit,OnDestroy {
   };
   subscription: Subscription = new Subscription;
   subscription1: Subscription = new Subscription;
+  subscription2: Subscription = new Subscription;
   constructor(
     private router: Router,
     private authService: AuthService,
@@ -109,7 +110,13 @@ export class EmailComponent implements OnInit,OnDestroy {
     })
     this.isLoggedIn = this.storageService.isLoggedIn();
     if (this.isLoggedIn) {
-      this.user=this.storageService.getUser() ;
+      //this.user=this.storageService.getUser() ;
+      this.subscription2=this.events.userdataEvent.subscribe(
+        state=>{
+          console.log("userdataEvent 11");
+          if(state.state==1)this.user=state.userdata;
+        }
+      )
       this.getMail();
       
      /* this.subscription=this.events.updatestatusEvent.subscribe(state=>{
@@ -133,6 +140,8 @@ export class EmailComponent implements OnInit,OnDestroy {
   @HostListener('window:beforeunload')
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.subscription1.unsubscribe();
+    this.subscription2.unsubscribe();
     //this.sync();
   }
   toggleSelectAll(event:any){

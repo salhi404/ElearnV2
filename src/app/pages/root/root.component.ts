@@ -106,16 +106,17 @@ export class RootComponent implements OnInit, OnDestroy {
         if(!err.verified)this.logout();
         
       }});
+      this.events.changeuserdataState({state:1,userdata:this.user});
     }
     if (this.state.islogged) {
       this.isLoggedIn = this.state.islogged;
       this.user = this.state.user;
+      this.events.changeuserdataState({state:1,userdata:this.user});
     }
     if (this.isLoggedIn) {
       console.log("user");
       console.log(this.user);
-
-      this.prepsubscription();
+      //this.prepsubscription();
       this.socketService.setupSocketConnection(this.storageService.getTokent());
       this.socketService.getMsg();
       //this.getMailUpdate();
@@ -142,6 +143,8 @@ export class RootComponent implements OnInit, OnDestroy {
       this.subscription6 = this.events.updateEvent.subscribe(state => {
         if (state == this.events.UPDATEUSER) {
           this.user = this.storageService.getUser();
+          this.events.changeuserdataState({state:1,userdata:this.user});
+
         }
       })
       this.subscription5=this.events.infostatusEvent.subscribe(state=>{

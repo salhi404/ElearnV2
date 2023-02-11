@@ -22,6 +22,8 @@ export class EventsService {
   taskstatusEvent = this.taskEvent.asObservable();
   public updateEvent = new BehaviorSubject(-1);
   updatestatusEvent = this.updateEvent.asObservable();
+  public userdataEvent = new BehaviorSubject<{state:number,userdata:any}>({state:-1,userdata:null});
+  userdatastatusEvent = this.userdataEvent.asObservable();
   constructor() { }
   chngLayoutEvent(state: number) {
     this.layoutEvent.next(state)
@@ -40,5 +42,8 @@ export class EventsService {
   }
   changeupdateState(state: any) {
     this.updateEvent.next(state);
+  }
+  changeuserdataState(state: {state:number,userdata:any}) {
+    this.userdataEvent.next(state);
   }
 }

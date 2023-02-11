@@ -33,7 +33,6 @@ export class ProfileImageComponent implements OnInit {
   previewImaurl='';
   deletedImage=false;
   blockHostListener=false;
-
   @Input() modalEvent: Observable<number>=null as any;
   formData: FormData|null=null;
   @ViewChild("modalDialog") modalDialog!: ElementRef;

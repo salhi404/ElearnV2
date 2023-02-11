@@ -57,11 +57,17 @@ export class ProfileComponent implements OnInit,OnDestroy {
       console.log('Uploaded File Details:', item);
       this.closeModel();
     };*/
-      this.subscription2 = this.events.updateEvent.subscribe(state => {
+      this.subscription2 = this.events.userdataEvent.subscribe(
+        state=>{
+          console.log("userdataEvent 11");
+          if(state.state==1)this.user=state.userdata;
+        }
+      )
+      /*this.events.updateEvent.subscribe(state => {
         if (state == this.events.UPDATEUSER) {
           this.user = this.storageService.getUser();
         }
-      })
+      })*/
       this.roles=this.user.roles.map(rl=>{switch (rl) {
         case "ROLE_USER":
           return 'Student';

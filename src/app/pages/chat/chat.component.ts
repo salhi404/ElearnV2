@@ -36,6 +36,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   recievedchatError: string = '';
   tempind: number = 0;
   subscription: Subscription = new Subscription;
+  subscription1: Subscription = new Subscription;
   navigationExtras: NavigationExtras = { state: null as any };
   emailAdd: string = '';
   MsgTosend: string = '';
@@ -58,7 +59,13 @@ export class ChatComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.isLoggedIn = this.storageService.isLoggedIn();
     if (this.isLoggedIn) {
-      this.user = this.storageService.getUser();
+      //this.user = this.storageService.getUser();
+      this.subscription1=this.events.userdataEvent.subscribe(
+        state=>{
+          console.log("userdataEvent 11");
+          if(state.state==1)this.user=state.userdata;
+        }
+      )
       this.subscription = this.socketService.recieveMsg.subscribe(data => {
         if (this.firstrecieveMsgfired) {
           console.log("recieveMsg fired ");
@@ -152,6 +159,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   @HostListener('window:beforeunload')
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.subscription1.unsubscribe();
     clearInterval(this.interval);
   }
   dismissAlert(fade: boolean) {
