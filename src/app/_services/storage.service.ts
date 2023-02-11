@@ -22,7 +22,7 @@ export class StorageService {
     }
     if(this.isLoggedIn()||forUser){
        const data = localStorage.getItem(PREFRENCES_KEY+"_user");
-       if(data){
+       if(data&&this.isLoggedIn()){
         pref=JSON.parse(data);
        }else{
         localStorage.setItem(PREFRENCES_KEY+"_user", JSON.stringify(pref));

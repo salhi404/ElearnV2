@@ -18,7 +18,7 @@
       </li >
       <li  *ngIf="!interfaceLayout">
         <a (click)="toggleFullScreen()" class="nav-link  fullscreen-btn pointer">
-            <i-feather class="fnavIcon" name="Maximize"></i-feather>
+            <i-feather class="fnavIcon" name="{{isFullScreen?'Minimize':'Maximize'}}"></i-feather>
         </a>
       </li >
       <li><app-theme-switch  *ngIf="!interfaceLayout" [isChecked]="DarkTheme"></app-theme-switch></li>  

@@ -23126,7 +23126,10 @@ a.dropdown-item.active {
     width: 100%;
     line-height: 20px
 }
-
+.dropdown-list .dropdown-list-message {
+    height: unset;
+    min-height: 40px;
+}
 .dropdown-list .dropdown-list-message .dropdown-item {
     display: flex;
     padding-top: 4px;
@@ -29700,7 +29703,7 @@ body.layout-3 .main-footer {
 }
 
 .people-list .chat-list img {
-    width: 45px;
+    //width: 45px;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     -ms-border-radius: 50%;
