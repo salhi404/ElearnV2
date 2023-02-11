@@ -14,3 +14,21 @@ export function parsegrade(grade:number):string{
     }
     return '';
 }
+export function parseroles(roles:string[]):string[]{
+return roles.map(rl=>{switch (rl) {
+    case "ROLE_USER":
+      return 'Student';
+    case "ROLE_MODERATOR":
+      return 'Moderator';
+    case "ROLE_ADMIN":
+      return 'Admin';
+  }
+  return '';
+});
+}
+export function getmainrole(roles:string[]):string{
+    return roles.includes('Admin')?'Admin':roles.includes('Moderator')?'Moderator':'Student';
+}
+export function getmainrolecode(roles:string[]):number{
+    return roles.includes('ROLE_ADMIN')?1:roles.includes('ROLE_MODERATOR')?2:3;
+}

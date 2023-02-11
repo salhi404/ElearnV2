@@ -2,6 +2,7 @@ import { Component, OnInit,Input,ElementRef, HostListener } from '@angular/core'
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { EventsService } from 'src/app/services/events.service';
+import { getmainrolecode } from 'src/app/functions/parsers'
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
@@ -10,6 +11,8 @@ import { EventsService } from 'src/app/services/events.service';
 export class SidebarComponent implements OnInit {
   @Input() isTabletMode:boolean=false;
   @Input() unoppenedchatCount:number=0;
+  roles:string[]=[];
+  mainrole:number=-1;
   @HostListener('document:click', ['$event'])
   clickout(event:any) {
     if(this.eRef.nativeElement.contains(event.target)) {
@@ -35,7 +38,6 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit(): void {
     this.subscription =this.events.currentLayoutEvent.subscribe(state =>{
-     
       if (state==2) {
           console.log("logging change recieed in sidebar "+state);
           this.blockOutside=true;
@@ -43,9 +45,15 @@ export class SidebarComponent implements OnInit {
             this.blockOutside=false;
           }, 200);
           this.sideBarShow=true;
-
       }
     } )
+    this.roles=this.events.userdataEvent.getValue().userdata.roles;
+    console.log("this.roles");
+    console.log(this.roles);
+    
+    this.mainrole=getmainrolecode(this.roles);
+    console.log("this.mainrole");
+    console.log(this.mainrole);
     for (let index = 0; index < 10; index++) {
       this.activeDropDown[index] = false;
       

@@ -65,6 +65,9 @@ export class RootComponent implements OnInit, OnDestroy {
         case "/profile":
         this.currentRoute=5;
         break;
+        case "/mod-dashboard":
+        this.currentRoute=6;
+        break;
         default:
           if(this.storageService.isLoggedIn())this.router.navigate(["/home"]);
           this.currentRoute=0;
@@ -297,7 +300,9 @@ export class RootComponent implements OnInit, OnDestroy {
     }
     this.isLoggedIn = false;
     this.storageService.clearUser();
-
+    const pref = this.storageService.getPrefrences();
+    this.DarkTheme = pref.darkTheme;
+    this.showMiniSideBar = pref.miniSideBar;
     this.storageService.clearChatters();
     this.user = null as any;
     this.events.changeLoggingState(-1);

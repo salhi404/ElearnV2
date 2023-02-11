@@ -6,7 +6,7 @@ import { Router, NavigationExtras } from '@angular/router';
 import { Subject, Subscription } from 'rxjs';
 import { AuthService } from '../../_services/auth.service';
 import { EventsService } from 'src/app/services/events.service';
-import { parsegrade } from 'src/app/functions/parsers';
+import { parsegrade,parseroles,getmainrole } from 'src/app/functions/parsers';
 //import { FileUploader } from 'ng2-file-upload'; 
 import { base64ToFile, Dimensions, ImageCroppedEvent } from 'ngx-image-cropper';
 import { NgxImageCompressService } from 'ngx-image-compress';
@@ -68,17 +68,8 @@ export class ProfileComponent implements OnInit,OnDestroy {
           this.user = this.storageService.getUser();
         }
       })*/
-      this.roles=this.user.roles.map(rl=>{switch (rl) {
-        case "ROLE_USER":
-          return 'Student';
-        case "ROLE_MODERATOR":
-          return 'Moderator';
-        case "ROLE_ADMIN":
-          return 'Admin';
-      }
-      return '';
-    });
-    this.mainRole=this.roles.includes('Admin')?'Admin':this.roles.includes('Moderator')?'Moderator':'Student';
+    this.roles=parseroles(this.user.roles) ;
+    this.mainRole=getmainrole(this.roles);
     this.grade=parsegrade(this.user.grade);
     }else{
       this.navigationExtras={ state: {errorNbr:403} };

@@ -11,6 +11,7 @@ import { InterfaceComponent } from './pages/interface/interface.component';
 import { CalendarComponent } from './pages/calendar/calendar.component';
 import { NotificationsComponent } from './pages/notifications/notifications.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { ModDashboardComponent } from './pages/mod-dashboard/mod-dashboard.component';
 const routes: Routes = [
   {
     path: '', component: RootComponent,
@@ -43,7 +44,11 @@ const routes: Routes = [
       path: 'profile',
       component: ProfileComponent
     },
-
+    {
+      path: 'mod-dashboard',
+      component: ModDashboardComponent
+    },
+    
   ]
 },
 {path: 'login', component: LoginComponent},
