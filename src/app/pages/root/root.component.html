@@ -1,9 +1,8 @@
-<div id="body" class="theme-white" [ngClass]="{'sidebar-mini':showMiniSideBar&&!isTabletMode,'dark':DarkTheme,'dark-sidebar':DarkTheme,'theme-black':DarkTheme,'interfaceBody':interfaceLayout}" >
-  
+<div id="body"  [ngClass]="{'sidebar-mini':showMiniSideBar&&!isTabletMode,'dark dark-sidebar theme-black':DarkTheme,'interfaceBody':interfaceLayout,'theme-red':mainrole==1,'theme-cyan':mainrole==2,'theme-white':mainrole==3}" > 
   <div  id="app" >
     <div class="main-wrapper main-wrapper-1">
       <app-navbar [interfaceLayout]="interfaceLayout" [mailCount]="unoppenedMailCount" [mails]="unoppenedMail" [logged]="isLoggedIn" [user]="user" [DarkTheme]="DarkTheme"></app-navbar>
-      <app-sidebar *ngIf="!interfaceLayout" [isTabletMode]="isTabletMode" [unoppenedchatCount]="unoppenedchatCount" ></app-sidebar>
+      <app-sidebar [mainrole]="mainrole" [showMiniSideBar]="showMiniSideBar" *ngIf="!interfaceLayout" [isTabletMode]="isTabletMode" [unoppenedchatCount]="unoppenedchatCount" ></app-sidebar>
       <!-- Main Content -->
      <router-outlet></router-outlet>
       <div class="flex-grow-1" style="flex: 1;" ></div>

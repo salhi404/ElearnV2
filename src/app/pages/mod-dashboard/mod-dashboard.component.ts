@@ -1,4 +1,4 @@
-import { Component, OnInit,OnDestroy } from '@angular/core';
+import { Component, OnInit,OnDestroy,AfterViewInit,Renderer2   } from '@angular/core';
 import { User } from 'app/Interfaces/user';
 import { Subject, Subscription } from 'rxjs';
 import { StorageService } from 'app/_services/storage.service';
@@ -11,16 +11,16 @@ import { parsegrade,parseroles,getmainrole, getmainrolecode } from 'app/function
   templateUrl: './mod-dashboard.component.html',
   styleUrls: ['./mod-dashboard.component.scss']
 })
-export class ModDashboardComponent implements OnInit,OnDestroy  {
+export class ModDashboardComponent implements OnInit,OnDestroy ,AfterViewInit {
   user:User=null as any;
   roles:string[]=[];
   mainRole:String='';
   mainRolecode:number=-1;
   subscription: Subscription = new Subscription();
   isLoggedIn:boolean=false;
-  dtOptions: DataTables.Settings = {};
+  activeroute:number=1;
   navigationExtras: NavigationExtras = { state: null as any };
-  constructor(private storageService: StorageService,private authService: AuthService,private events:EventsService,private router: Router,) { }
+  constructor(private storageService: StorageService,private authService: AuthService,private events:EventsService,private router: Router,private renderer: Renderer2 ,) { }
 
 
   ngOnInit(): void {
@@ -29,7 +29,6 @@ export class ModDashboardComponent implements OnInit,OnDestroy  {
     this.user=this.storageService.getUser();
       this.subscription = this.events.userdataEvent.subscribe(
         state=>{
-          console.log("userdataEvent 11");
           if(state.state==1)this.user=state.userdata;
         }
       )
@@ -37,9 +36,7 @@ export class ModDashboardComponent implements OnInit,OnDestroy  {
     this.mainRole=getmainrole(this.roles);
     this.mainRolecode=getmainrolecode(this.user.roles);
     console.log(this.mainRolecode );
-    this.dtOptions = {
-      pagingType: 'full_numbers'
-    };
+
     
     }else{
       this.navigationExtras={ state: {errorNbr:403} };
@@ -51,5 +48,14 @@ export class ModDashboardComponent implements OnInit,OnDestroy  {
     this.subscription.unsubscribe();
     //this.subscription2.unsubscribe();
   }
-
+  ngAfterViewInit(): void {
+    this.renderer.listen('document', 'click', (event) => {
+      if (event.target.hasAttribute("user-id")) {
+        this.router.navigate(["/person/" + event.target.getAttribute("user-id")]);
+        console.log(event.target.getAttribute("user-id"));
+        
+        
+      }
+    });
+  }
 }

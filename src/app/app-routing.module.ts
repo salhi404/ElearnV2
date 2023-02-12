@@ -12,6 +12,7 @@ import { CalendarComponent } from './pages/calendar/calendar.component';
 import { NotificationsComponent } from './pages/notifications/notifications.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { ModDashboardComponent } from './pages/mod-dashboard/mod-dashboard.component';
+import { UsersModComponent } from './pages/mod-pages/users-mod/users-mod.component';
 const routes: Routes = [
   {
     path: '', component: RootComponent,
@@ -46,7 +47,18 @@ const routes: Routes = [
     },
     {
       path: 'mod-dashboard',
-      component: ModDashboardComponent
+      component: ModDashboardComponent,
+      children: [
+        {
+          path: 'users-mod',
+          component:UsersModComponent
+        },
+        /*{
+          path: 'home',
+          component: HomeComponent
+        }*/
+      ]
+      
     },
     
   ]

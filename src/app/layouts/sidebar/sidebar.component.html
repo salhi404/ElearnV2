@@ -12,22 +12,22 @@
       <ul class="sidebar-menu">
         <li class="menu-header">Main</li>
         <li [ngClass]="{'active2':router.url==='/home' }" >
-          <a  (click)="toggleSideBarShow(false)" routerLink="/home"  class="nav-link pointer">
-            <i-feather class="fsideIcons" name="monitor"></i-feather>
+          <a  (click)="toggleSideBarShow(false)" routerLink="/home"  [title]="showMiniSideBar?'':''" class="nav-link pointer">
+            <i-feather class="fsideIcons" name="Home"></i-feather>
             <span>Home</span></a>
         </li>
         <li *ngIf="mainrole==1" [ngClass]="{'active2':router.url==='/mod-dashboard' }" >
-          <a  (click)="toggleSideBarShow(false)" routerLink="/mod-dashboard"  class="nav-link pointer">
+          <a  (click)="toggleSideBarShow(false)" routerLink="/mod-dashboard" [title]="showMiniSideBar?'':''" class="nav-link pointer">
             <i-feather class="fsideIcons" name="monitor"></i-feather>
             <span>Dashboard</span></a>
         </li>
         <li [ngClass]="{'active2':router.url==='/email' }">
-          <a (click)="toggleSideBarShow(false)" routerLink="/email" class="nav-link pointer">
+          <a (click)="toggleSideBarShow(false)" routerLink="/email" [title]="showMiniSideBar?'':''" class="nav-link pointer">
             <i-feather class="fsideIcons" name="mail"></i-feather>
             <span>Email</span></a>
         </li>
         <li [ngClass]="{'active2':router.url==='/chat' }">
-          <a (click)="toggleSideBarShow(false)" routerLink="/chat" class="nav-link pointer">
+          <a (click)="toggleSideBarShow(false)" routerLink="/chat" [title]="showMiniSideBar?'':''" class="nav-link pointer">
             <i-feather class="fsideIcons" name="message-circle"></i-feather> 
             <div *ngIf="unoppenedchatCount>0" class="badge badge-success badgesideBar " style="display: unset;"> {{unoppenedchatCount}}</div>
             <span>Chat</span>
@@ -35,7 +35,7 @@
           </a>
         </li>
         <li [ngClass]="{'active2':router.url==='/calendar' }">
-          <a (click)="toggleSideBarShow(false)" routerLink="/calendar" class="nav-link pointer">
+          <a (click)="toggleSideBarShow(false)" routerLink="/calendar" [title]="showMiniSideBar?'':''" class="nav-link pointer">
             <i-feather class="fsideIcons" name="calendar"></i-feather> 
             <span>calendar</span>
           </a>

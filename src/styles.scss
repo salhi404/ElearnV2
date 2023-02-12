@@ -23855,7 +23855,7 @@ body.sidebar-gone .main-sidebar {
     box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
     content: " ";
     position: fixed;
-    background-color: #fff;
+    //background-color: #fff;
     width: 65px;
     height: 100%;
     left: 0;
@@ -26346,6 +26346,9 @@ body.layout-3 .main-footer {
 .dark-sidebar .main-sidebar {
     background-color: #353c48
 }
+/*.theme-red .main-sidebar { //redside
+    //background-color: #FF5C5C !important
+}*/
 
 .dark-sidebar .main-sidebar .sidebar-brand {
     background-color: #353c48
@@ -26474,6 +26477,7 @@ body.layout-3 .main-footer {
 .light-sidebar .main-sidebar .sidebar-menu li ul.dropdown-menu li a:hover::before {
     color: #454546
 }
+
 
 .theme-purple .btn-outline-primary:not([disabled]):not(.disabled):active,
 .theme-purple .btn-outline-primary.active:not([disabled]):not(.disabled),

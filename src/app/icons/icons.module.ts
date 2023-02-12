@@ -4,10 +4,11 @@ import { FeatherModule } from 'angular-feather';
 
 
 
-import { AlignJustify, Maximize, Monitor,Briefcase,Command,Mail,Copy,ShoppingBag,File,Layout,Grid,PieChart,Feather
+import {Home,AlignJustify, Maximize, Monitor,Briefcase,Command,Mail,Copy,ShoppingBag,File,Layout,Grid,PieChart,Feather
         ,Image,Flag,Sliders,Map,MapPin,UserCheck,Anchor,ChevronsDown,AlertTriangle,Bell,ArrowDownCircle, XCircle,MessageCircle,Calendar,Minimize } from 'angular-feather/icons';
 
 const icons = {
+  Home,
   AlignJustify,
   Maximize,
   Monitor,

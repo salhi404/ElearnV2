@@ -8,6 +8,8 @@ import { filter } from 'rxjs/operators';
 import { Router, NavigationEnd } from '@angular/router';
 import { Mail } from 'app/Interfaces/Mail';
 import { SocketioService } from 'app/services/socketio.service';
+import { getmainrolecode } from 'app/functions/parsers'
+
 @Component({
   selector: 'app-root',
   templateUrl: './root.component.html',
@@ -43,29 +45,32 @@ export class RootComponent implements OnInit, OnDestroy {
         this.router.navigate(["/"]);
       }
       this.interfaceLayout=false;
-      switch (event.url) {
-        case "/":
-          if(this.storageService.isLoggedIn())this.router.navigate(["/home"]);
+      console.log("split");
+      console.log(event.url.split('/'));
+      
+      switch (event.url.split('/')[1]) {
+        case "":
+          if(this.storageService.isLoggedIn())this.router.navigate(["home"]);
           this.currentRoute=0;
           this.interfaceLayout=true;
           break;
-        case "/home":
+        case "home":
           this.currentRoute=1;
           this.getTodeyCalender();
           break;
-        case "/email":
+        case "email":
           this.currentRoute=2;
           break;
-        case "/chat":
+        case "chat":
           this.currentRoute=3;
           break;
-        case "/calendar":
+        case "calendar":
         this.currentRoute=4;
         break;
-        case "/profile":
+        case "profile":
         this.currentRoute=5;
         break;
-        case "/mod-dashboard":
+        case "mod-dashboard":
         this.currentRoute=6;
         break;
         default:
@@ -98,6 +103,9 @@ export class RootComponent implements OnInit, OnDestroy {
   user: User = null as any;
   state: any = { user: this.user, islogged: false, remember: true };
   userSent: boolean = false;
+  roles:string[]=[];
+  mainrole:number=-1;
+
   ngOnInit(): void {
     this.onWindowResize();
     this.isLoggedIn = this.storageService.isLoggedIn();
@@ -126,6 +134,12 @@ export class RootComponent implements OnInit, OnDestroy {
       /*setInterval(() => {
         this.getMailUpdate();
       }, 12000);*/
+      this.roles=this.events.userdataEvent.getValue().userdata.roles;
+      console.log("this.roles");
+      console.log(this.roles);
+      this.mainrole=getmainrolecode(this.roles);
+      console.log("this.mainrole");
+      console.log(this.mainrole);
       this.getnoppenedMail();
       this.getnoppenedchat();
       this.updateContacts();
