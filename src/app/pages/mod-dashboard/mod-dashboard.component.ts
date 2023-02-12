@@ -18,8 +18,10 @@ export class ModDashboardComponent implements OnInit,OnDestroy  {
   mainRolecode:number=-1;
   subscription: Subscription = new Subscription();
   isLoggedIn:boolean=false;
+  dtOptions: DataTables.Settings = {};
   navigationExtras: NavigationExtras = { state: null as any };
   constructor(private storageService: StorageService,private authService: AuthService,private events:EventsService,private router: Router,) { }
+
 
   ngOnInit(): void {
     this.isLoggedIn = this.storageService.isLoggedIn();
@@ -35,6 +37,9 @@ export class ModDashboardComponent implements OnInit,OnDestroy  {
     this.mainRole=getmainrole(this.roles);
     this.mainRolecode=getmainrolecode(this.user.roles);
     console.log(this.mainRolecode );
+    this.dtOptions = {
+      pagingType: 'full_numbers'
+    };
     
     }else{
       this.navigationExtras={ state: {errorNbr:403} };

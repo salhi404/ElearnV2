@@ -32,6 +32,7 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { ProfileSettingComponent } from './components/profile-setting/profile-setting.component';
 import { ProfileImageComponent } from './components/profile-image/profile-image.component';
 import { ModDashboardComponent } from './pages/mod-dashboard/mod-dashboard.component';
+import { DataTablesModule } from "angular-datatables";
 @NgModule({
   declarations: [
     AppComponent,
@@ -69,7 +70,8 @@ import { ModDashboardComponent } from './pages/mod-dashboard/mod-dashboard.compo
     BrowserModule,
     AppRoutingModule,
     FileUploadModule,
-    ImageCropperModule
+    ImageCropperModule,
+    DataTablesModule
   ],
   providers: [],
   bootstrap: [AppComponent]
