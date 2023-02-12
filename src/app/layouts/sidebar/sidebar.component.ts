@@ -1,8 +1,8 @@
 import { Component, OnInit,Input,ElementRef, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { EventsService } from 'src/app/services/events.service';
-import { getmainrolecode } from 'src/app/functions/parsers'
+import { EventsService } from 'app/services/events.service';
+import { getmainrolecode } from 'app/functions/parsers'
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',

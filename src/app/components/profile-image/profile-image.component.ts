@@ -1,10 +1,10 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild,Input } from '@angular/core';
-import { User } from 'src/app/Interfaces/user';
-import { StorageService } from 'src/app/_services/storage.service';
+import { User } from 'app/Interfaces/user';
+import { StorageService } from 'app/_services/storage.service';
 import { Observable, Subscription } from 'rxjs';
 import { AuthService } from '../../_services/auth.service';
-import { EventsService } from 'src/app/services/events.service';
-import { parsegrade } from 'src/app/functions/parsers';
+import { EventsService } from 'app/services/events.service';
+import { parsegrade } from 'app/functions/parsers';
 import { base64ToFile, Dimensions, ImageCroppedEvent } from 'ngx-image-cropper';
 import { NgxImageCompressService } from 'ngx-image-compress';
 @Component({

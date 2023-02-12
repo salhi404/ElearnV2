@@ -1,7 +1,7 @@
 import { Component, OnInit,ElementRef, HostListener,Input } from '@angular/core';
-import { StorageService } from 'src/app/_services/storage.service';
-import { AuthService } from 'src/app/_services/auth.service';
-import { EventsService } from 'src/app/services/events.service';
+import { StorageService } from 'app/_services/storage.service';
+import { AuthService } from 'app/_services/auth.service';
+import { EventsService } from 'app/services/events.service';
 import {  Router, NavigationExtras } from '@angular/router';
 
 @Component({

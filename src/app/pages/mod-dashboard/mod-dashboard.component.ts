@@ -1,11 +1,11 @@
 import { Component, OnInit,OnDestroy } from '@angular/core';
-import { User } from 'src/app/Interfaces/user';
+import { User } from 'app/Interfaces/user';
 import { Subject, Subscription } from 'rxjs';
-import { StorageService } from 'src/app/_services/storage.service';
+import { StorageService } from 'app/_services/storage.service';
 import { Router, NavigationExtras } from '@angular/router';
 import { AuthService } from '../../_services/auth.service';
-import { EventsService } from 'src/app/services/events.service';
-import { parsegrade,parseroles,getmainrole, getmainrolecode } from 'src/app/functions/parsers';
+import { EventsService } from 'app/services/events.service';
+import { parsegrade,parseroles,getmainrole, getmainrolecode } from 'app/functions/parsers';
 @Component({
   selector: 'app-mod-dashboard',
   templateUrl: './mod-dashboard.component.html',

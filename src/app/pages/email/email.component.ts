@@ -1,11 +1,11 @@
 import { Component, OnInit,OnDestroy, HostListener } from '@angular/core';
-import { Mail } from 'src/app/Interfaces/Mail';
-import { AuthService } from 'src/app/_services/auth.service';
-import { StorageService } from 'src/app/_services/storage.service';
+import { Mail } from 'app/Interfaces/Mail';
+import { AuthService } from 'app/_services/auth.service';
+import { StorageService } from 'app/_services/storage.service';
 import { DatePipe } from '@angular/common';
-import { EventsService } from 'src/app/services/events.service';
+import { EventsService } from 'app/services/events.service';
 import {  Router, NavigationExtras } from '@angular/router';
-import { User } from 'src/app/Interfaces/user';
+import { User } from 'app/Interfaces/user';
 import { Subscription } from 'rxjs';
 
   interface  Mod{

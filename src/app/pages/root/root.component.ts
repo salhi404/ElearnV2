@@ -1,13 +1,13 @@
 import { Component, OnInit, HostListener, OnDestroy, ElementRef, ViewChild } from '@angular/core';
-import { EventsService } from 'src/app/services/events.service';
-import { StorageService } from 'src/app/_services/storage.service';
+import { EventsService } from 'app/services/events.service';
+import { StorageService } from 'app/_services/storage.service';
 import { AuthService } from '../../_services/auth.service';
-import { User } from 'src/app/Interfaces/user';
+import { User } from 'app/Interfaces/user';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { Router, NavigationEnd } from '@angular/router';
-import { Mail } from 'src/app/Interfaces/Mail';
-import { SocketioService } from 'src/app/services/socketio.service';
+import { Mail } from 'app/Interfaces/Mail';
+import { SocketioService } from 'app/services/socketio.service';
 @Component({
   selector: 'app-root',
   templateUrl: './root.component.html',

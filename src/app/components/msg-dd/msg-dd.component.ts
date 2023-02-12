@@ -1,8 +1,8 @@
 import { Component, OnInit,ElementRef, HostListener, Input } from '@angular/core';
-import { Mail } from 'src/app/Interfaces/Mail';
+import { Mail } from 'app/Interfaces/Mail';
 import { DatePipe } from '@angular/common';
 import {  Router, NavigationExtras } from '@angular/router';
-import { EventsService } from 'src/app/services/events.service';
+import { EventsService } from 'app/services/events.service';
 
 @Component({
   selector: 'app-msg-dd',

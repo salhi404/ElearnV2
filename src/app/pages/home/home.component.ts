@@ -1,6 +1,6 @@
 import { Component, OnInit , OnDestroy} from '@angular/core';
 import { Subscription } from 'rxjs';
-import { EventsService } from 'src/app/services/events.service';
+import { EventsService } from 'app/services/events.service';
 import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-home',

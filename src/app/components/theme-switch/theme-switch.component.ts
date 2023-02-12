@@ -1,5 +1,5 @@
 import { Component, OnInit ,Input } from '@angular/core';
-import { EventsService } from 'src/app/services/events.service';
+import { EventsService } from 'app/services/events.service';
 @Component({
   selector: 'app-theme-switch',
   templateUrl: './theme-switch.component.html',

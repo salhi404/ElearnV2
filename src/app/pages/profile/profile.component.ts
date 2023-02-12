@@ -1,12 +1,12 @@
 import { Component, ElementRef, HostListener, OnInit, ViewChild,OnDestroy } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { User } from 'src/app/Interfaces/user';
-import { StorageService } from 'src/app/_services/storage.service';
+import { User } from 'app/Interfaces/user';
+import { StorageService } from 'app/_services/storage.service';
 import { Router, NavigationExtras } from '@angular/router';
 import { Subject, Subscription } from 'rxjs';
 import { AuthService } from '../../_services/auth.service';
-import { EventsService } from 'src/app/services/events.service';
-import { parsegrade,parseroles,getmainrole } from 'src/app/functions/parsers';
+import { EventsService } from 'app/services/events.service';
+import { parsegrade,parseroles,getmainrole } from 'app/functions/parsers';
 //import { FileUploader } from 'ng2-file-upload'; 
 import { base64ToFile, Dimensions, ImageCroppedEvent } from 'ngx-image-cropper';
 import { NgxImageCompressService } from 'ngx-image-compress';

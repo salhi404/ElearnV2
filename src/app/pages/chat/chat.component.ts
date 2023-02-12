@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, HostListener } from '@angular/core';
-import { Chat } from 'src/app/Interfaces/chat';
+import { Chat } from 'app/Interfaces/chat';
 import { DatePipe } from '@angular/common';
-import { User, UserPublic } from 'src/app/Interfaces/user';
-import { StorageService } from 'src/app/_services/storage.service';
+import { User, UserPublic } from 'app/Interfaces/user';
+import { StorageService } from 'app/_services/storage.service';
 import { Router, NavigationExtras } from '@angular/router';
-import { SocketioService } from 'src/app/services/socketio.service';
+import { SocketioService } from 'app/services/socketio.service';
 import { Subscription, take } from 'rxjs';
 import { AuthService } from '../../_services/auth.service';
-import { EventsService } from 'src/app/services/events.service';
+import { EventsService } from 'app/services/events.service';
 
 interface ChatInfo {
   chatter: UserPublic;

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../_services/auth.service';
 import { StorageService } from '../../_services/storage.service';
 import {  Router, NavigationExtras } from '@angular/router';
-import { User } from 'src/app/Interfaces/user';
+import { User } from 'app/Interfaces/user';
 //import { AuthManageService } from '../../_services/auth-manage.service';
 //import {LocalService} from '../local.service';
 @Component({

@@ -2,10 +2,10 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AuthService } from '../../_services/auth.service';
 import { StorageService } from '../../_services/storage.service';
 import { Router } from '@angular/router';
-import { User } from 'src/app/Interfaces/user';
+import { User } from 'app/Interfaces/user';
 import { DatePipe } from '@angular/common';
 import { Subscription } from 'rxjs';
-import { EventsService } from 'src/app/services/events.service';
+import { EventsService } from 'app/services/events.service';
 @Component({
   selector: 'app-profile-setting',
   templateUrl: './profile-setting.component.html',

@@ -6,7 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './layouts/navbar/navbar.component';
 import { RootComponent } from './pages/root/root.component';
-import { IconsModule } from 'src/app/icons/icons.module';
+import { IconsModule } from 'app/icons/icons.module';
 import { SidebarComponent } from './layouts/sidebar/sidebar.component';
 import { MsgDDComponent } from './components/msg-dd/msg-dd.component';
 import { NtfDDComponent } from './components/ntf-dd/ntf-dd.component';
@@ -27,7 +27,7 @@ import { CalendarComponent } from './pages/calendar/calendar.component';
 import { NotificationsComponent } from './pages/notifications/notifications.component';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { ProfileComponent } from './pages/profile/profile.component';
-import { FileUploadModule } from 'ng2-file-upload';
+//import { FileUploadModule } from 'ng2-file-upload';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { ProfileSettingComponent } from './components/profile-setting/profile-setting.component';
 import { ProfileImageComponent } from './components/profile-image/profile-image.component';
@@ -69,7 +69,7 @@ import { DataTablesModule } from "angular-datatables";
     IconsModule,
     BrowserModule,
     AppRoutingModule,
-    FileUploadModule,
+    //FileUploadModule,
     ImageCropperModule,
     DataTablesModule
   ],

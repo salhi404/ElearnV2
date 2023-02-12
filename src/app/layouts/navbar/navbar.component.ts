@@ -1,8 +1,8 @@
 import { Component, HostListener, Inject, OnInit,Input } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { EventsService } from 'src/app/services/events.service';
-import { User } from 'src/app/Interfaces/user';
-import { Mail } from 'src/app/Interfaces/Mail';
+import { EventsService } from 'app/services/events.service';
+import { User } from 'app/Interfaces/user';
+import { Mail } from 'app/Interfaces/Mail';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
