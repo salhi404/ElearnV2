@@ -29,7 +29,6 @@
     "datatables.net-dt": "^1.11.3",
     "jquery": "^3.6.0",
     "material-icons": "^1.13.1",
-    "ng2-file-upload": "^3.0.0",
     "ngx-image-compress": "^13.1.14",
     "ngx-image-cropper": "^6.3.2",
     "rxjs": "~7.5.0",
