@@ -21,8 +21,6 @@ export class ModDashboardComponent implements OnInit,OnDestroy ,AfterViewInit {
   activeroute:number=1;
   navigationExtras: NavigationExtras = { state: null as any };
   constructor(private storageService: StorageService,private authService: AuthService,private events:EventsService,private router: Router,private renderer: Renderer2 ,) { }
-
-
   ngOnInit(): void {
     this.isLoggedIn = this.storageService.isLoggedIn();
     if (this.isLoggedIn) {
@@ -41,6 +39,16 @@ export class ModDashboardComponent implements OnInit,OnDestroy ,AfterViewInit {
     }else{
       this.navigationExtras={ state: {errorNbr:403} };
       this.router.navigate(['/error'],this.navigationExtras);
+    }
+
+  }
+  activateroute(ind:number){
+    this.activeroute=ind;
+    if (ind==1) {
+      this.router.navigate(['./users-mod']);
+    }
+    if (ind==2) {
+      this.router.navigate(['./notifications-mod']);
     }
 
   }

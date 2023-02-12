@@ -2,7 +2,7 @@
   <section class="section">
     <div class="row ">
       <div  class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12 ">
-        <div [ngClass]="{'active-mod-page border-danger':activeroute==1}" (click)="activeroute=1" routerLink="./users-mod" class="card pointer grow">
+        <div [ngClass]="{'active-mod-page border-danger':activeroute==1}" (click)="activateroute(1)" class="card pointer grow">
           <div class="card-statistic-4">
             <div class="d-flex align-items-center justify-content-between">
               <div class="row ">
@@ -24,7 +24,7 @@
         </div>
       </div>
       <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-        <div [ngClass]="{'active-mod-page border-danger':activeroute==2}" (click)="activeroute=2"  class="card pointer grow">
+        <div [ngClass]="{'active-mod-page border-danger':activeroute==2}" (click)="activateroute(2)"  class="card pointer grow">
           <div class="card-statistic-4">
             <div class="align-items-center justify-content-between">
               <div class="row ">
@@ -46,7 +46,7 @@
         </div>
       </div>
       <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-        <div [ngClass]="{'active-mod-page border-danger':activeroute==3}" (click)="activeroute=3" class="card pointer grow">
+        <div [ngClass]="{'active-mod-page border-danger':activeroute==3}" (click)="activateroute(3)" class="card pointer grow">
           <div class="card-statistic-4">
             <div class="align-items-center justify-content-between">
               <div class="row ">
@@ -68,7 +68,7 @@
         </div>
       </div>
       <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-        <div [ngClass]="{'active-mod-page border-danger':activeroute==4}" (click)="activeroute=4" class="card pointer grow">
+        <div [ngClass]="{'active-mod-page border-danger':activeroute==4}" (click)="activateroute(4)" class="card pointer grow">
           <div class="card-statistic-4">
             <div class="align-items-center justify-content-between">
               <div class="row ">

@@ -257,19 +257,35 @@
                       <h4>Users</h4>
                     </div>
                     <div class="card-body">
-                        <table datatable [dtOptions]="dtOptions"  class="row-border hover">
+                        <!-- <table datatable [dtOptions]="dtOptions"  class="row-border hover"> -->
+                            <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead >
+                                    <th class="pl-4">Pic</th>
+                                    <th>Username</th>
+                                    <th>Roles</th>
+                                    <th>Status</th>
+                                    <th>First name</th>
+                                    <th>Last name</th>
+                                    <th>Edit</th>        
+                            </thead>
                             <tbody>
-                              <tr>
-                                <td>1</td>
-                                <td>Foo</td>
-                                <td>Bar</td>
-                                <td>1</td>
-                                <td>Foo</td>
-                                <td>Bar</td>
-                                <td></td>
+                              <tr *ngFor="let user of usersList">
+                                <td>
+                                <figure class="avatar"   [ngClass]="{'avatarInitials':user.profileImage.length==2}" [attr.data-initial]="user.profileImage" >
+                                <img class="avatarImg" *ngIf="user.profileImage.length>2" [src]="user.profileImage" alt="...">
+                                </figure>
+                                </td>
+                                <td>{{user.username}}</td>
+                                <td  class=""><span style="display: block; margin: 0 auto;" *ngFor="let role of user.roles.reverse()  ">{{role}}</span> </td>
+                                <td>ToDo</td>
+                                <td>{{user.fName}}</td>
+                                <td>{{user.lName}}</td>
+                                <td><div (click)="edit(user.username)" class="btn btn-info pointer">edit</div></td>
                               </tr>
                             </tbody>
                           </table>
+                          </div>
                           
                     </div>
                   </div>

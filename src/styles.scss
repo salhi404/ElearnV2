@@ -23817,7 +23817,7 @@ pre {
         width: 100%
     }
 }
-
+//sidebar
 .main-sidebar {
     box-shadow: 0 4px 25px 0 rgba(0, 0, 0, 0.1);
     position: fixed;
@@ -24100,8 +24100,8 @@ body.layout-2 .main-content {
 }
 
 body.layout-2 .main-footer {
-    margin-left: 230px;
-    width: calc(100% - 230px);
+    margin-left: 225px;
+    width: calc(100% - 225px);
     padding-left: 0;
     padding-right: 0
 }
@@ -24479,7 +24479,7 @@ body.layout-3 .main-footer {
 }
 
 .main-content {
-    padding-left: 280px;
+    padding-left: 225px;
     padding-right: 30px;
     padding-top: 130px;
     width: 100%;
@@ -24487,7 +24487,7 @@ body.layout-3 .main-footer {
 }
 
 .main-footer {
-    padding: 20px 30px 20px 280px;
+    padding: 20px 30px 20px 225px;
     margin-top: 40px;
     color: #98a6ad;
     border-top: 1px solid #e3eaef;

@@ -26,6 +26,17 @@ return roles.map(rl=>{switch (rl) {
   return '';
 });
 }
+export function parserole(role:string):string{
+   switch (role) {
+      case "user":
+        return 'Student';
+      case "moderator":
+        return 'Moderator';
+      case "admin":
+        return 'Admin';
+    }
+    return '';
+  }
 export function getmainrole(roles:string[]):string{
     return roles.includes('Admin')?'Admin':roles.includes('Moderator')?'Moderator':'Student';
 }

@@ -50,6 +50,9 @@ const routes: Routes = [
       component: ModDashboardComponent,
       children: [
         {
+          path: '',
+          component:UsersModComponent
+        },{
           path: 'users-mod',
           component:UsersModComponent
         },
