@@ -45,7 +45,12 @@
                 <td>{{user.username}}</td>
                 <td class=""><span style="display: block; margin: 0 auto;"
                     *ngFor="let role of user.roles.reverse()  ">{{role}}</span> </td>
-                <td>ToDo</td>
+                <td>
+                  <div class="status">
+                  <i class="material-icons {{user.OnlineStat==-1?'online':'offline'}}">fiber_manual_record</i>
+                  <span>{{user.OnlineStat==-1?'Online':''+ datepipe.transform(user.OnlineStat,'HH:mm dd/MM/yy')}}</span> 
+                </div>
+              </td>
                 <td>{{user.fName}}</td>
                 <td>{{user.lName}}</td>
                 <td>{{user.email}}</td>

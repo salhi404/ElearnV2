@@ -34,6 +34,7 @@ import { ProfileImageComponent } from './components/profile-image/profile-image.
 import { ModDashboardComponent } from './pages/mod-dashboard/mod-dashboard.component';
 import { DataTablesModule } from "angular-datatables";
 import { UsersModComponent } from './pages/mod-pages/users-mod/users-mod.component';
+import { NotificationModComponent } from './pages/mod-pages/notification-mod/notification-mod.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -62,6 +63,7 @@ import { UsersModComponent } from './pages/mod-pages/users-mod/users-mod.compone
     ProfileImageComponent,
     ModDashboardComponent,
     UsersModComponent,
+    NotificationModComponent,
   ],
   imports: [
     FullCalendarModule,

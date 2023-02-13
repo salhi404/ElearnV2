@@ -126,16 +126,17 @@
                 </ul>
                 <div class="tab-content tab-bordered" >
                   <div class="tab-pane " [ngClass]="{'show active':showenTab==0,'fadetab':showenTabFade==0,'unfadetab':showenTabFade!=0 }"  >
-                    <div class="row">
+                    <div  class="row">
                       <div class="col-md-3 col-6 b-r">
                         <strong>Full Name</strong>
                         <br>
                         <p class="text-muted">{{user.fName}} {{user.lName}}</p>
                       </div>
                       <div class="col-md-3 col-6 b-r">
-                        <strong>Status</strong>
+                        <strong>Roles</strong>
                         <br>
-                        <p class="text-muted">{{mainRole}}</p>
+                        <p  *ngFor="let role of roles.reverse()" class="text-muted my-0">{{role}}</p>
+                        
                       </div>
                       <div class="col-md-3 col-6 b-r">
                         <strong>Email</strong>

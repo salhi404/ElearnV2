@@ -50,11 +50,13 @@ const routes: Routes = [
       component: ModDashboardComponent,
       children: [
         {
-          path: '',
-          component:UsersModComponent
+          path: '', redirectTo: '/mod-dashboard/users-mod', pathMatch: 'full'
         },{
           path: 'users-mod',
           component:UsersModComponent
+        },{
+          path: '**', redirectTo: '/home', pathMatch: 'full'
+          // component:UsersModComponent
         },
         /*{
           path: 'home',

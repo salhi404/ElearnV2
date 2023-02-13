@@ -24,13 +24,14 @@ export class UsersModComponent implements OnInit, OnDestroy {
   loading:boolean=false;
   changeRoleResult=-1;
   timeout1: any;
+  connectedCount:number=-1;
   form:any={
     user:false,
     teacher:false,
     moderator:false,
     admin:false,
   }
-  constructor(private events: EventsService, private modervice: ModService,) { }
+  constructor(private events: EventsService, private modervice: ModService,private authService: AuthService,) { }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
     this.subscription1.unsubscribe();
@@ -48,6 +49,7 @@ export class UsersModComponent implements OnInit, OnDestroy {
         console.log(data);
         if (data.users) {
           this.usersList = data.users;
+          this.getconnectedchaters()
         }
 
       },
@@ -57,6 +59,32 @@ export class UsersModComponent implements OnInit, OnDestroy {
       }
     })
 
+  }
+  getconnectedchaters() {
+    this.authService.getconnectedchatters(this.usersList.map(e => e.email)).subscribe({
+      next: (data: any) => {
+        /* console.log("connected chaters data recieved ");
+         console.log(data);*/
+         if(data){
+          this.connectedCount=0;
+          data.forEach((elem:any) => {
+             const userr = this.usersList.find((user: any) => elem.user == user.email);
+             if(elem.date==-1)this.connectedCount++;
+             if(userr) userr.OnlineStat=elem.date;
+          })
+          console.log("this.connectedCount",this.connectedCount);
+          
+          var info=this.events.modinfoEvent.getValue();
+          info.connectedCount=this.connectedCount;
+          info.usersCount=data.length;
+          this.events.changemodInfoState(info);
+         }
+      },
+      error: (err) => {
+        console.log("err");
+        console.log(err);
+      }
+    })
   }
   parserole(role: string): string {
     return parserole(role);

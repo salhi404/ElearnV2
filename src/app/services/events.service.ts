@@ -18,6 +18,8 @@ export class EventsService {
   loggingStatusEvent = this.loggingEvent.asObservable();
   public infoEvent = new BehaviorSubject({unoppenedchatCount:0,unoppenedMailCount:0,TodayEventsCount:0,  nextEvent:null as any});
   infostatusEvent = this.infoEvent.asObservable();
+  public modinfoEvent = new BehaviorSubject({usersCount:-1,connectedCount:-1/*,TodayEventsCount:0,  nextEvent:null as any*/});
+  modinfostatusEvent = this.modinfoEvent.asObservable();
   public taskEvent = new BehaviorSubject({task:-1,data:{}as any});
   taskstatusEvent = this.taskEvent.asObservable();
   public updateEvent = new BehaviorSubject(-1);
@@ -45,5 +47,8 @@ export class EventsService {
   }
   changeuserdataState(state: {state:number,userdata:any}) {
     this.userdataEvent.next(state);
+  }
+  changemodInfoState(state: any) {
+    this.modinfoEvent.next(state);
   }
 }

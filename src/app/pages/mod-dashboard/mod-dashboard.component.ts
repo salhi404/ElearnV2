@@ -17,9 +17,12 @@ export class ModDashboardComponent implements OnInit,OnDestroy ,AfterViewInit {
   mainRole:String='';
   mainRolecode:number=-1;
   subscription: Subscription = new Subscription();
+  subscription1: Subscription = new Subscription();
   isLoggedIn:boolean=false;
   activeroute:number=1;
   navigationExtras: NavigationExtras = { state: null as any };
+  usersCount:number=-1;
+  connectedCount:number=-1;
   constructor(private storageService: StorageService,private authService: AuthService,private events:EventsService,private router: Router,private renderer: Renderer2 ,) { }
   ngOnInit(): void {
     this.isLoggedIn = this.storageService.isLoggedIn();
@@ -27,15 +30,30 @@ export class ModDashboardComponent implements OnInit,OnDestroy ,AfterViewInit {
     this.user=this.storageService.getUser();
       this.subscription = this.events.userdataEvent.subscribe(
         state=>{
-          if(state.state==1)this.user=state.userdata;
+          if(state.state==1){
+            this.user=state.userdata;
+            this.roles=parseroles(this.user.roles) ;
+            this.mainRole=getmainrole(this.roles);
+            this.mainRolecode=getmainrolecode(this.user.roles);
+          }
+          if(state.state==2){
+            this.user=null as any;
+            this.roles=[];
+            this.mainRole='';
+            this.mainRolecode=-1;
+          }
+          
+
         }
       )
-    this.roles=parseroles(this.user.roles) ;
-    this.mainRole=getmainrole(this.roles);
-    this.mainRolecode=getmainrolecode(this.user.roles);
-    console.log(this.mainRolecode );
-
-    
+    this.subscription1=this.events.modinfostatusEvent.subscribe(state=>{
+      if(state.usersCount){
+        this.usersCount=state.usersCount;
+      }
+      if(state.connectedCount){
+        this.connectedCount=state.connectedCount;
+      }
+    })
     }else{
       this.navigationExtras={ state: {errorNbr:403} };
       this.router.navigate(['/error'],this.navigationExtras);
@@ -45,10 +63,10 @@ export class ModDashboardComponent implements OnInit,OnDestroy ,AfterViewInit {
   activateroute(ind:number){
     this.activeroute=ind;
     if (ind==1) {
-      this.router.navigate(['./users-mod']);
+      this.router.navigate(['/mod-dashboard/users-mod']);
     }
     if (ind==2) {
-      this.router.navigate(['./notifications-mod']);
+      this.router.navigate(['/mod-dashboard/users-mod']);
     }
 
   }
