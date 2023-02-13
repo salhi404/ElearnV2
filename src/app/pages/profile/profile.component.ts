@@ -45,7 +45,6 @@ export class ProfileComponent implements OnInit,OnDestroy {
     //this.reader.onload = e => this.imageSrc = this.reader.result;
     this.isLoggedIn = this.storageService.isLoggedIn();
     if (this.isLoggedIn) {
-    this.user=this.storageService.getUser();
    /* this.uploader.onAfterAddingFile = (file) => {
       file.withCredentials = false;
     };
@@ -59,8 +58,18 @@ export class ProfileComponent implements OnInit,OnDestroy {
     };*/
       this.subscription2 = this.events.userdataEvent.subscribe(
         state=>{
-          console.log("userdataEvent 11");
-          if(state.state==1)this.user=state.userdata;
+          if(state.state==1){
+            this.user=state.userdata;
+            this.roles=parseroles(this.user.roles) ;
+            this.mainRole=getmainrole(this.roles);
+            this.grade=parsegrade(this.user.grade);
+          }
+          if(state.state==2){
+            this.user=state.userdata;
+            this.roles=[];
+            this.mainRole="";
+            this.grade="";
+          }
         }
       )
       /*this.events.updateEvent.subscribe(state => {
@@ -68,9 +77,7 @@ export class ProfileComponent implements OnInit,OnDestroy {
           this.user = this.storageService.getUser();
         }
       })*/
-    this.roles=parseroles(this.user.roles) ;
-    this.mainRole=getmainrole(this.roles);
-    this.grade=parsegrade(this.user.grade);
+    
     }else{
       this.navigationExtras={ state: {errorNbr:403} };
       this.router.navigate(['/error'],this.navigationExtras);

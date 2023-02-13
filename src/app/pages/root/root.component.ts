@@ -95,6 +95,7 @@ export class RootComponent implements OnInit, OnDestroy {
   subscription4: Subscription = new Subscription;
   subscription5: Subscription = new Subscription;
   subscription6: Subscription = new Subscription;
+  subscription7: Subscription = new Subscription;
   showMiniSideBar: boolean = false;
   isTabletMode: boolean = false;
   DarkTheme: boolean = false;
@@ -114,8 +115,8 @@ export class RootComponent implements OnInit, OnDestroy {
       this.authService.verifyJwt().subscribe({next:data=>{
         if(!data.verified)this.logout();
       },error:err=>{
-        if(!err.verified)this.logout();
-        
+       // if(!err.verified)this.logout();
+       // TODO - add a "server is down page"
       }});
       this.events.changeuserdataState({state:1,userdata:this.user});
     }
@@ -134,12 +135,23 @@ export class RootComponent implements OnInit, OnDestroy {
       /*setInterval(() => {
         this.getMailUpdate();
       }, 12000);*/
-      this.roles=this.events.userdataEvent.getValue().userdata.roles;
-      console.log("this.roles");
-      console.log(this.roles);
-      this.mainrole=getmainrolecode(this.roles);
-      console.log("this.mainrole");
-      console.log(this.mainrole);
+      this.subscription7=this.events.userdataEvent.subscribe(
+        state=>{
+          if(state.state==1){
+            this.user=state.userdata;
+            this.roles=state.userdata.roles;
+            this.mainrole=getmainrolecode(this.roles);
+          }
+          if(state.state==2){
+            this.user=state.userdata;
+            this.roles=[];
+            this.mainrole=-1;
+          }
+          const pref = this.storageService.getPrefrences();
+          this.DarkTheme = pref.darkTheme;
+          this.showMiniSideBar = pref.miniSideBar;
+        }
+      )
       this.getnoppenedMail();
       this.getnoppenedchat();
       this.updateContacts();
@@ -175,9 +187,6 @@ export class RootComponent implements OnInit, OnDestroy {
         
       })
     }
-    const pref = this.storageService.getPrefrences();
-    this.DarkTheme = pref.darkTheme;
-    this.showMiniSideBar = pref.miniSideBar;
     this.subscription2 = this.events.loggingStatusEvent.subscribe(state => {
       if (state == 2) {
         this.logout();
@@ -314,15 +323,9 @@ export class RootComponent implements OnInit, OnDestroy {
     }
     this.isLoggedIn = false;
     this.storageService.clearUser();
-    const pref = this.storageService.getPrefrences();
-    this.DarkTheme = pref.darkTheme;
-    this.showMiniSideBar = pref.miniSideBar;
-    this.storageService.clearChatters();
-    this.user = null as any;
     this.events.changeLoggingState(-1);
-    this.mainrole=-1;
+    this.events.changeuserdataState({state:2,userdata:null as any});
     this.router.navigate([""]);
-    //window.location.reload();
   }
   test() {
     if (this.isLoggedIn) this.authService.sendPref(this.storageService.getPrefrences(true)).subscribe({
@@ -348,8 +351,7 @@ export class RootComponent implements OnInit, OnDestroy {
     this.authService.getcontacts().subscribe({next:data=>{
       if(data.contacts)this.storageService.saveChatters(data.contacts);
     },error:err=>{
-      if(!err.verified)this.logout();
-      
+      console.log("updateContacts error",err);
     }});
   }
   @HostListener('window:beforeunload')
@@ -370,6 +372,7 @@ export class RootComponent implements OnInit, OnDestroy {
     this.subscription4.unsubscribe();
     this.subscription5.unsubscribe();
     this.subscription6.unsubscribe();
+    this.subscription7.unsubscribe();
     if (!this.state.remember && this.isLoggedIn) this.logout();
     this.socketService.disconnect();
   }
