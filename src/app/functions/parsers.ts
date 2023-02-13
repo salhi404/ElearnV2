@@ -22,6 +22,8 @@ return roles.map(rl=>{switch (rl) {
       return 'Moderator';
     case "ROLE_ADMIN":
       return 'Admin';
+      case "ROLE_TEACHER":
+        return 'Teacher';
   }
   return '';
 });
@@ -34,12 +36,14 @@ export function parserole(role:string):string{
         return 'Moderator';
       case "admin":
         return 'Admin';
+       case "teacher":
+          return 'Teacher';
     }
     return '';
   }
 export function getmainrole(roles:string[]):string{
-    return roles.includes('Admin')?'Admin':roles.includes('Moderator')?'Moderator':'Student';
+    return roles.includes('Admin')?'Admin':roles.includes('Moderator')?'Moderator':roles.includes('Teacher')?'Teacher':'Student';
 }
 export function getmainrolecode(roles:string[]):number{
-    return roles.includes('ROLE_ADMIN')?1:roles.includes('ROLE_MODERATOR')?2:3;
+    return roles.includes('ROLE_ADMIN')?1:roles.includes('ROLE_MODERATOR')?2:roles.includes('ROLE_TEACHER')?3:2;
 }

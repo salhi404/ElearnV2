@@ -1,4 +1,4 @@
-<div id="body"  [ngClass]="{'sidebar-mini':showMiniSideBar&&!isTabletMode,'dark dark-sidebar theme-black':DarkTheme,'interfaceBody':interfaceLayout,'theme-red':mainrole==1,'theme-cyan':mainrole==2,'theme-white':mainrole==3}" > 
+<div id="body"  [ngClass]="{'sidebar-mini':showMiniSideBar&&!isTabletMode,'dark dark-sidebar theme-black':DarkTheme,'interfaceBody':interfaceLayout,'theme-red':mainrole==1,'theme-cyan':mainrole==2,'theme-purple':mainrole==3,'theme-white':mainrole==4||mainrole==-1}" > 
   <div  id="app" >
     <div class="main-wrapper main-wrapper-1">
       <app-navbar [interfaceLayout]="interfaceLayout" [mailCount]="unoppenedMailCount" [mails]="unoppenedMail" [logged]="isLoggedIn" [user]="user" [DarkTheme]="DarkTheme"></app-navbar>

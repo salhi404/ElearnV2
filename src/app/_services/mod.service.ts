@@ -21,4 +21,8 @@ export class ModService {
     const token = this.storageService.getTokent();
     return this.http.post(MOD_API + 'getusers', {token}, httpOptions);
   }
+  changeRoles(user:string,roles:any): Observable<any> {
+    const token = this.storageService.getTokent();
+    return this.http.post(MOD_API + 'changeroles', {token,user,roles}, httpOptions);
+  }
 }

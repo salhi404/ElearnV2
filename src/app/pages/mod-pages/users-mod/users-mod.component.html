@@ -1,293 +1,131 @@
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <div [ngClass]="{'invisible2':!editing}" (click)="backToList()" class="iconBtn">
+          <div class="iconBtnBack ">
+            <a data-toggle="tooltip">
+              <i class="material-icons">arrow_back</i>
+            </a>
+          </div>
+        </div>
+        <h4 class="text-center width-per-100"><span style="left: -12px;" class="position-relative">
 
-            <!--<div class="row">
-                <div class="col-12">
-                  <div class="card">
-                    <div class="card-header">
-                      <h4>Assign Task Table</h4>
-                      <div class="card-header-form">
-                        <form>
-                          <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search">
-                            <div class="input-group-btn">
-                              <button class="btn btn-primary"><i class="fas fa-search"></i></button>
-                            </div>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
-                    <div class="card-body p-0">
-                      <div class="table-responsive">
-                        <table class="table table-striped">
-                          <tr>
-                            <th class="text-center">
-                              <div class="custom-checkbox custom-checkbox-table custom-control">
-                                <input type="checkbox" data-checkboxes="mygroup" data-checkbox-role="dad"
-                                  class="custom-control-input" id="checkbox-all">
-                                <label for="checkbox-all" class="custom-control-label">&nbsp;</label>
-                              </div>
-                            </th>
-                            <th>Task Name</th>
-                            <th>Members</th>
-                            <th>Task Status</th>
-                            <th>Assigh Date</th>
-                            <th>Due Date</th>
-                            <th>Priority</th>
-                            <th>Action</th>
-                          </tr>
-                          <tr>
-                            <td class="p-0 text-center">
-                              <div class="custom-checkbox custom-control">
-                                <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input"
-                                  id="checkbox-1">
-                                <label for="checkbox-1" class="custom-control-label">&nbsp;</label>
-                              </div>
-                            </td>
-                            <td>Create a mobile app</td>
-                            <td class="text-truncate">
-                              <ul class="list-unstyled order-list m-b-0 m-b-0">
-                                <li class="team-member team-member-sm"><img class="rounded-circle"
-                                    src="assets/img/users/user-8.png" alt="user" data-toggle="tooltip" title=""
-                                    data-original-title="Wildan Ahdian"></li>
-                                <li class="team-member team-member-sm"><img class="rounded-circle"
-                                    src="assets/img/users/user-9.png" alt="user" data-toggle="tooltip" title=""
-                                    data-original-title="John Deo"></li>
-                                <li class="team-member team-member-sm"><img class="rounded-circle"
-                                    src="assets/img/users/user-10.png" alt="user" data-toggle="tooltip" title=""
-                                    data-original-title="Sarah Smith"></li>
-                                <li class="avatar avatar-sm"><span class="badge badge-primary">+4</span></li>
-                              </ul>
-                            </td>
-                            <td class="align-middle">
-                              <div class="progress-text">50%</div>
-                              <div class="progress" data-height="6">
-                                <div class="progress-bar bg-success" data-width="50%"></div>
-                              </div>
-                            </td>
-                            <td>2018-01-20</td>
-                            <td>2019-05-28</td>
-                            <td>
-                              <div class="badge badge-success">Low</div>
-                            </td>
-                            <td><a href="#" class="btn btn-outline-primary">Detail</a></td>
-                          </tr>
-                          <tr>
-                            <td class="p-0 text-center">
-                              <div class="custom-checkbox custom-control">
-                                <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input"
-                                  id="checkbox-2">
-                                <label for="checkbox-2" class="custom-control-label">&nbsp;</label>
-                              </div>
-                            </td>
-                            <td>Redesign homepage</td>
-                            <td class="text-truncate">
-                              <ul class="list-unstyled order-list m-b-0 m-b-0">
-                                <li class="team-member team-member-sm"><img class="rounded-circle"
-                                    src="assets/img/users/user-1.png" alt="user" data-toggle="tooltip" title=""
-                                    data-original-title="Wildan Ahdian"></li>
-                                <li class="team-member team-member-sm"><img class="rounded-circle"
-                                    src="assets/img/users/user-2.png" alt="user" data-toggle="tooltip" title=""
-                                    data-original-title="John Deo"></li>
-                                <li class="avatar avatar-sm"><span class="badge badge-primary">+2</span></li>
-                              </ul>
-                            </td>
-                            <td class="align-middle">
-                              <div class="progress-text">40%</div>
-                              <div class="progress" data-height="6">
-                                <div class="progress-bar bg-danger" data-width="40%"></div>
-                              </div>
-                            </td>
-                            <td>2017-07-14</td>
-                            <td>2018-07-21</td>
-                            <td>
-                              <div class="badge badge-danger">High</div>
-                            </td>
-                            <td><a href="#" class="btn btn-outline-primary">Detail</a></td>
-                          </tr>
-                          <tr>
-                            <td class="p-0 text-center">
-                              <div class="custom-checkbox custom-control">
-                                <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input"
-                                  id="checkbox-3">
-                                <label for="checkbox-3" class="custom-control-label">&nbsp;</label>
-                              </div>
-                            </td>
-                            <td>Backup database</td>
-                            <td class="text-truncate">
-                              <ul class="list-unstyled order-list m-b-0 m-b-0">
-                                <li class="team-member team-member-sm"><img class="rounded-circle"
-                                    src="assets/img/users/user-3.png" alt="user" data-toggle="tooltip" title=""
-                                    data-original-title="Wildan Ahdian"></li>
-                                <li class="team-member team-member-sm"><img class="rounded-circle"
-                                    src="assets/img/users/user-4.png" alt="user" data-toggle="tooltip" title=""
-                                    data-original-title="John Deo"></li>
-                                <li class="team-member team-member-sm"><img class="rounded-circle"
-                                    src="assets/img/users/user-5.png" alt="user" data-toggle="tooltip" title=""
-                                    data-original-title="Sarah Smith"></li>
-                                <li class="avatar avatar-sm"><span class="badge badge-primary">+3</span></li>
-                              </ul>
-                            </td>
-                            <td class="align-middle">
-                              <div class="progress-text">55%</div>
-                              <div class="progress" data-height="6">
-                                <div class="progress-bar bg-purple" data-width="55%"></div>
-                              </div>
-                            </td>
-                            <td>2019-07-25</td>
-                            <td>2019-08-17</td>
-                            <td>
-                              <div class="badge badge-info">Average</div>
-                            </td>
-                            <td><a href="#" class="btn btn-outline-primary">Detail</a></td>
-                          </tr>
-                          <tr>
-                            <td class="p-0 text-center">
-                              <div class="custom-checkbox custom-control">
-                                <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input"
-                                  id="checkbox-4">
-                                <label for="checkbox-4" class="custom-control-label">&nbsp;</label>
-                              </div>
-                            </td>
-                            <td>Android App</td>
-                            <td class="text-truncate">
-                              <ul class="list-unstyled order-list m-b-0 m-b-0">
-                                <li class="team-member team-member-sm"><img class="rounded-circle"
-                                    src="assets/img/users/user-7.png" alt="user" data-toggle="tooltip" title=""
-                                    data-original-title="John Deo"></li>
-                                <li class="team-member team-member-sm"><img class="rounded-circle"
-                                    src="assets/img/users/user-8.png" alt="user" data-toggle="tooltip" title=""
-                                    data-original-title="Sarah Smith"></li>
-                                <li class="avatar avatar-sm"><span class="badge badge-primary">+4</span></li>
-                              </ul>
-                            </td>
-                            <td class="align-middle">
-                              <div class="progress-text">70%</div>
-                              <div class="progress" data-height="6">
-                                <div class="progress-bar" data-width="70%"></div>
-                              </div>
-                            </td>
-                            <td>2018-04-15</td>
-                            <td>2019-07-19</td>
-                            <td>
-                              <div class="badge badge-success">Low</div>
-                            </td>
-                            <td><a href="#" class="btn btn-outline-primary">Detail</a></td>
-                          </tr>
-                          <tr>
-                            <td class="p-0 text-center">
-                              <div class="custom-checkbox custom-control">
-                                <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input"
-                                  id="checkbox-5">
-                                <label for="checkbox-5" class="custom-control-label">&nbsp;</label>
-                              </div>
-                            </td>
-                            <td>Logo Design</td>
-                            <td class="text-truncate">
-                              <ul class="list-unstyled order-list m-b-0 m-b-0">
-                                <li class="team-member team-member-sm"><img class="rounded-circle"
-                                    src="assets/img/users/user-9.png" alt="user" data-toggle="tooltip" title=""
-                                    data-original-title="Wildan Ahdian"></li>
-                                <li class="team-member team-member-sm"><img class="rounded-circle"
-                                    src="assets/img/users/user-10.png" alt="user" data-toggle="tooltip" title=""
-                                    data-original-title="John Deo"></li>
-                                <li class="team-member team-member-sm"><img class="rounded-circle"
-                                    src="assets/img/users/user-2.png" alt="user" data-toggle="tooltip" title=""
-                                    data-original-title="Sarah Smith"></li>
-                                <li class="avatar avatar-sm"><span class="badge badge-primary">+2</span></li>
-                              </ul>
-                            </td>
-                            <td class="align-middle">
-                              <div class="progress-text">45%</div>
-                              <div class="progress" data-height="6">
-                                <div class="progress-bar bg-cyan" data-width="45%"></div>
-                              </div>
-                            </td>
-                            <td>2017-02-24</td>
-                            <td>2018-09-06</td>
-                            <td>
-                              <div class="badge badge-danger">High</div>
-                            </td>
-                            <td><a href="#" class="btn btn-outline-primary">Detail</a></td>
-                          </tr>
-                          <tr>
-                            <td class="p-0 text-center">
-                              <div class="custom-checkbox custom-control">
-                                <input type="checkbox" data-checkboxes="mygroup" class="custom-control-input"
-                                  id="checkbox-6">
-                                <label for="checkbox-6" class="custom-control-label">&nbsp;</label>
-                              </div>
-                            </td>
-                            <td>Ecommerce website</td>
-                            <td class="text-truncate">
-                              <ul class="list-unstyled order-list m-b-0 m-b-0">
-                                <li class="team-member team-member-sm"><img class="rounded-circle"
-                                    src="assets/img/users/user-8.png" alt="user" data-toggle="tooltip" title=""
-                                    data-original-title="Wildan Ahdian"></li>
-                                <li class="team-member team-member-sm"><img class="rounded-circle"
-                                    src="assets/img/users/user-9.png" alt="user" data-toggle="tooltip" title=""
-                                    data-original-title="John Deo"></li>
-                                <li class="team-member team-member-sm"><img class="rounded-circle"
-                                    src="assets/img/users/user-10.png" alt="user" data-toggle="tooltip" title=""
-                                    data-original-title="Sarah Smith"></li>
-                                <li class="avatar avatar-sm"><span class="badge badge-primary">+4</span></li>
-                              </ul>
-                            </td>
-                            <td class="align-middle">
-                              <div class="progress-text">30%</div>
-                              <div class="progress" data-height="6">
-                                <div class="progress-bar bg-orange" data-width="30%"></div>
-                              </div>
-                            </td>
-                            <td>2018-01-20</td>
-                            <td>2019-05-28</td>
-                            <td>
-                              <div class="badge badge-info">Average</div>
-                            </td>
-                            <td><a href="#" class="btn btn-outline-primary">Detail</a></td>
-                          </tr>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-            </div>-->
-            <div class="row">
-                <div class="col-12">
-                  <div class="card">
-                    <div class="card-header">
-                      <h4>Users</h4>
-                    </div>
-                    <div class="card-body">
-                        <!-- <table datatable [dtOptions]="dtOptions"  class="row-border hover"> -->
-                            <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead >
-                                    <th class="pl-4">Pic</th>
-                                    <th>Username</th>
-                                    <th>Roles</th>
-                                    <th>Status</th>
-                                    <th>First name</th>
-                                    <th>Last name</th>
-                                    <th>Edit</th>        
-                            </thead>
-                            <tbody>
-                              <tr *ngFor="let user of usersList">
-                                <td>
-                                <figure class="avatar"   [ngClass]="{'avatarInitials':user.profileImage.length==2}" [attr.data-initial]="user.profileImage" >
-                                <img class="avatarImg" *ngIf="user.profileImage.length>2" [src]="user.profileImage" alt="...">
-                                </figure>
-                                </td>
-                                <td>{{user.username}}</td>
-                                <td  class=""><span style="display: block; margin: 0 auto;" *ngFor="let role of user.roles.reverse()  ">{{role}}</span> </td>
-                                <td>ToDo</td>
-                                <td>{{user.fName}}</td>
-                                <td>{{user.lName}}</td>
-                                <td><div (click)="edit(user.username)" class="btn btn-info pointer">edit</div></td>
-                              </tr>
-                            </tbody>
-                          </table>
-                          </div>
-                          
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <figure *ngIf="editing" class="avatar mr-2"
+              [ngClass]="{'avatarInitials':selectedUser.profileImage.length==2}"
+              [attr.data-initial]="selectedUser.profileImage">
+              <img class="avatarImg" *ngIf="selectedUser.profileImage.length>2" [src]="selectedUser.profileImage"
+                alt="...">
+            </figure>
+            {{editing?selectedUser.username:'Users'}}
+          </span></h4>
+      </div>
+      <div class="card-body {{editing?'':'p-0'}}">
+        <!-- <table datatable [dtOptions]="dtOptions"  class="row-border hover"> -->
+        <div *ngIf="!editing" class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <th class="pl-4">Pic</th>
+              <th>Username</th>
+              <th>Roles</th>
+              <th>Status</th>
+              <th>First name</th>
+              <th>Last name</th>
+              <th>Email</th>
+              <th>Edit</th>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of usersList">
+                <td>
+                  <figure class="avatar" [ngClass]="{'avatarInitials':user.profileImage.length==2}"
+                    [attr.data-initial]="user.profileImage">
+                    <img class="avatarImg" *ngIf="user.profileImage.length>2" [src]="user.profileImage" alt="...">
+                  </figure>
+                </td>
+                <td>{{user.username}}</td>
+                <td class=""><span style="display: block; margin: 0 auto;"
+                    *ngFor="let role of user.roles.reverse()  ">{{role}}</span> </td>
+                <td>ToDo</td>
+                <td>{{user.fName}}</td>
+                <td>{{user.lName}}</td>
+                <td>{{user.email}}</td>
+                <td>
+                  <div (click)="edit(user.username)" class="btn btn-info pointer">view</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div *ngIf="editing">
+          <div class="row">
+            <div class="col-md-2 col-6 b-r">
+              <strong>Username</strong>
+              <br>
+              <p class="text-muted">{{selectedUser.username}}</p>
+            </div>
+            <div class="col-md-2 col-6 b-r">
+              <strong>Full Name</strong>
+              <br>
+              <p class="text-muted">{{selectedUser.fName}} {{selectedUser.lName}}</p>
+            </div>
+            <div class="col-md-2 col-6 b-r">
+              <strong>Email</strong>
+              <br>
+              <p class="text-muted">{{selectedUser.email}}</p>
+            </div>
+            <div class="col-md-2 col-6 b-r">
+              <strong>Birth date</strong>
+              <br>
+              <p class="text-muted">{{datepipe.transform(selectedUser.birthDate, 'dd-MM-yyyy')}}</p>
+            </div>
+            <div class="col-md-2 col-6 b-r">
+              <strong>grade</strong>
+              <br>
+              <p class="text-muted">{{parsegrade(selectedUser.grade)}}</p>
+            </div>
+            <div class="col-md-2 col-6 b-r">
+              <strong>verification</strong>
+              <br>
+              <p [ngClass]="{'text-success':selectedUser.verified,'text-danger':!selectedUser.verified}">
+                {{selectedUser.verified?'verified':'not verified'}}</p>
+            </div>
+          </div>
+          <div class="form-group ">
+            <div class="selectgroup selectgroup-pills">
+              <ul class="list-group roles-group">
+                <li class="list-group-item d-flex  align-items-center">
+                  <label class="form-label mb-0">
+                    <h6 class="mr-3">Roles</h6>
+                </label>
+              <label   class="selectgroup-item mb-0 ">
+                <input type="checkbox" name="user" [(ngModel)]="form.user" value="user" class="selectgroup-input">
+                <span class="selectgroup-button">User</span>
+              </label>
+              <label  class="selectgroup-item mb-0 ">
+                <input type="checkbox" name="teacher" [(ngModel)]="form.teacher" value="teacher"
+                  class="selectgroup-input">
+                <span class="selectgroup-button">Teacher</span>
+              </label>
+              <label  class="selectgroup-item mb-0 ">
+                <input type="checkbox" name="moderator" [(ngModel)]="form.moderator" value="moderator"
+                  class="selectgroup-input">
+                <span class="selectgroup-button">Moderator</span>
+              </label>
+              <label  class="selectgroup-item mb-0 ">
+                <input type="checkbox" name="admin" [(ngModel)]="form.admin" value="admin" class="selectgroup-input">
+                <span class="selectgroup-button">Admin</span>
+              </label>
+              <span (click)="submitRoles()" [ngClass]="{'btn-info pointer':changeRoleResult==-1,'btn-success':changeRoleResult==1,'btn-danger':changeRoleResult==2}" class="btn btn-info d-flex justify-content-center align-items-center" >
+                {{changeRoleResult==-1?'Submit':changeRoleResult==1?'success':'failed'}}
+              <span *ngIf="loading" class="mx-2"></span>
+              <app-spinner *ngIf="loading" [type]="1"></app-spinner></span>
+            </li>
+          </ul>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

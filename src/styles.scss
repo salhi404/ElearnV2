@@ -58,7 +58,7 @@
     height: 42px;
     width: 42px;
     background-color: rgba(173, 173, 173, 0.37);
-    transition: 0.2s;
+    transition: width 0.2s, height 0.2s, background-color 0.2s;
 }
 .iconBtn a {
     margin: 0;
@@ -26794,12 +26794,12 @@ body.layout-3 .main-footer {
     background: #5864bd
 }
 
-.theme-purple .selectgroup-input:focus+.selectgroup-button,
+// .theme-purple .selectgroup-input:focus+.selectgroup-button,
 .theme-purple .selectgroup-input:checked+.selectgroup-button {
     background-color: #5864bd
 }
 
-.theme-purple .selectgroup-input-radio:focus+.selectgroup-button,
+// .theme-purple .selectgroup-input-radio:focus+.selectgroup-button,
 .theme-purple .selectgroup-input-radio:checked+.selectgroup-button {
     background-color: #5864bd
 }
@@ -27115,12 +27115,12 @@ body.layout-3 .main-footer {
     background: #3dc9b3
 }
 
-.theme-cyan .selectgroup-input:focus+.selectgroup-button,
+// .theme-cyan .selectgroup-input:focus+.selectgroup-button,
 .theme-cyan .selectgroup-input:checked+.selectgroup-button {
     background-color: #3dc9b3
 }
 
-.theme-cyan .selectgroup-input-radio:focus+.selectgroup-button,
+// .theme-cyan .selectgroup-input-radio:focus+.selectgroup-button,
 .theme-cyan .selectgroup-input-radio:checked+.selectgroup-button {
     background-color: #3dc9b3
 }
@@ -27436,12 +27436,12 @@ body.layout-3 .main-footer {
     background: #28c76f
 }
 
-.theme-green .selectgroup-input:focus+.selectgroup-button,
+// .theme-green .selectgroup-input:focus+.selectgroup-button,
 .theme-green .selectgroup-input:checked+.selectgroup-button {
     background-color: #28c76f
 }
 
-.theme-green .selectgroup-input-radio:focus+.selectgroup-button,
+// .theme-green .selectgroup-input-radio:focus+.selectgroup-button,
 .theme-green .selectgroup-input-radio:checked+.selectgroup-button {
     background-color: #28c76f
 }
@@ -27757,12 +27757,12 @@ body.layout-3 .main-footer {
     background: #ea5455
 }
 
-.theme-red .selectgroup-input:focus+.selectgroup-button,
+//.theme-red .selectgroup-input:focus+.selectgroup-button,
 .theme-red .selectgroup-input:checked+.selectgroup-button {
     background-color: #ea5455
 }
 
-.theme-red .selectgroup-input-radio:focus+.selectgroup-button,
+//.theme-red .selectgroup-input-radio:focus+.selectgroup-button,
 .theme-red .selectgroup-input-radio:checked+.selectgroup-button {
     background-color: #ea5455
 }

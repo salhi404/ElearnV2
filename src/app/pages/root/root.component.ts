@@ -320,7 +320,9 @@ export class RootComponent implements OnInit, OnDestroy {
     this.storageService.clearChatters();
     this.user = null as any;
     this.events.changeLoggingState(-1);
-    this.router.navigate(["/"]);
+    this.mainrole=-1;
+    this.router.navigate([""]);
+    //window.location.reload();
   }
   test() {
     if (this.isLoggedIn) this.authService.sendPref(this.storageService.getPrefrences(true)).subscribe({
