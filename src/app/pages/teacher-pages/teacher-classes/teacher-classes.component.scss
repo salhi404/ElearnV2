@@ -1,0 +1,87 @@
+.button-four {
+    padding: 0;
+    border: none;
+    font: inherit;
+    color: inherit;
+    background-color: transparent;
+    cursor: pointer;
+  }
+  
+  .button-four:focus {
+    outline: 0;
+  }
+
+  .button-four {
+    height: 50px;
+    width: 50px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+      0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+  }
+  .button-four {
+    background-color: #547aa5;
+    border-radius: 15px;
+  }
+  .grow { transition: all .2s ease-in-out; }
+.grow:hover { transform: scale(1.05); }
+.centerr{
+    width: 100%;
+}
+.add-bttn {
+    height: 100px;
+}
+
+
+
+
+//model
+
+
+.modal {
+    background: rgba(20, 20, 20, 0.2);
+    transition: .2s;
+  }
+  .modal-dialog{
+    min-width: 30%;
+    margin-top: 10px;
+    transition: -webkit-transform .2s ease-out;
+      -webkit-transition: -webkit-transform .2s ease-out;
+      transition: transform .2s ease-out;
+      transition: transform .2s ease-out, -webkit-transform .2s ease-out;
+      transition: transform .2s ease-out, -webkit-transform .2s ease-out;
+      -webkit-transform: translate(0, -10px);
+      transform: translate(0, -10px)
+  }
+  @media(max-width:1100px) {
+    .modal-dialog{
+      min-width: 40%;
+    }
+  }
+  @media(max-width:800px) {
+    .modal-dialog{
+      min-width: 60%;
+    }
+    .card-header-action2  .btn{
+      padding: 5px 12px!important;
+      font-size: 15px!important;
+    }
+  }
+  @media(max-width:576px) {
+    .modal-dialog{
+      min-width: 90%;
+    }
+    .card-header-action2  .btn{
+      padding: 4px 9px!important;
+      font-size: 12px!important;
+    }
+  }
+  
+  .showModal{
+    display: flex;
+  }
+  .fadeModel{
+    background: rgba(20, 20, 20, 0.7);
+  }
+  .fadeModel .modal-dialog{
+    -webkit-transform: translate(0, 0px);
+      transform: translate(0, 0px)
+  }

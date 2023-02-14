@@ -1,4 +1,4 @@
-import { Component, OnInit,OnDestroy } from '@angular/core';
+import { Component, OnInit,OnDestroy, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { User } from 'app/Interfaces/user';
 import { EventsService } from 'app/services/events.service';
@@ -14,17 +14,23 @@ import { DatePipe } from '@angular/common';
 export class TeacherClassesComponent implements OnInit,OnDestroy {
   subscription: Subscription = new Subscription();
   subscription1: Subscription = new Subscription();
+  subscription2: Subscription = new Subscription();
   user: User = null as any;
+  classes:any[]=[];
+  blockHostListener=false;
+  modelShowen:boolean=false;
+  addnotEdit=true;
+  fadeModel:boolean=false;
   form:any={
-    user:false,
-    teacher:false,
-    moderator:false,
-    admin:false,
+    class:'',
+    subject:1,
   }
+  @ViewChild("modalDialog") modalDialog!: ElementRef;
   constructor(private events: EventsService, private teacherservice: TeacherService,/*private authService: AuthService,*/) { }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
-     this.subscription1.unsubscribe();
+    this.subscription1.unsubscribe();
+    this.subscription2.unsubscribe();
   }
   ngOnInit(): void {
     this.subscription = this.events.userdataEvent.subscribe(
@@ -38,17 +44,66 @@ export class TeacherClassesComponent implements OnInit,OnDestroy {
         }
       }
     )
-    // this.subscription1 = this.teacherservice.getUsers().subscribe({
-    //   next: data => {
-    //     console.log("data");
-    //     console.log(data);
+    this.subscription1 = this.teacherservice.getClasses().subscribe({
+      next: data => {
+        console.log("getClasses");
+        console.log(data);
+        if(data.classes){
+          this.classes=data.classes;
+        }
 
-    //   },
-    //   error: err => {
-    //     console.log(err);
+      },
+      error: err => {
+        console.log(err);
 
-    //   }
-    // })
+      }
+    })
+  }
 
+  openModel(issAdd:boolean){
+    this.addnotEdit=issAdd;
+    if(issAdd){
+      this.form={ class:'', subject:'1', }
+    }
+    this.blockHostListener=true;
+    setTimeout(() => {
+      this.blockHostListener=false;
+    }, 300);
+    this.modelShowen=true;
+    setTimeout(() => {
+    this.fadeModel=true;
+    }, 10);
+  }
+  closeModel(){
+    this.fadeModel=false;
+    setTimeout(() => {
+      this.modelShowen=false;
+    }, 150);
+  }
+  submitModal(){
+    
+    if(this.form.class==='')this.form.class="My Class";
+    this.subscription2=this.teacherservice.addclass(this.form.class,+this.form.subject).subscribe({
+      next: data => {
+        console.log("getClasses");
+        console.log(data);
+        if(data.classes){
+          this.classes=data.classes;
+        }
+      },
+      error: err => {
+        console.log(err);
+
+      }
+    })
+    console.log("submit",this.form);
+    this.closeModel();
+  }
+  @HostListener('document:click', ['$event'])
+  clickout(event:any) {
+    if(!this.modalDialog.nativeElement.contains(event.target)&&!this.blockHostListener){
+      console.log('close');
+      this.closeModel();    
+    }
   }
 }
