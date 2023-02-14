@@ -31,7 +31,7 @@ export class UsersModComponent implements OnInit, OnDestroy {
     moderator:false,
     admin:false,
   }
-  constructor(private events: EventsService, private modervice: ModService,private authService: AuthService,) { }
+  constructor(private events: EventsService, private modservice: ModService,private authService: AuthService,) { }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
     this.subscription1.unsubscribe();
@@ -40,10 +40,15 @@ export class UsersModComponent implements OnInit, OnDestroy {
     this.subscription = this.events.userdataEvent.subscribe(
       state => {
         console.log("userdataEvent 11");
-        if (state.state == 1) this.user = state.userdata;
+        if(state.state==1){
+          this.user=state.userdata;
+        }
+        if(state.state==2){
+          this.user=null as any;
+        }
       }
     )
-    this.subscription1 = this.modervice.getUsers().subscribe({
+    this.subscription1 = this.modservice.getUsers().subscribe({
       next: data => {
         console.log("data");
         console.log(data);
@@ -121,7 +126,7 @@ export class UsersModComponent implements OnInit, OnDestroy {
     if(this.form.moderator)temproles.push('moderator');
     if(this.form.admin)temproles.push('admin');
     console.log(temproles);
-    this.modervice.changeRoles(this.selectedUser.username,temproles).subscribe({
+    this.modservice.changeRoles(this.selectedUser.username,temproles).subscribe({
       next: data => {
         console.log("data");
         console.log(data);

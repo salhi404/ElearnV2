@@ -35,6 +35,12 @@ import { ModDashboardComponent } from './pages/mod-dashboard/mod-dashboard.compo
 import { DataTablesModule } from "angular-datatables";
 import { UsersModComponent } from './pages/mod-pages/users-mod/users-mod.component';
 import { NotificationModComponent } from './pages/mod-pages/notification-mod/notification-mod.component';
+import { TeacherDashboardComponent } from './pages/teacher-pages/teacher-dashboard/teacher-dashboard.component';
+import { TeacherEventsComponent } from './pages/teacher-pages/teacher-events/teacher-events.component';
+import { TeacherNotificationsComponent } from './pages/teacher-pages/teacher-notifications/teacher-notifications.component';
+import { TeacherLiveStreamComponent } from './pages/teacher-pages/teacher-live-stream/teacher-live-stream.component';
+import { TeacherEnrollersComponent } from './pages/teacher-pages/teacher-enrollers/teacher-enrollers.component';
+import { TeacherClassesComponent } from './pages/teacher-pages/teacher-classes/teacher-classes.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -64,6 +70,12 @@ import { NotificationModComponent } from './pages/mod-pages/notification-mod/not
     ModDashboardComponent,
     UsersModComponent,
     NotificationModComponent,
+    TeacherDashboardComponent,
+    TeacherEventsComponent,
+    TeacherNotificationsComponent,
+    TeacherLiveStreamComponent,
+    TeacherEnrollersComponent,
+    TeacherClassesComponent,
   ],
   imports: [
     FullCalendarModule,

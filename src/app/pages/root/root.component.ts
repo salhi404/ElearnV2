@@ -73,6 +73,9 @@ export class RootComponent implements OnInit, OnDestroy {
         case "mod-dashboard":
         this.currentRoute=6;
         break;
+        case "teacher-dashboard":
+        this.currentRoute=7;
+        break;
         default:
           if(this.storageService.isLoggedIn())this.router.navigate(["/home"]);
           this.currentRoute=0;

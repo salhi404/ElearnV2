@@ -45,5 +45,5 @@ export function getmainrole(roles:string[]):string{
     return roles.includes('Admin')?'Admin':roles.includes('Moderator')?'Moderator':roles.includes('Teacher')?'Teacher':'Student';
 }
 export function getmainrolecode(roles:string[]):number{
-    return roles.includes('ROLE_ADMIN')?1:roles.includes('ROLE_MODERATOR')?2:roles.includes('ROLE_TEACHER')?3:2;
+    return roles.includes('ROLE_ADMIN')?1:roles.includes('ROLE_MODERATOR')?2:roles.includes('ROLE_TEACHER')?3:4;
 }

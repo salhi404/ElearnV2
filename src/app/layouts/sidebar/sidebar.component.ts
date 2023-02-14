@@ -13,6 +13,7 @@ export class SidebarComponent implements OnInit {
   @Input() unoppenedchatCount:number=0;
   @Input()showMiniSideBar:boolean=false;
   @Input()mainrole:number=-1;
+  @Input()roles:string[]=[];
   @HostListener('document:click', ['$event'])
   clickout(event:any) {
     if(this.eRef.nativeElement.contains(event.target)) {

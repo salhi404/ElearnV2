@@ -13,6 +13,12 @@ import { NotificationsComponent } from './pages/notifications/notifications.comp
 import { ProfileComponent } from './pages/profile/profile.component';
 import { ModDashboardComponent } from './pages/mod-dashboard/mod-dashboard.component';
 import { UsersModComponent } from './pages/mod-pages/users-mod/users-mod.component';
+import { TeacherDashboardComponent } from './pages/teacher-pages/teacher-dashboard/teacher-dashboard.component';
+import { TeacherEnrollersComponent } from './pages/teacher-pages/teacher-enrollers/teacher-enrollers.component';
+import { TeacherEventsComponent } from './pages/teacher-pages/teacher-events/teacher-events.component';
+import { TeacherNotificationsComponent } from './pages/teacher-pages/teacher-notifications/teacher-notifications.component';
+import { TeacherLiveStreamComponent } from './pages/teacher-pages/teacher-live-stream/teacher-live-stream.component';
+import { TeacherClassesComponent } from './pages/teacher-pages/teacher-classes/teacher-classes.component';
 const routes: Routes = [
   {
     path: '', component: RootComponent,
@@ -50,9 +56,9 @@ const routes: Routes = [
       component: ModDashboardComponent,
       children: [
         {
-          path: '', redirectTo: '/mod-dashboard/users-mod', pathMatch: 'full'
+          path: '', redirectTo: '/mod-dashboard/users', pathMatch: 'full'
         },{
-          path: 'users-mod',
+          path: 'users',
           component:UsersModComponent
         },{
           path: '**', redirectTo: '/home', pathMatch: 'full'
@@ -65,7 +71,36 @@ const routes: Routes = [
       ]
       
     },
-    
+    {
+      path: 'teacher-dashboard',
+      component: TeacherDashboardComponent,
+      children: [
+        {
+          path: '', redirectTo: '/teacher-dashboard/classes', pathMatch: 'full'
+        },{
+          path: 'classes',
+          component:TeacherClassesComponent
+        },{
+          path: 'events',
+          component:TeacherEventsComponent
+        },{
+          path: 'notifications',
+          component:TeacherNotificationsComponent
+        },{
+          path: 'liveStreams',
+          component:TeacherLiveStreamComponent
+        },
+        {
+          path: '**', redirectTo: '/home', pathMatch: 'full'
+          // component:UsersModComponent
+        },
+        /*{
+          path: 'home',
+          component: HomeComponent
+        }*/
+      ]
+      
+    },
   ]
 },
 {path: 'login', component: LoginComponent},

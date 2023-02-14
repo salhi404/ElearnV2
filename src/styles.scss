@@ -76,7 +76,6 @@
 #cropper > div{
     display: flex ;
     justify-content: center;
-    border:2px solid red
   }
 
 .theme-black .sidebar-brand .logo-name{
@@ -19236,7 +19235,7 @@ a.text-dark:hover {
     color: #fff !important
 }
 
-.bg-purple {
+.bg-1 {
     background-color: #9c27b0 !important;
     color: #fff
 }
@@ -21079,12 +21078,12 @@ select.form-control:not([size]):not([multiple]) {
 .card.card-statistic-1 .card-icon {
     width: 30px;
     height: 30px;
-    margin: 10px 0px 0px 20px;
+    margin: 10px 0px 0px 0px;
     border-radius: 3px;
     line-height: 78px;
     text-align: center;
     float: left;
-    font-size: 30px
+    font-size: 30px;
 }
 
 .card.card-statistic-1 .card-header h4,
@@ -27473,12 +27472,28 @@ body.layout-3 .main-footer {
 }
 
 //added
-.theme-red .main-sidebar .sidebar-menu li .exclusive .fsideIcons {
+.main-sidebar .sidebar-menu li .exclusive1 .fsideIcons {
     color: rgba($color: #ea5455, $alpha: .75)!important 
 }
-.theme-red .main-sidebar .sidebar-menu li.active2 .exclusive .fsideIcons {
+.main-sidebar .sidebar-menu li.active2 .exclusive1 .fsideIcons {
     color: rgba($color: #ea5455, $alpha: 1)!important 
 }
+
+.main-sidebar .sidebar-menu li .exclusive2 .fsideIcons {
+    color: rgba($color: #3dc9b3, $alpha: .75)!important 
+}
+.main-sidebar .sidebar-menu li.active2 .exclusive2 .fsideIcons {
+    color: rgba($color: #3dc9b3, $alpha: 1)!important 
+}
+
+.main-sidebar .sidebar-menu li .exclusive3 .fsideIcons {
+    color: rgba($color: #5864bd, $alpha: .75)!important 
+}
+.main-sidebar .sidebar-menu li.active2 .exclusive3 .fsideIcons {
+    color: rgba($color: #5864bd, $alpha: 1)!important 
+}
+
+
 .theme-red.sidebar-mini .main-sidebar .sidebar-menu>li.active>a {
     background-color: rgba(0, 0, 0, 0.14)
 }
