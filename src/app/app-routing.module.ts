@@ -76,9 +76,9 @@ const routes: Routes = [
       component: TeacherDashboardComponent,
       children: [
         {
-          path: '', redirectTo: '/teacher-dashboard/classes', pathMatch: 'full'
+          path: '', redirectTo: '/teacher-dashboard/users', pathMatch: 'full'
         },{
-          path: 'classes',
+          path: 'users',
           component:TeacherClassesComponent
         },{
           path: 'events',

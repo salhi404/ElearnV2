@@ -1,90 +1,68 @@
-<div [ngClass]="{'showModal':modelShowen,'fadeModel':fadeModel}" class="modal" id="modal">
-  <div class="modal-dialog" role="document" #modalDialog>
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="formModal"> {{addnotEdit?'Add Class':'Edit Class'}}</h5>
-        <button type="button" class="close" (click)="closeModel()">
-          <span>&times;</span>
-        </button>
-      </div>
-      <div class="modal-body modalstyle">
-        <form class="">
-          <div class="form-group mb-2">
-            <label class="mb-1">Class name : </label>
-            <input name="event" [(ngModel)]="form.class" type="text" class="form-control" placeholder="My Class">
-          </div>
-          <div class="form-group mb-2">
-            <div class="selectgroup selectgroup-pills">
-              <ul class="list-group roles-group">
-                <li class="list-group-item d-flex  flex-wrap align-items-center">
-                  <label class="form-label mb-0 d-flex align-items-center justify-content-cente">
-                    <h6 class="mr-3">Subjet :</h6>
-                  </label>
-                  <label class="selectgroup-item mb-0  ">
-                    <input type="radio" name="subject" [(ngModel)]="form.subject" value="1" class="selectgroup-input">
-                    <span class="selectgroup-button">Math</span>
-                  </label>
-                  <label class="selectgroup-item mb-0 ">
-                    <input type="radio" name="subject" [(ngModel)]="form.subject" value="2"
-                      class="selectgroup-input">
-                    <span class="selectgroup-button">Physics</span>
-                  </label>
-                  <label class="selectgroup-item mb-0 ">
-                    <input type="radio" name="subject" [(ngModel)]="form.subject" value="3"
-                      class="selectgroup-input">
-                    <span class="selectgroup-button">all</span>
-                  </label>
-                  <!-- <label class="selectgroup-item mb-0 ">
-                    <input type="radio" name="subject" [(ngModel)]="form.subject" value="4"
-                      class="selectgroup-input">
-                    <span class="selectgroup-button">Admin</span>
-                  </label> -->
-                </li>
-              </ul>
-            </div>
-          </div>
-          <!-- <div class="form-group mb-3">
-						<label class="mb-1">To : </label>
-						<input name="endDate" [(ngModel)]="form.endDate" type="date" class="form-control">
-					</div> -->
-          <div class="d-flex align-items-center justify-content-center">
-            <button (click)="submitModal()" type="button" class="btn btn-primary m-t-15 waves-effect ">{{addnotEdit?'Add Class':'Edit Class'}}</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-
 <div class="row">
-  <div *ngFor="let class of classes" class="col-lg-3 col-md-6 col-sm-6 col-12">
-    <div class="card card-statistic-1">
-      <div class="card-icon l-bg-green">
-        <div class="d-flex flex-column justify-content-center align-items-center h-100 ">
-          <i class="fas fa-drafting-compass mb-1"></i>
-          <span style="font-size: 15px;line-height: 15px; font-weight: 500;">Math</span>
-        </div>
-      </div>
-      <div class="card-wrap">
-        <div class="padding-20">
-          <div class="text-right">
-            <h3 class="font-light mb-0">
-              <i class="ti-arrow-up text-success"></i> 10
-            </h3>
-            <span class="text-muted">New Clients</span>
+  <div *ngIf="chosenIndex==-1" class="d-flex justify-content-center w-100" > <span class="alert alert-primary">choose a class </span>  </div>
+  <div class="col-12">
+    <div class="card classCard" [ngClass]="{'classhidden':chosenIndex==-1}">
+      <div class="card-header">
+        <div [ngClass]="{'invisible2':!editing}" (click)="backToList()" class="iconBtn">
+          <div class="iconBtnBack ">
+            <a data-toggle="tooltip">
+              <i class="material-icons">arrow_back</i>
+            </a>
           </div>
         </div>
+        <h4 class="text-center width-per-100"><span style="left: -12px;" class="position-relative">
+
+            <figure *ngIf="editing" class="avatar mr-2"
+              [ngClass]="{'avatarInitials':selectedUser.profileImage.length==2}"
+              [attr.data-initial]="selectedUser.profileImage">
+              <img class="avatarImg" *ngIf="selectedUser.profileImage.length>2" [src]="selectedUser.profileImage"
+                alt="...">
+            </figure>
+            {{editing?selectedUser.username:'users'}}
+          </span></h4>
+      </div>
+      <div class="card-body">
+        <div *ngIf="!editing" class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <th class="pl-4">Pic</th>
+              <th>Username</th>
+              <th>Roles</th>
+              <th>Status</th>
+              <th>First name</th>
+              <th>Last name</th>
+              <th>Email</th>
+              <th>Edit</th>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of chosenClass?.enrollers">
+                <td>
+                  <figure class="avatar" [ngClass]="{'avatarInitials':user.profileImage.length==2}"
+                    [attr.data-initial]="user.profileImage">
+                    <img class="avatarImg" *ngIf="user.profileImage.length>2" [src]="user.profileImage" alt="...">
+                  </figure>
+                </td>
+                <td>{{user.username}}</td>
+                <td class=""><span style="display: block; margin: 0 auto;"
+                    *ngFor="let role of user.roles.reverse()  ">{{role}}</span> </td>
+                <td>
+                  <div class="status">
+                  <i class="material-icons {{user.OnlineStat==-1?'online':'offline'}}">fiber_manual_record</i>
+                  <span>{{user.OnlineStat==-1?'online':'offline'}}</span> 
+                </div>
+              </td>
+                <td>{{user.fName}}</td>
+                <td>{{user.lName}}</td>
+                <td>{{user.email}}</td>
+                <td>
+                  <div (click)="edit(user.username)" class="btn btn-info pointer">view</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
       </div>
     </div>
   </div>
-  <div
-    class=" add-bttn d-flex flex-column justify-content-center align-items-center grow {{classes.length==0?'centerr':''}} ">
-    <button (click)="openModel(true)" title="add new class" class="button-four"><i
-        class="fas fa-plus col-white "></i></button>
-  </div>
-
-
 </div>

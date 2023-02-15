@@ -14,6 +14,22 @@ export function parsegrade(grade:number):string{
     }
     return '';
 }
+export function parsesubject(subject:number):string{
+  switch (subject) {
+      case 1: return 'Math';
+      case 2: return 'Physics';
+      case 3: return 'all';
+  }
+  return '';
+}
+export function parsesubjectIcon(subject:number):string{
+  switch (subject) {
+      case 1: return 'fa-drafting-compass';
+      case 2: return 'fa-atom';
+      case 3: return 'fa-chalkboard-teacher';
+  }
+  return '';
+}
 export function parseroles(roles:string[]):string[]{
 return roles.map(rl=>{switch (rl) {
     case "ROLE_USER":
