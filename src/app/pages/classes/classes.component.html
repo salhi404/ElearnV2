@@ -1,5 +1,49 @@
 <div style="min-height: 900px;" class="main-content">
     <section style="min-height: 800px;" class="section">
+        <div class="divider"><span></span><span>Classes</span><span></span></div>
+        <div class="row">
+            <div *ngFor="let class of MyClasses index as i" class="col-lg-3 col-md-6 col-sm-6 col-12">
+              <div (click)="chooseClass(i)" class="card card-statistic-1 grow2 classCard" [ngClass]="{'active-class':chosenIndex==i}" >
+                <div class="card-icon classCardIcon">
+                  <div class="d-flex flex-column justify-content-center align-items-center h-100 ">
+                    <i class="fas {{parsesubjectIcon(class.subject)}} mb-1"></i>
+                    <span style="font-size: 15px;line-height: 15px; font-weight: 500;">{{parsesubject(class.subject)}}</span>
+                  </div>
+                </div>
+                <div class="h-100 flex-containerr">
+                  <div class="padding-20">
+                    <div class="flex-containerr">
+                      <h4 class="text-light mb-2">{{class.name}}</h4>
+                      <span class="font-light  text-light">
+                        <i class="ti-arrow-up text-light">code : {{class.uuid}}</i>
+                      </span>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                <div   class="  d-flex flex-column justify-content-center align-items-center  ">
+                <div [ngClass]="{'add-bttn-Card-Expanded':expandAddcard}"  class="card add-bttn-Card  "  #cardAdd>
+                  <div  [ngClass]="{'uuid-input-Expanded':expandAddcard,'uuid-input-display-non':!uuidDisplay}" class="uuid-input">
+                    <input required minlength="6" #uuid="ngModel"  title="uuid" type="tex" [(ngModel)]="retreaveduuid" placeholder="class code"
+                    class="form-control  "  [ngClass]="{'is-invalid':(uuid.errors &&submited)||(submiterrcode!=-1&&submittduuid==retreaveduuid)}">
+                    <div class="invalid-feedback" role="alert" *ngIf="uuid.errors &&submited" >
+                      <div *ngIf="uuid.errors['required']">code required</div>
+                      <div *ngIf="uuid.errors['minlength']">code too short</div>
+                    </div>
+                    <div class="invalid-feedback" *ngIf="(submiterrcode!=-1&&submittduuid==retreaveduuid)">{{submiterrstr}}</div>
+                    
+                  </div>
+                   <button (click)="oppenAddClass(uuid.errors)" title="add new class" class="add-bttn grow3"><i
+                        class="fas fa-plus col-white "></i></button>
+                  </div>
+                </div>
+                  
+              </div>
+          </div>
+
         <div style="height: 800px;"  class="section-body  d-flex flex-column ">
             <div style="height: 800px;" class="row">
               <div style="height: 800px;" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -10,11 +54,14 @@
                         <div class="categories">
                           <ul>
                             <li [ngClass]="{'active':oppenedtab==1}">
-                              <a class="pointer" (click)="oppenTab(1)" >My Classes</a>
+                              <a class="pointer" (click)="oppenTab(1)" >class Info</a>
                             </li>
                             <li [ngClass]="{'active':oppenedtab==2}">
-                              <a class="pointer" (click)="oppenTab(2)" >find Class</a>
+                              <a class="pointer" (click)="oppenTab(2)" >Tasks</a>
                             </li>
+                            <li [ngClass]="{'active':oppenedtab==3}">
+                                <a class="pointer" (click)="oppenTab(3)" >Notifications</a>
+                              </li>
                             <!-- <li>
                               <a class="pointer"  data-filter=".apps">Apps</a>
                             </li>
@@ -25,10 +72,31 @@
                         </div>
 
                       </section>
-                      <div class="flex-grow-1">
-
+                      <div *ngIf="oppenedtab==1" >
+                        <div *ngIf="chosenClass" class="row">
+                          <div class="col-md-3 col-6 b-r">
+                            <strong>class name </strong>
+                            <br>
+                            <p class="text-muted">{{chosenClass.name}}</p>
+                          </div>
+                          <div class="col-md-3 col-6 b-r">
+                            <strong>teacher</strong>
+                            <br>
+                            <p class="text-muted">{{chosenClass.teacher}}</p>
+                            
+                          </div>
+                          <div class="col-md-3 col-6 b-r">
+                            <strong>Subject</strong>
+                            <br>
+                            <p class="text-muted">{{parsesubject(chosenClass.subject)}}</p>
+                          </div>
+                          <div class="col-md-3 col-6">
+                            <strong>code</strong>
+                            <br>
+                            <p class="text-muted">{{chosenClass.uuid}}</p>
+                          </div>
+                        </div>
                       </div>
-                   
                   </div>
                 </div>
               </div>

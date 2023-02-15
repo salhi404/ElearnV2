@@ -1,19 +1,36 @@
-import { Component , OnInit, OnDestroy} from '@angular/core';
+import { Component , OnInit, OnDestroy, ViewChild, ElementRef, HostListener} from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { User } from 'app/Interfaces/user';
 import { EventsService } from 'app/services/events.service';
+import { StudentService } from "app/_services/student.service";
 import { DatePipe } from '@angular/common';
+import { parsegrade,parseroles,getmainrole, getmainrolecode, parsesubject ,parsesubjectIcon } from 'app/functions/parsers';
 @Component({
   selector: 'app-classes',
   templateUrl: './classes.component.html',
   styleUrls: ['./classes.component.scss']
 })
-export class ClassesComponent {
+export class ClassesComponent implements OnInit, OnDestroy {
   oppenedtab:number=1;
+  uuidDisplay=false;
+  retreaveduuid:string='';
+  expandAddcard:boolean=false;
   subscription: Subscription = new Subscription();
   subscription1: Subscription = new Subscription();
+  submiterrcode:number=-1;
+  submiterrstr:string='';
+  submittduuid:string='';
   user: User = null as any;
-  constructor(private events: EventsService,) { }
+  MyClasses:any[]=[];
+  chosenClass:any=null;
+  chosenIndex:number=-1;
+  blockHostListener: boolean=false;
+  submited=false;
+  @ViewChild("cardAdd") cardAdd!: ElementRef;
+  loading: boolean=false;
+
+
+  constructor(private events: EventsService,private StudentService:StudentService) { }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
     this.subscription1.unsubscribe();
@@ -30,8 +47,98 @@ export class ClassesComponent {
         }
       }
     )
+    this.getClasses();
+  }
+  getClasses(){
+    this.subscription1=this.StudentService.getClasses().subscribe({
+
+      next:data=>{
+        console.log('get student classses data',data);
+        this.MyClasses=data.classes; //[{subject:"math",name:"rerer",uuid:'sdsd'}]
+        
+      },
+      error:err=>{
+        console.log('get student classes error',err);
+        
+      }
+    })
   }
   oppenTab(ind:number){
     this.oppenedtab=ind;
+  }
+  oppenAddClass(error:any){
+    this.blockHostListener=true;
+    setTimeout(() => {
+      this.blockHostListener=false;
+    }, 100);
+    if(!this.expandAddcard){
+      this.expandAddcard=true;
+        setTimeout(() => {
+          this.uuidDisplay=true;
+        }, 500);
+    }else{
+      console.log("submit");
+      this.submit(error);
+
+    }
+    
+
+  }
+  clear(){
+    this.submiterrcode=-1;
+    this.submiterrstr='';
+  }
+  submit(error:any){
+    this.clear;
+    console.log(error);
+    if(!error){
+      this.loading=true;
+      this.submittduuid=this.retreaveduuid;
+      this.StudentService.enroll(this.retreaveduuid).subscribe({
+
+        next:data=>{
+          console.log('enroll data',data);
+          this.getClasses();
+          this.loading=false;
+        },
+        error:err=>{
+          console.log('enroll error',err);
+          this.loading=false;
+          if(err.status==565){
+            this.submiterrcode=565;
+            this.submiterrstr='class not found';
+          }
+          if(err.status==566){
+            this.submiterrcode=566;
+            this.submiterrstr='alredy registered ';
+          }
+        }
+      })
+    }
+    this.submited=true;
+  }
+  chooseClass(id:number){
+    if( this.chosenIndex!=id){
+      this.chosenIndex=id;
+      this.chosenClass=this.MyClasses[id];
+    }else{
+      this.chosenIndex=-1;
+      this.chosenClass=null;
+    }
+    this.events.changeTaskState({task:20,data:{chosenIndex:this.chosenIndex ,chosenClass:this.chosenClass}})
+  }
+  parsesubject(subject:number):string{
+    return parsesubject(subject);
+  }
+  parsesubjectIcon(subject:number):string{
+    return parsesubjectIcon(subject);
+  }
+  @HostListener('document:click', ['$event'])
+  clickout(event:any) {
+    if(!this.cardAdd.nativeElement.contains(event.target)&&!this.blockHostListener&&this.expandAddcard){
+      this.expandAddcard=false;{
+        this.uuidDisplay=false;
+      }
+    }
   }
 }

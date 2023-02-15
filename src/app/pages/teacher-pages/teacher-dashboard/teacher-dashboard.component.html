@@ -49,6 +49,7 @@
 					</div> -->
           <div class="d-flex align-items-center justify-content-center">
             <button (click)="submitModal()" type="button" class="btn btn-primary m-t-15 waves-effect ">{{addnotEdit?'Add Class':'Edit Class'}}</button>
+           
           </div>
         </form>
       </div>
@@ -70,10 +71,11 @@
             <div class="h-100 flex-containerr">
               <div class="padding-20">
                 <div class="flex-containerr">
-                  <span class="font-light mb-0 text-light">
-                    <i class="ti-arrow-up text-light">{{class.enrollers.length}}</i> enrolled
+                  <h4 class="text-light mb-2">{{class.name}}</h4>
+                  <span class="font-light  text-light">
+                    <i class="ti-arrow-up text-light">code : {{class.uuid}}</i>
                   </span>
-                  <h4 class="text-light">{{class.name}}</h4>
+                  
                 </div>
               </div>
             </div>

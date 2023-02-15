@@ -1,1 +1,110 @@
 .containerGrid { display: grid; grid-template-rows: 100px }
+
+.grow { transition: all .2s ease-in-out; }
+.grow:hover { transform: scale(1.05);box-shadow: 0 15px 30px 0 rgba(90, 97, 105, 0.4) }
+.classCard{
+    background-color: #74EBD5;
+    background-image: linear-gradient(45deg, #74EBD5 0%, #9FACE6 100%);    
+}
+.classCardIcon{
+    background-color: #74EBD5;
+    background-image: linear-gradient(120deg, #74EBD5 0%, #9FACE6 100%);
+    
+
+}
+
+
+
+
+.centerr{
+    width: 100%;
+}
+
+
+.active-class{
+    border:2px solid #5864bd !important ;
+  }
+
+  .flex-containerr {
+    height: 100px!important;
+    padding: 0;
+    margin: 0;
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.flex-containerr * {
+  padding: 0;
+    margin: 0;
+    line-height: 20px;
+}
+.grow3 { transition: all .2s ease-in-out; }
+.grow3:hover { transform: scale(1.05); }
+.grow2 { cursor: pointer; transition: all .2s ease-in-out; }
+.grow2:hover { transform: scale(1.05);box-shadow: 0 15px 30px 0 rgba(90, 97, 105, 0.4) }
+.uuid-input{
+    flex-grow: 0;
+    margin: 5px;
+    width: 0%;
+    transition: all .5s ease-in-out;
+}
+.uuid-input .invalid-feedback{
+  position: absolute;
+  margin-left: 10px;
+}
+.uuid-input-display-non  {
+    display: none;
+}
+.uuid-input-Expanded{
+    flex-grow: 1;
+   display: unset;
+   width: 100%;
+
+}
+.add-bttn-Card {
+   background: #00000000;
+   box-shadow: 0 15px 30px 0 rgba(90, 97, 105, 0);
+   padding: 15px;
+   height: 100px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   flex-direction: row;
+   width: 0%;
+   transition: all .5s ease-in-out;
+   transition: width .2s ease-in-out;
+}
+
+.add-bttn-Card-Expanded {
+    background: #fff;
+    box-shadow: 0 10px 30px 0 rgba(90, 97, 105, 0.226);
+    height: 100px;
+    width: 100%;
+    
+ }
+
+.add-bttn {
+    padding: 0;
+    border: none;
+    font: inherit;
+    color: inherit;
+    background-color: transparent;
+    cursor: pointer;
+  }
+  
+  .add-bttn:focus {
+    outline: 0;
+  }
+
+  .add-bttn {
+    flex-shrink:0;
+    height: 50px;
+    width: 50px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+      0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+  }
+  .add-bttn {
+    background-color: #547aa5;
+    border-radius: 15px;
+  }
