@@ -60,8 +60,8 @@
       <div class="divider"><span></span><span>Classes</span><span></span></div>
       <div class="row">
         <div *ngFor="let class of classes index as i" class="col-lg-3 col-md-6 col-sm-6 col-12">
-          <div (click)="chooseClass(i)" class="card card-statistic-1 grow2" [ngClass]="{'active-class':chosenIndex==i}">
-            <div class="card-icon l-bg-green">
+          <div (click)="chooseClass(i)" class="card card-statistic-1 grow2 classCard" [ngClass]="{'active-class':chosenIndex==i}">
+            <div class="card-icon classCardIcon">
               <div class="d-flex flex-column justify-content-center align-items-center h-100 ">
                 <i class="fas {{parsesubjectIcon(class.subject)}} mb-1"></i>
                 <span style="font-size: 15px;line-height: 15px; font-weight: 500;">{{parsesubject(class.subject)}}</span>
@@ -70,10 +70,10 @@
             <div class="h-100 flex-containerr">
               <div class="padding-20">
                 <div class="flex-containerr">
-                  <span class="font-light mb-0">
-                    <i class="ti-arrow-up text-success">{{class.enrollers.length}}</i> enrolled
+                  <span class="font-light mb-0 text-light">
+                    <i class="ti-arrow-up text-light">{{class.enrollers.length}}</i> enrolled
                   </span>
-                  <h4 class="text-muted">{{class.name}}</h4>
+                  <h4 class="text-light">{{class.name}}</h4>
                 </div>
               </div>
             </div>

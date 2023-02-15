@@ -1,0 +1,38 @@
+<div style="min-height: 900px;" class="main-content">
+    <section style="min-height: 800px;" class="section">
+        <div style="height: 800px;"  class="section-body  d-flex flex-column ">
+            <div style="height: 800px;" class="row">
+              <div style="height: 800px;" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div style="height: 800px;" class="card ">
+                  <div  class="card-body ">
+                      <section  class="gray-bg padding-top-bottom">
+                        <!--==== Portfolio Filters ====-->
+                        <div class="categories">
+                          <ul>
+                            <li [ngClass]="{'active':oppenedtab==1}">
+                              <a class="pointer" (click)="oppenTab(1)" >My Classes</a>
+                            </li>
+                            <li [ngClass]="{'active':oppenedtab==2}">
+                              <a class="pointer" (click)="oppenTab(2)" >find Class</a>
+                            </li>
+                            <!-- <li>
+                              <a class="pointer"  data-filter=".apps">Apps</a>
+                            </li>
+                            <li>
+                              <a class="pointer"  data-filter=".psd">PSD</a>
+                            </li> -->
+                          </ul>
+                        </div>
+
+                      </section>
+                      <div class="flex-grow-1">
+
+                      </div>
+                   
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </section>
+</div>

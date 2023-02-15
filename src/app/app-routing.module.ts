@@ -19,6 +19,7 @@ import { TeacherEventsComponent } from './pages/teacher-pages/teacher-events/tea
 import { TeacherNotificationsComponent } from './pages/teacher-pages/teacher-notifications/teacher-notifications.component';
 import { TeacherLiveStreamComponent } from './pages/teacher-pages/teacher-live-stream/teacher-live-stream.component';
 import { TeacherClassesComponent } from './pages/teacher-pages/teacher-classes/teacher-classes.component';
+import { ClassesComponent } from './pages/classes/classes.component';
 const routes: Routes = [
   {
     path: '', component: RootComponent,
@@ -30,6 +31,10 @@ const routes: Routes = [
       {
         path: 'home',
         component: HomeComponent
+      },
+      {
+        path: 'classes',
+        component: ClassesComponent
       },
       {
         path: 'email',
