@@ -33,6 +33,7 @@ export class TeacherDashboardComponent implements OnInit,OnDestroy  {
   chosenIndex:number=-1;
   modelShowen:boolean=false;
   fadeModel:boolean=false;
+  attemptogetClasses:number=0;
   modalEvent: Subject<number> = new Subject<number>();
   addnotEdit=true;
   form:any={
@@ -97,8 +98,11 @@ export class TeacherDashboardComponent implements OnInit,OnDestroy  {
       if(state.task==4){
         this.openModel(true)
       }
+      if(state.task==15){
+        this.getclasses(true);
+      }
     })
-    this.getclasses();
+    this.getclasses(false);
     }else{
       this.navigationExtras={ state: {errorNbr:403} };
       this.router.navigate(['/error'],this.navigationExtras);
@@ -120,14 +124,38 @@ export class TeacherDashboardComponent implements OnInit,OnDestroy  {
     }
 
   }
-  getclasses(){
+  getclasses(refresh:boolean){
     this.subscription1 = this.teacherservice.getClasses().subscribe({
       next: data => {
         console.log("getClasses");
         console.log(data);
+       // this.attemptogetClasses++;
         if(data.classes){
           this.classes=data.classes;
-          this.events.changeclassInfoState({state:1, classes:this.classes});
+          console.log("this.classes before",this.classes);
+          this.classes.sort(function(a,b){
+            // Turn your strings into dates, and then subtract them
+            // to get a value that is either negative, positive, or zero.
+            return (new Date(a.created).getTime()) - (new Date(b.created).getTime());
+          });
+          console.log("this.classes after sort",this.classes);
+          if(refresh){this.events.changeclassInfoState({state:2, classes:this.classes});}
+          else{this.events.changeclassInfoState({state:1, classes:this.classes});}
+
+
+          // if(data.classNmbr==data.classes.length||this.attemptogetClasses==15){
+          //   this.attemptogetClasses=0;
+            
+          //   if(this.attemptogetClasses==3){
+          //     console.log("attempts exeeded");
+              
+          //   }
+          // }else{
+          //   this.getclasses(refresh);
+          // }
+         
+          
+
         }
 
       },
@@ -180,7 +208,7 @@ export class TeacherDashboardComponent implements OnInit,OnDestroy  {
       next: data => {
         console.log("getClasses");
         console.log(data);
-        this.getclasses();
+        this.getclasses(false);
       },
       error: err => {
         console.log(err);

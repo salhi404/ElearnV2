@@ -27,11 +27,11 @@
             <thead>
               <th class="pl-4">Pic</th>
               <th>Username</th>
-              <th>Roles</th>
-              <th>Status</th>
-              <th>First name</th>
-              <th>Last name</th>
+              <th>Birth date</th>
+              <th>online Status</th>
+              <th>Full Name</th>
               <th>Email</th>
+              <th>Status</th>
               <th>Edit</th>
             </thead>
             <tbody>
@@ -43,17 +43,16 @@
                   </figure>
                 </td>
                 <td>{{user.username}}</td>
-                <td class=""><span style="display: block; margin: 0 auto;"
-                    *ngFor="let role of user.roles.reverse()  ">{{role}}</span> </td>
+                <td class="">{{datepipe.transform(user.birthDate, 'dd-MM-yyyy')}} </td>
                 <td>
                   <div class="status">
                   <i class="material-icons {{user.OnlineStat==-1?'online':'offline'}}">fiber_manual_record</i>
                   <span>{{user.OnlineStat==-1?'online':'offline'}}</span> 
                 </div>
               </td>
-                <td>{{user.fName}}</td>
-                <td>{{user.lName}}</td>
+                <td>{{user.fName+" "+user.lName}}</td>
                 <td>{{user.email}}</td>
+                <td class="{{user.accepted?'text-success':'text-danger'}}" >{{user.accepted?'Accepted':'Waiting'}}</td>
                 <td>
                   <div (click)="edit(user.username)" class="btn btn-info pointer">view</div>
                 </td>
@@ -61,7 +60,44 @@
             </tbody>
           </table>
         </div>
-        
+        <div *ngIf="editing">
+          <div class="row">
+            <div class="col-md-2 col-6 b-r">
+              <strong>Username</strong>
+              <br>
+              <p class="text-muted">{{selectedUser.username}}</p>
+            </div>
+            <div class="col-md-2 col-6 b-r">
+              <strong>Full Name</strong>
+              <br>
+              <p class="text-muted">{{selectedUser.fName}} {{selectedUser.lName}}</p>
+            </div>
+            <div class="col-md-2 col-6 b-r">
+              <strong>Email</strong>
+              <br>
+              <p class="text-muted">{{selectedUser.email}}</p>
+            </div>
+            <div class="col-md-2 col-6 b-r">
+              <strong>Birth date</strong>
+              <br>
+              <p class="text-muted">{{datepipe.transform(selectedUser.birthDate, 'dd-MM-yyyy')}}</p>
+            </div>
+            <div class="col-md-2 col-6 b-r">
+              <strong>grade</strong>
+              <br>
+              <p class="text-muted">{{parsegrade(selectedUser.grade)}}</p>
+            </div>
+            <div class="col-md-2 col-6 b-r">
+              <strong>Status : </strong>
+              <span class="{{selectedUser.accepted?'text-success':'text-danger'}}">
+                {{selectedUser.accepted?'Accepted':'Waiting'}}</span>
+                <span (click)="changeStatus()" [ngClass]="{'btn-info':changeRoleResult==-1&&!selectedUser.accepted,'btn-warning':changeRoleResult==-1&&selectedUser.accepted,' pointer':changeRoleResult==-1,'btn-success':changeRoleResult==1,'btn-danger':changeRoleResult==2}" class="btn btn-info d-flex justify-content-center align-items-center" >
+                  {{changeRoleResult==-1?selectedUser.accepted?'Reject':'Accept':changeRoleResult==1?'success':'failed'}}
+                <span *ngIf="loading" class="mx-2"></span>
+                <app-spinner *ngIf="loading" [type]="1"></app-spinner></span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

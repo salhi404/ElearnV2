@@ -23,4 +23,13 @@ export class TeacherService {
     const token = this.storageService.getTokent();
     return this.http.post(TEACHER_API + 'addclass', {token,classname,subject}, httpOptions);
   }
+  editacceptedstudent(classrm:string,student:string,isAccepting:boolean): Observable<any> {
+    const token = this.storageService.getTokent();
+    return this.http.post(TEACHER_API + 'editacceptedstudent', {token,classrm,student,isAccepting}, httpOptions);
+  }
+
+  
+
+
+
 }

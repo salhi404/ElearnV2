@@ -4,7 +4,7 @@ import { User } from 'app/Interfaces/user';
 import { EventsService } from 'app/services/events.service';
 import { AuthService } from 'app/_services/auth.service';
 import { TeacherService } from 'app/_services/teacher.service';
-import { parsesubject ,parsesubjectIcon } from 'app/functions/parsers';
+import { parsesubject ,parsesubjectIcon,parsegrade } from 'app/functions/parsers';
 import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-teacher-classes',
@@ -23,6 +23,8 @@ export class TeacherClassesComponent implements OnInit,OnDestroy {
   chosenClass:any=null;
   chosenIndex:number=-1;
   connectedCount:number=-1;
+  loading:boolean=false;
+  changeRoleResult=-1;
   datepipe: DatePipe = new DatePipe('en-US');
 
   constructor(private events: EventsService, private teacherservice: TeacherService,private authService: AuthService,) { }
@@ -47,8 +49,22 @@ export class TeacherClassesComponent implements OnInit,OnDestroy {
     this.subscription1 = this.events.classinfostatusEvent.subscribe(
       state => {
         console.log("Classes retreived");
-        if(state.classes){
+        if(state.state==1&&state.classes){
           this.classes=state.classes;
+          console.log("state.state==",state.state);
+          
+        }
+        if(state.state==2&&state.classes){
+          console.log("state.state==",state.state);
+          if(this.chosenClass&&this.selectedUser){
+            this.classes=state.classes;
+            this.events.changeTaskState({task:10,data:{chosenIndex:this.chosenIndex ,chosenClass:this.classes[this.chosenIndex]}})
+            console.log("selectedUser before",this.selectedUser);
+            this.selectedUser=this.chosenClass.enrollers.find((userr:any)=>userr.email==this.selectedUser.email);
+            console.log("selectedUser after",this.selectedUser);
+          }
+
+          
         }
       }
     )
@@ -56,6 +72,14 @@ export class TeacherClassesComponent implements OnInit,OnDestroy {
       if(state.task==10){
         this.chosenIndex=state.data.chosenIndex;
         this.chosenClass=state.data.chosenClass;
+      }
+      if(state.task==16){
+        if(this.selectedUser&&this.chosenClass){
+          console.log("161616161");
+          
+          console.log(this.selectedUser);
+          
+        }
       }
     })
   }
@@ -85,20 +109,49 @@ edit(user:string){
   this.editing=true;
   this.selectedUser=this.chosenClass.enrollers.find((userr:any)=>userr.username==user);
 }
+changeStatus(){
+  console.log("changeStatus");
+  if(!this.loading){
+    this.loading=true;
+    this.teacherservice.editacceptedstudent(this.chosenClass.id,this.selectedUser.email,!this.selectedUser.accepted).subscribe({
+      next: (data: any) => {
+         if(data){
+          console.log("editacceptedstudent data ",data);
+          // this.changeRoleResult=1;
+          this.loading=false;
+          this.selectedUser.accepted=!this.selectedUser.accepted;
+          this.events.changeTaskState({task:15,data:{}as any});   
+         }
+      },
+      error: (err) => {
+        console.log("editacceptedstudent err ",err);
+        this.changeRoleResult=2;
+        this.loading=false;
+      }
+    })
+    // setTimeout(() => {
+    //   this.changeRoleResult=-1;
+    // }, 2500);
+  }else{
+    console.log("wait");
+    
+  }
+
+}
 backToList(){
   //this.form={user:false,teacher:false,moderator:false,admin:false}
   this.editing=false;
   this.selectedUser=null;
   console.log("backToList");
 }
-
+parsegrade(grade: number): string {
+  return parsegrade(grade);
+}
   parsesubject(subject:number):string{
     return parsesubject(subject);
   }
   parsesubjectIcon(subject:number):string{
     return parsesubjectIcon(subject);
   }
-  openModel(issadd:boolean){
-    this.events.changeTaskState({task:issadd?4:5,data:{}as any});    
-  }
+
 }
