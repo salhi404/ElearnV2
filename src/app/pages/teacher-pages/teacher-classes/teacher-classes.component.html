@@ -1,5 +1,6 @@
 <div class="row">
-  <div *ngIf="chosenIndex==-1" class="d-flex justify-content-center w-100" > <span class="alert alert-primary">choose a class </span>  </div>
+  <div *ngIf="chosenIndex==-1" class="d-flex justify-content-center w-100"> <span class="alert alert-primary">choose a
+      class </span> </div>
   <div class="col-12">
     <div class="card classCard" [ngClass]="{'classhidden':chosenIndex==-1}">
       <div class="card-header">
@@ -28,7 +29,7 @@
               <th class="pl-4">Pic</th>
               <th>Username</th>
               <th>Birth date</th>
-              <th>online Status</th>
+              <th>online Status <i (click)="refreshconnected()" class="material-icons loop-icon">loop</i></th>
               <th>Full Name</th>
               <th>Email</th>
               <th>Status</th>
@@ -46,13 +47,13 @@
                 <td class="">{{datepipe.transform(user.birthDate, 'dd-MM-yyyy')}} </td>
                 <td>
                   <div class="status">
-                  <i class="material-icons {{user.OnlineStat==-1?'online':'offline'}}">fiber_manual_record</i>
-                  <span>{{user.OnlineStat==-1?'online':'offline'}}</span> 
-                </div>
-              </td>
+                    <i class="material-icons {{user.OnlineStat==-1?'online':'offline'}}">fiber_manual_record</i>
+                    <span>{{user.OnlineStat==-1?'online':'offline'}}</span>
+                  </div>
+                </td>
                 <td>{{user.fName+" "+user.lName}}</td>
                 <td>{{user.email}}</td>
-                <td class="{{user.accepted?'text-success':'text-danger'}}" >{{user.accepted?'Accepted':'Waiting'}}</td>
+                <td class="{{user.accepted?'text-success':'text-danger'}}">{{user.accepted?'Accepted':'Waiting'}}</td>
                 <td>
                   <div (click)="edit(user.username)" class="btn btn-info pointer">view</div>
                 </td>
@@ -91,8 +92,10 @@
               <strong>Status : </strong>
               <span class="{{selectedUser.accepted?'text-success':'text-danger'}}">
                 {{selectedUser.accepted?'Accepted':'Waiting'}}</span>
-                <span (click)="changeStatus()" [ngClass]="{'btn-info':changeRoleResult==-1&&!selectedUser.accepted,'btn-warning':changeRoleResult==-1&&selectedUser.accepted,' pointer':changeRoleResult==-1,'btn-success':changeRoleResult==1,'btn-danger':changeRoleResult==2}" class="btn btn-info d-flex justify-content-center align-items-center" >
-                  {{changeRoleResult==-1?selectedUser.accepted?'Reject':'Accept':changeRoleResult==1?'success':'failed'}}
+              <span (click)="changeStatus()"
+                [ngClass]="{'btn-info':changeRoleResult==-1&&!selectedUser.accepted,'btn-warning':changeRoleResult==-1&&selectedUser.accepted,' pointer':changeRoleResult==-1,'btn-success':changeRoleResult==1,'btn-danger':changeRoleResult==2}"
+                class="btn btn-info d-flex justify-content-center align-items-center">
+                {{changeRoleResult==-1?selectedUser.accepted?'Reject':'Accept':changeRoleResult==1?'success':'failed'}}
                 <span *ngIf="loading" class="mx-2"></span>
                 <app-spinner *ngIf="loading" [type]="1"></app-spinner></span>
             </div>

@@ -101,6 +101,13 @@ export class TeacherDashboardComponent implements OnInit,OnDestroy  {
       if(state.task==15){
         this.getclasses(true);
       }
+      if(state.task==10){
+        this.chosenIndex=state.data.chosenIndex;
+        this.chosenClass=state.data.chosenClass;
+      }
+      if(state.task==21){
+        this.getconnectedchaters(state.data.uuid);
+      }
     })
     this.getclasses(false);
     }else{
@@ -134,47 +141,34 @@ export class TeacherDashboardComponent implements OnInit,OnDestroy  {
           this.classes=data.classes;
           console.log("this.classes before",this.classes);
           this.classes.sort(function(a,b){
-            // Turn your strings into dates, and then subtract them
-            // to get a value that is either negative, positive, or zero.
             return (new Date(a.created).getTime()) - (new Date(b.created).getTime());
           });
           console.log("this.classes after sort",this.classes);
           if(refresh){this.events.changeclassInfoState({state:2, classes:this.classes});}
           else{this.events.changeclassInfoState({state:1, classes:this.classes});}
-
-
-          // if(data.classNmbr==data.classes.length||this.attemptogetClasses==15){
-          //   this.attemptogetClasses=0;
-            
-          //   if(this.attemptogetClasses==3){
-          //     console.log("attempts exeeded");
-              
-          //   }
-          // }else{
-          //   this.getclasses(refresh);
-          // }
-         
-          
-
         }
-
       },
-      error: err => {
+      error: err => {console.log(err);}
+    })
+  }
+  getconnectedchaters(uuid:string) {
+    this.authService.getconnectedchatters(this.classes.find(cl=>cl.uuid==uuid).enrollers.map((e:any) => e.email)).subscribe({
+      next: (data: any) => {
+        this.events.changeTaskState({task:20,data:{connectionList:data,connectedfor:uuid}})
+      },
+      error: (err) => {
+        console.log("err");
         console.log(err);
-
       }
     })
   }
-  
   chooseClass(id:number){
     if( this.chosenIndex!=id){
-      this.chosenIndex=id;
-      this.chosenClass=this.classes[id];
+      this.events.changeTaskState({task:10,data:{chosenIndex:id,chosenClass:this.classes[id]}})
+      this.getconnectedchaters(this.classes[id].uuid);
     }else{
-      this.chosenIndex=-1;
-      this.chosenClass=null;
+      this.events.changeTaskState({task:10,data:{chosenIndex:-1,chosenClass:null}})
     }
-    this.events.changeTaskState({task:10,data:{chosenIndex:this.chosenIndex ,chosenClass:this.chosenClass}})
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();

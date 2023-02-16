@@ -78,7 +78,6 @@ export class UsersModComponent implements OnInit, OnDestroy {
              if(userr) userr.OnlineStat=elem.date;
           })
           console.log("this.connectedCount",this.connectedCount);
-          
           var info=this.events.modinfoEvent.getValue();
           info.connectedCount=this.connectedCount;
           info.usersCount=data.length;

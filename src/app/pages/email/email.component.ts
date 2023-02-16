@@ -370,6 +370,7 @@ export class EmailComponent implements OnInit,OnDestroy {
     }
   }
   refresh(){
+    // TODO - refresh with soket event
     this.getMail();
   }
   openWindow(wnd:number):void{
@@ -472,6 +473,7 @@ export class EmailComponent implements OnInit,OnDestroy {
     });
   }
   getMail():Mail[]{
+    // FIXME - sort mail by new
     var mail:Mail[]=[];
     this.recieveMail();
     /*for (let index = 0; index < 10; index++) {
