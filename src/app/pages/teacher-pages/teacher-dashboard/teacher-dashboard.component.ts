@@ -109,7 +109,11 @@ export class TeacherDashboardComponent implements OnInit,OnDestroy  {
         this.getconnectedchaters(state.data.uuid);
       }
     })
-    this.getclasses(false);
+
+
+    this.getclasses(false); // TODO - implement reload with socket or add a button 
+
+
     }else{
       this.navigationExtras={ state: {errorNbr:403} };
       this.router.navigate(['/error'],this.navigationExtras);
@@ -202,6 +206,7 @@ export class TeacherDashboardComponent implements OnInit,OnDestroy  {
       next: data => {
         console.log("getClasses");
         console.log(data);
+        // TODO add loading fase + push only new class
         this.getclasses(false);
       },
       error: err => {

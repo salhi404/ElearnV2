@@ -123,6 +123,7 @@ export class RootComponent implements OnInit, OnDestroy {
       },error:err=>{
        // if(!err.verified)this.logout();
        // TODO - add a "server is down page"
+       // TODO - handle user deletion or so "
       }});
       this.events.changeuserdataState({state:1,userdata:this.user});
     }

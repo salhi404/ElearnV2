@@ -49,7 +49,6 @@
 					</div> -->
           <div class="d-flex align-items-center justify-content-center">
             <button (click)="submitModal()" type="button" class="btn btn-primary m-t-15 waves-effect ">{{addnotEdit?'Add Class':'Edit Class'}}</button>
-           
           </div>
         </form>
       </div>
@@ -60,6 +59,7 @@
     <section class="section">
       <div class="divider"><span></span><span>Classes</span><span></span></div>
       <div class="row">
+        <!-- // TODO -add leadig state   -->
         <div *ngFor="let class of classes index as i" class="col-lg-3 col-md-6 col-sm-6 col-12">
           <div (click)="chooseClass(i)" class="card card-statistic-1 grow2 classCard" [ngClass]="{'active-class':chosenIndex==i}">
             <div class="card-icon classCardIcon">

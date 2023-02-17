@@ -26,8 +26,9 @@ export class ClassesComponent implements OnInit, OnDestroy {
   chosenIndex:number=-1;
   blockHostListener: boolean=false;
   submited=false;
-  @ViewChild("cardAdd") cardAdd!: ElementRef;
   loading: boolean=false;
+  @ViewChild("cardAdd") cardAdd!: ElementRef;
+  
 
 
   constructor(private events: EventsService,private StudentService:StudentService) { }
@@ -55,7 +56,9 @@ export class ClassesComponent implements OnInit, OnDestroy {
       next:data=>{
         console.log('get student classses data',data);
         this.MyClasses=data.classes; //[{subject:"math",name:"rerer",uuid:'sdsd'}]
-        
+        this.MyClasses.sort(function(a,b){          
+          return (+b.accepted)-(+a.accepted)
+        })
       },
       error:err=>{
         console.log('get student classes error',err);
@@ -81,8 +84,10 @@ export class ClassesComponent implements OnInit, OnDestroy {
       this.submit(error);
 
     }
-    
-
+  }
+  closeAddClass(){
+    this.expandAddcard=false;
+    this.uuidDisplay=false;
   }
   clear(){
     this.submiterrcode=-1;
@@ -91,13 +96,13 @@ export class ClassesComponent implements OnInit, OnDestroy {
   submit(error:any){
     this.clear;
     console.log(error);
-    if(!error){
+    if(!error&&!this.loading){
       this.loading=true;
       this.submittduuid=this.retreaveduuid;
       this.StudentService.enroll(this.retreaveduuid).subscribe({
-
         next:data=>{
-          console.log('enroll data',data);
+          this.submited=false;
+          this.closeAddClass();
           this.getClasses();
           this.loading=false;
         },
@@ -136,9 +141,7 @@ export class ClassesComponent implements OnInit, OnDestroy {
   @HostListener('document:click', ['$event'])
   clickout(event:any) {
     if(!this.cardAdd.nativeElement.contains(event.target)&&!this.blockHostListener&&this.expandAddcard){
-      this.expandAddcard=false;{
-        this.uuidDisplay=false;
-      }
+      this.closeAddClass();
     }
   }
 }

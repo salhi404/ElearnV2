@@ -17,7 +17,8 @@
                       <span class="font-light  text-light">
                         <i class="ti-arrow-up text-light">code : {{class.uuid}}</i>
                       </span>
-                      
+                      <strong *ngIf="!class.accepted" class="text-light">status : <span class="{{class.accepted?'text-success2':'text-danger2'}}" >{{class.accepted?'Accepted':'Waiting'}}</span></strong>
+                            
                     </div>
                   </div>
                 </div>
@@ -36,8 +37,12 @@
                     <div class="invalid-feedback" *ngIf="(submiterrcode!=-1&&submittduuid==retreaveduuid)">{{submiterrstr}}</div>
                     
                   </div>
-                   <button (click)="oppenAddClass(uuid.errors)" title="add new class" class="add-bttn grow3"><i
-                        class="fas fa-plus col-white "></i></button>
+                  <!-- TODO add loading animation  -->
+                   <button (click)="oppenAddClass(uuid.errors)" title="add new class" [ngClass]="{'add-bttn-Expanded':expandAddcard}" class="add-bttn grow3">
+                    <i *ngIf="!loading"  class="fas fa-plus col-white "></i>
+                    <i> <app-spinner *ngIf="loading" [type]="1"></app-spinner></i>
+                    
+                  </button>
                   </div>
                 </div>
                   
@@ -99,7 +104,6 @@
                           <div class="col-md-2 col-6">
                             <strong>status :</strong>
                             <br>
-                            
                             <p class="{{chosenClass.accepted?'text-success':'text-danger'}}" >{{chosenClass.accepted?'Accepted':'Waiting'}}</p>
                           </div>
                         </div>
