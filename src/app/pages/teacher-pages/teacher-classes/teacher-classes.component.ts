@@ -19,14 +19,11 @@ export class TeacherClassesComponent implements OnInit, OnDestroy {
   selectedUser: any = null;
   editing: boolean = false;
   user: User = null as any;
-  classes: any[] = [];//FIXME - not nesessary
   chosenClass: any = null;
-  chosenIndex: number = -1;
   connectedCount: number = -1;
   loading: boolean = false;
   changeRoleResult = -1;
   datepipe: DatePipe = new DatePipe('en-US');
-
   constructor(private events: EventsService, private teacherservice: TeacherService, private authService: AuthService,) { }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
@@ -38,62 +35,26 @@ export class TeacherClassesComponent implements OnInit, OnDestroy {
     this.subscription = this.events.userdataEvent.subscribe(
       state => {
         console.log("userdataEvent 11");
-        if (state.state == 1) {
+        if (state.state == this.events.UPDATEUSER) {
           this.user = state.userdata;
         }
-        if (state.state == 2) {
+        if (state.state == this.events.DALETEUSER) {
           this.user = null as any;
         }
       }
     )
-    this.subscription1 = this.events.classinfostatusEvent.subscribe(
-      state => {
-        console.log("Classes retreived");
-        if (state.state == 1 && state.classes) {
-          this.classes = state.classes;
-          console.log("state.state==", state.state);
-
-        }
-        if (state.state == 2 && state.classes) {
-          console.log("state.state==", state.state);
-          if (this.chosenClass && this.selectedUser) {
-            this.classes = state.classes;
-            this.events.changeTaskState({ task: 10, data: { chosenIndex: this.chosenIndex, chosenClass: this.classes[this.chosenIndex] } })
-            console.log("selectedUser before", this.selectedUser);
-            this.selectedUser = this.chosenClass.enrollers.find((userr: any) => userr.email == this.selectedUser.email);
-            console.log("selectedUser after", this.selectedUser);
-          }
-        }
-      }
-    )
     this.subscription3 = this.events.taskEvent.subscribe(state => {
-      if (state.task == 10) {
-        this.chosenIndex = state.data.chosenIndex;
+      if (state.task == this.events.TASKCHOOSECLASSES) {
         this.chosenClass = state.data.chosenClass;
+        if (this.selectedUser) this.selectedUser = this.chosenClass.enrollers.find((userr: any) => userr.email == this.selectedUser.email);
       }
-      if (state.task == 16) {
-        if (this.selectedUser && this.chosenClass) {
-          console.log("161616161");
-          console.log(this.selectedUser);
-
-        }
-      }
-      if (state.task == 20) {
-        this.connectedCount = 0;
-        const forclass = this.classes.find(cl => cl.uuid == state.data.connectedfor);
-        if (forclass) {
-          state.data.connectionList.forEach((elem: any) => {
-            const userr = forclass.enrollers.find((user: any) => elem.user == user.email);
-            if (elem.date == -1) this.connectedCount++;
-            if (userr) userr.OnlineStat = elem.date;
-          })
-        }
-        console.log("connectedCount", this.connectedCount);
+      if (state.task == this.events.TASKCONNECTEDRECIEVED) {
+        if(this.chosenClass.uuid===state.data.connectedfor) this.chosenClass = state.data.chosenClass;
       }
     })
   }
   refreshconnected() {
-    this.events.changeTaskState({task:21,data:{uuid:this.chosenClass.uuid,}})
+    this.events.changeTaskState({ task: this.events.TASKREFRESHCONNECTED, data: { uuid: this.chosenClass.uuid, } })
   }
   edit(user: string) {
     console.log(user);
@@ -111,7 +72,7 @@ export class TeacherClassesComponent implements OnInit, OnDestroy {
             // this.changeRoleResult=1;
             this.loading = false;
             this.selectedUser.accepted = !this.selectedUser.accepted;
-            this.events.changeTaskState({ task: 15, data: {} as any });
+            this.events.changeTaskState({ task: this.events.TASKGETCLASSES, data: {} as any });
           }
         },
         error: (err) => {
@@ -120,9 +81,6 @@ export class TeacherClassesComponent implements OnInit, OnDestroy {
           this.loading = false;
         }
       })
-      // setTimeout(() => {
-      //   this.changeRoleResult=-1;
-      // }, 2500);
     } else {
       console.log("wait");
 

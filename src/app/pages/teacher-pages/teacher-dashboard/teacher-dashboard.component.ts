@@ -65,7 +65,7 @@ export class TeacherDashboardComponent implements OnInit,OnDestroy  {
     this.user=this.storageService.getUser();
       this.subscription = this.events.userdataEvent.subscribe(
         state=>{
-          if(state.state==1){
+          if(state.state==this.events.UPDATEUSER){
             this.user=state.userdata;
             this.roles=parseroles(this.user.roles) ;
             this.mainRole=getmainrole(this.roles);
@@ -77,7 +77,7 @@ export class TeacherDashboardComponent implements OnInit,OnDestroy  {
               
             // }
           }
-          if(state.state==2){
+          if(state.state==this.events.DALETEUSER){
             this.user=null as any;
             this.roles=[];
             this.mainRole='';
@@ -95,17 +95,17 @@ export class TeacherDashboardComponent implements OnInit,OnDestroy  {
     })*/
 
     this.subscription3=this.events.taskEvent.subscribe(state=>{
-      if(state.task==4){
-        this.openModel(true)
+      if(state.task==this.events.TASKOPENMODAL){
+        this.openModel(true) //old 4
       }
-      if(state.task==15){
-        this.getclasses(true);
+      if(state.task==this.events.TASKGETCLASSES){
+        this.getclasses(true); //old 15
       }
-      if(state.task==10){
+      if(state.task==this.events.TASKCHOOSECLASSES){ //old 10
         this.chosenIndex=state.data.chosenIndex;
         this.chosenClass=state.data.chosenClass;
       }
-      if(state.task==21){
+      if(state.task==this.events.TASKREFRESHCONNECTED){  //old 21
         this.getconnectedchaters(state.data.uuid);
       }
     })
@@ -148,7 +148,10 @@ export class TeacherDashboardComponent implements OnInit,OnDestroy  {
             return (new Date(a.created).getTime()) - (new Date(b.created).getTime());
           });
           console.log("this.classes after sort",this.classes);
-          if(refresh){this.events.changeclassInfoState({state:2, classes:this.classes});}
+          if(refresh){
+            this.events.changeclassInfoState({state:2, classes:this.classes});
+
+          }
           else{this.events.changeclassInfoState({state:1, classes:this.classes});}
         }
       },
@@ -158,7 +161,17 @@ export class TeacherDashboardComponent implements OnInit,OnDestroy  {
   getconnectedchaters(uuid:string) {
     this.authService.getconnectedchatters(this.classes.find(cl=>cl.uuid==uuid).enrollers.map((e:any) => e.email)).subscribe({
       next: (data: any) => {
-        this.events.changeTaskState({task:20,data:{connectionList:data,connectedfor:uuid}})
+        this.connectedCount = 0;
+          const forclass = this.classes.find(cl => cl.uuid == uuid);
+          if (forclass) {
+            data.forEach((elem: any) => {
+              const userr = forclass.enrollers.find((user: any) => elem.user == user.email);
+              if (elem.date == -1) this.connectedCount++;
+              if (userr) userr.OnlineStat = elem.date;
+            })
+          }
+        this.events.changeTaskState({task:this.events.TASKCONNECTEDRECIEVED,data:{chosenClass:forclass,connectedfor:uuid}})
+      
       },
       error: (err) => {
         console.log("err");
@@ -168,10 +181,10 @@ export class TeacherDashboardComponent implements OnInit,OnDestroy  {
   }
   chooseClass(id:number){
     if( this.chosenIndex!=id){
-      this.events.changeTaskState({task:10,data:{chosenIndex:id,chosenClass:this.classes[id]}})
+      this.events.changeTaskState({task:this.events.TASKCHOOSECLASSES,data:{chosenIndex:id,chosenClass:this.classes[id]}})
       this.getconnectedchaters(this.classes[id].uuid);
     }else{
-      this.events.changeTaskState({task:10,data:{chosenIndex:-1,chosenClass:null}})
+      this.events.changeTaskState({task:this.events.TASKCHOOSECLASSES,data:{chosenIndex:-1,chosenClass:null}})
     }
   }
   ngOnDestroy(): void {

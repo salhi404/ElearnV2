@@ -40,10 +40,10 @@ export class ClassesComponent implements OnInit, OnDestroy {
     this.subscription = this.events.userdataEvent.subscribe(
       state => {
         console.log("userdataEvent 11");
-        if(state.state==1){
+        if(state.state==this.events.UPDATEUSER){
           this.user=state.userdata;
         }
-        if(state.state==2){
+        if(state.state==this.events.DALETEUSER){
           this.user=null as any;
         }
       }
@@ -130,7 +130,6 @@ export class ClassesComponent implements OnInit, OnDestroy {
       this.chosenIndex=-1;
       this.chosenClass=null;
     }
-    this.events.changeTaskState({task:20,data:{chosenIndex:this.chosenIndex ,chosenClass:this.chosenClass}})
   }
   parsesubject(subject:number):string{
     return parsesubject(subject);

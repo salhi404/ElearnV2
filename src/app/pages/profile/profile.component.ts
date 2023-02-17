@@ -58,13 +58,13 @@ export class ProfileComponent implements OnInit,OnDestroy {
     };*/
       this.subscription2 = this.events.userdataEvent.subscribe(
         state=>{
-          if(state.state==1){
+          if(state.state==this.events.UPDATEUSER){
             this.user=state.userdata;
             this.roles=parseroles(this.user.roles) ;
             this.mainRole=getmainrole(this.roles);
             this.grade=parsegrade(this.user.grade);
           }
-          if(state.state==2){
+          if(state.state==this.events.DALETEUSER){
             this.user=state.userdata;
             this.roles=[];
             this.mainRole="";

@@ -30,7 +30,7 @@ export class ModDashboardComponent implements OnInit,OnDestroy ,AfterViewInit {
     this.user=this.storageService.getUser();
       this.subscription = this.events.userdataEvent.subscribe(
         state=>{
-          if(state.state==1){
+          if(state.state==this.events.UPDATEUSER){
             this.user=state.userdata;
             this.roles=parseroles(this.user.roles) ;
             this.mainRole=getmainrole(this.roles);
@@ -42,7 +42,7 @@ export class ModDashboardComponent implements OnInit,OnDestroy ,AfterViewInit {
               
             }
           }
-          if(state.state==2){
+          if(state.state==this.events.DALETEUSER){
             this.user=null as any;
             this.roles=[];
             this.mainRole='';

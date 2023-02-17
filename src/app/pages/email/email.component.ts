@@ -114,7 +114,12 @@ export class EmailComponent implements OnInit,OnDestroy {
       this.subscription2=this.events.userdataEvent.subscribe(
         state=>{
           console.log("userdataEvent 11");
-          if(state.state==1)this.user=state.userdata;
+          if(state.state==this.events.UPDATEUSER){
+            this.user=state.userdata;
+          }
+          if(state.state==this.events.DALETEUSER){
+            this.user=null as any;
+          }
         }
       )
       this.getMail();

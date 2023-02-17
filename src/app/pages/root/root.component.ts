@@ -144,12 +144,12 @@ export class RootComponent implements OnInit, OnDestroy {
       }, 12000);*/
       this.subscription7=this.events.userdataEvent.subscribe(
         state=>{
-          if(state.state==1){
+          if(state.state==this.events.UPDATEUSER){
             this.user=state.userdata;
             this.roles=state.userdata.roles;
             this.mainrole=getmainrolecode(this.roles);
           }
-          if(state.state==2){
+          if(state.state==this.events.DALETEUSER){
             this.user=state.userdata;
             this.roles=[];
             this.mainrole=-1;
