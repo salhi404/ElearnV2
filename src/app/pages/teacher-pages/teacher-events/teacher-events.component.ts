@@ -8,18 +8,32 @@ import { FullCalendarComponent } from '@fullcalendar/angular';
 import { DatePipe } from '@angular/common';
 import { AuthService } from 'app/_services/auth.service';
 import { EventImpl } from '@fullcalendar/core/internal';
+
+
+import { Subject, Subscription } from 'rxjs';
+import { EventsService } from 'app/services/events.service';
+import { TeacherService } from 'app/_services/teacher.service';
+import { parsesubject, parsesubjectIcon, parsegrade } from 'app/functions/parsers';
+
 @Component({
   selector: 'app-teacher-events',
   templateUrl: './teacher-events.component.html',
   styleUrls: ['./teacher-events.component.scss']
 })
 export class TeacherEventsComponent implements OnInit, AfterViewInit {
+  //-------------------------------------------------------------------------------
+  subscription: Subscription = new Subscription();
+  subscription1: Subscription = new Subscription();
+  chosenClass: any = null;
+  
+  //-------------------------------------------------------------------------------
+  
   @ViewChild(FullCalendarComponent) calendarElement!: FullCalendarComponent;
   @ViewChild("modalDialog") modalDialog!: ElementRef;
   @ViewChild("modalDialogDelete") modalDialogDelete!: ElementRef;
   @ViewChild("moreDD") moreDD!: ElementRef;
   blockHostListener:boolean=false;
-  events: EventSourceInput = [
+  optionsevents: EventSourceInput = [
     /*{ title: 'event 1', date: '2023-01-01', },
     { title: 'event 2', start: new Date() , end:'2023-01-30',color:'red'}*/
   ]
@@ -46,7 +60,7 @@ export class TeacherEventsComponent implements OnInit, AfterViewInit {
   modelShowen:boolean=false;
   showDD:boolean=false;
   blockcloseDD:boolean=false;
-  calendarTitle = "";
+  calendarTitle = "sssssss";
   dateselected:boolean=false;
   fadeModel=false;
   modelShowenDelete=false;
@@ -59,7 +73,7 @@ export class TeacherEventsComponent implements OnInit, AfterViewInit {
     eventClick: this.handleEventClick(), // MUST ensure `this` context is maintained
     eventMouseEnter:this.handleEventEnter(),
     eventMouseLeave:this.handleEventLeave(),
-    events: this.events,
+    events: this.optionsevents,
     locale: 'en-GB',
     eventTimeFormat: { // like '14:30:00'
       hour: '2-digit',
@@ -86,7 +100,66 @@ export class TeacherEventsComponent implements OnInit, AfterViewInit {
       end: 'today prev,next' // will normally be on the right. if RTL, will be on the left
     }*/
   };
+  constructor(private events: EventsService, private teacherservice: TeacherService,private cdr: ChangeDetectorRef,private authService: AuthService) { }
+  test() {
+    console.log(this.calendarApi.view.title);
+  }
+  ngOnInit(): void {
+    //this.calendarApi=this.calendarComponent.getApi();
+    //console.log(this.calendarApi.view);
+    this.subscription = this.events.taskEvent.subscribe(state => {
+      if (state.task == this.events.TASKCHOOSECLASSES) {
+        this.chosenClass = state.data.chosenClass;
+        if(this.chosenClass)this.getclassevents(this.chosenClass.uuid);
+      }
+      if (state.task == this.events.TASKCONNECTEDRECIEVED) {
+        if(this.chosenClass.uuid===state.data.connectedfor) this.chosenClass = state.data.chosenClass;
+      }
+    })
+    this.events.changeTaskState({task:this.events.TASKGETCHOSENCLASS,data:null})
+  }
+  ngAfterViewInit() {
+    this.calendarApi = this.calendarElement.getApi();
+    this.calendarTitle = this.calendarApi.view.title;
+    console.log("this.calendarTitle",this.calendarTitle);
+    
+    this.cdr.detectChanges();
+  }
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+    this.subscription1.unsubscribe();
+  }
 
+
+
+
+
+
+
+
+
+
+
+//-----------------------------------------------------------------------------------------------------
+getclassevents(uuid:string){
+var eventSources = this.calendarApi.getEvents()
+var len = eventSources.length;
+for (var i = 0; i < len; i++) { 
+    eventSources[i].remove(); 
+} 
+  this.teacherservice.getClassEvents(uuid).subscribe({
+    next:data=>{
+      console.log("getclassevents data",data);
+      data.events.forEach((element:any) => {
+      this.calendarApi.addEvent(this.parsEvent(element));
+      });
+    },
+    error:err=>{
+      console.log('err');
+      console.log(err);
+    }
+  });
+}
   handleEventClick(){
     const context=this;
     return (args: EventClickArg) =>{ 
@@ -131,32 +204,7 @@ export class TeacherEventsComponent implements OnInit, AfterViewInit {
   
     }
   }
-  constructor(private cdr: ChangeDetectorRef,private authService: AuthService) { }
-  test() {
-    console.log(this.calendarApi.view.title);
-  }
-  ngOnInit(): void {
-    //this.calendarApi=this.calendarComponent.getApi();
-    //console.log(this.calendarApi.view);
 
-  }
-  ngAfterViewInit() {
-    this.calendarApi = this.calendarElement.getApi();
-    this.calendarTitle = this.calendarApi.view.title;
-    this.cdr.detectChanges();
-    this.authService.getEvents().subscribe({
-      next:data=>{
-        data.data.forEach((element:any) => {
-        this.calendarApi.addEvent(this.parsEvent(element));
-        
-        });
-      },
-      error:err=>{
-        console.log('err');
-        console.log(err);
-      }
-    });
-  }
   navigate(opt: number) {
     switch (opt) {
       case -1:
@@ -257,7 +305,7 @@ export class TeacherEventsComponent implements OnInit, AfterViewInit {
     }else{
       const id=this.eventToDelete;
       this.calendarApi.getEventById(id)?.remove();
-      this.authService.DeleteEvent(id).subscribe({
+      this.teacherservice.deleteclassevent(this.chosenClass.uuid,id).subscribe({
         next:data=>{
           console.log('data delete');
           console.log(data);
@@ -292,7 +340,7 @@ export class TeacherEventsComponent implements OnInit, AfterViewInit {
       const tempevent:EventInput={ title: this.form.event,start:start,end:end,allDay:(this.form.startTime==''&&this.form.endTime==''),color:this.colorInput,id:this.tempId }
       if(this.addnotEditEvent){
         this.calendarApi.addEvent(this.parsEvent(tempevent));
-        this.authService.addEvent(event).subscribe({
+        this.teacherservice.addclassevent(this.chosenClass.uuid,event).subscribe({
           next:data=>{
             console.log('data addEvent');
             console.log(data);
@@ -314,7 +362,7 @@ export class TeacherEventsComponent implements OnInit, AfterViewInit {
         if(event.end)this.calendarApi.getEventById(this.eventToEdit)?.setEnd(event.end);
         this.calendarApi.getEventById(this.eventToEdit)?.setProp('allDay',event.allDay);
         this.calendarApi.getEventById(this.eventToEdit)?.setProp('color',event.color);
-        this.authService.editEvent(event,this.eventToEdit).subscribe({
+        this.teacherservice.editclassevent(this.chosenClass.uuid,this.eventToEdit,event).subscribe({
           next:data=>{
             console.log('data EditEvent');
             console.log(data);

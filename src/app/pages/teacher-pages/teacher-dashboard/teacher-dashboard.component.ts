@@ -96,18 +96,23 @@ export class TeacherDashboardComponent implements OnInit,OnDestroy  {
 
     this.subscription3=this.events.taskEvent.subscribe(state=>{
       if(state.task==this.events.TASKOPENMODAL){
-        this.openModel(true) //old 4
+        this.openModel(true) 
       }
       if(state.task==this.events.TASKGETCLASSES){
-        this.getclasses(true); //old 15
+        this.getclasses(true);
       }
-      if(state.task==this.events.TASKCHOOSECLASSES){ //old 10
+      if(state.task==this.events.TASKCHOOSECLASSES){ 
         this.chosenIndex=state.data.chosenIndex;
         this.chosenClass=state.data.chosenClass;
       }
-      if(state.task==this.events.TASKREFRESHCONNECTED){  //old 21
+      if(state.task==this.events.TASKREFRESHCONNECTED){  
         this.getconnectedchaters(state.data.uuid);
       }
+      if(state.task==this.events.TASKGETCHOSENCLASS){  
+        this.events.changeTaskState({task:this.events.TASKCHOOSECLASSES,data:{chosenIndex:this.chosenIndex,chosenClass:this.chosenClass}})
+      }
+
+      
     })
 
 

@@ -11,6 +11,9 @@
     
 
 }
+.active-class{
+  border:2px solid #5864bd !important ;
+}
 .transparent-border{
   border:solid 2px transparent;
 }
@@ -162,9 +165,7 @@
 }
 
 
-.active-class{
-    border:2px solid #5864bd !important ;
-  }
+
 
   .flex-containerr {
     height: 100px!important;

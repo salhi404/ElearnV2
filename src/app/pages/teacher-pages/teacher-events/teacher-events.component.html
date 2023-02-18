@@ -1,4 +1,6 @@
-<div class=" calendarCard card card-primary">
+
+<div *ngIf="!chosenClass" class="d-flex justify-content-center w-100"> <span class="alert alert-info">choose a class !! </span> </div>
+<div [ngClass]="{'hiddenCalendar':!chosenClass}" class=" calendarCard card card-primary">
     <div *ngIf="clicktodelete||clicktoEdit" class="clickAlert">
         <div *ngIf="true" class="alert alert-info   ">
             click an event

@@ -57,7 +57,7 @@ export class ClassesComponent implements OnInit, OnDestroy {
         console.log('get student classses data',data);
         this.MyClasses=data.classes; //[{subject:"math",name:"rerer",uuid:'sdsd'}]
         this.MyClasses.sort(function(a,b){          
-          return (+b.accepted)-(+a.accepted)
+          return (b.accepted?1:0)-(a.accepted?1:0)
         })
       },
       error:err=>{

@@ -10,13 +10,13 @@ export class EventsService {
   public DARKTHEMEDARK=5;
 
   public TASKOPENMAIL=1;
-  public TASKOPENMODAL=2;//old 4
-  public TASKGETCLASSES=3;  //old 15
-  public TASKCHOOSECLASSES=4;  //old 10
-  //public TASKUPDATECHOOSENCLASSES=5;  //old 10
-  public TASKREFRESHCONNECTED=5;  //old 21
-  public TASKCONNECTEDRECIEVED=6;  //old 20
-  
+  public TASKOPENMODAL=2;
+  public TASKGETCLASSES=3; 
+  public TASKCHOOSECLASSES=4; 
+  //public TASKUPDATECHOOSENCLASSES=5;  
+  public TASKREFRESHCONNECTED=5;  
+  public TASKCONNECTEDRECIEVED=6;  
+  public TASKGETCHOSENCLASS=7;  
   
   public UPDATEUSER=1;
   public DALETEUSER=2;

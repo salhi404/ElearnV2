@@ -18,7 +18,6 @@ export class TeacherClassesComponent implements OnInit, OnDestroy {
   subscription3: Subscription = new Subscription();
   selectedUser: any = null;
   editing: boolean = false;
-  user: User = null as any;
   chosenClass: any = null;
   connectedCount: number = -1;
   loading: boolean = false;
@@ -32,17 +31,6 @@ export class TeacherClassesComponent implements OnInit, OnDestroy {
     this.subscription3.unsubscribe();
   }
   ngOnInit(): void {
-    this.subscription = this.events.userdataEvent.subscribe(
-      state => {
-        console.log("userdataEvent 11");
-        if (state.state == this.events.UPDATEUSER) {
-          this.user = state.userdata;
-        }
-        if (state.state == this.events.DALETEUSER) {
-          this.user = null as any;
-        }
-      }
-    )
     this.subscription3 = this.events.taskEvent.subscribe(state => {
       if (state.task == this.events.TASKCHOOSECLASSES) {
         this.chosenClass = state.data.chosenClass;
@@ -52,6 +40,7 @@ export class TeacherClassesComponent implements OnInit, OnDestroy {
         if(this.chosenClass.uuid===state.data.connectedfor) this.chosenClass = state.data.chosenClass;
       }
     })
+    this.events.changeTaskState({task:this.events.TASKGETCHOSENCLASS,data:null});
   }
   refreshconnected() {
     this.events.changeTaskState({ task: this.events.TASKREFRESHCONNECTED, data: { uuid: this.chosenClass.uuid, } })
