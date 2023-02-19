@@ -3,11 +3,13 @@ import { Calendar, CalendarOptions, DateSelectArg, EventClickArg, EventInput, Ev
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from "@fullcalendar/interaction"
+import listGridPlugin from '@fullcalendar/list';
 import { DateClickArg } from '@fullcalendar/interaction';
 import { FullCalendarComponent } from '@fullcalendar/angular';
 import { DatePipe } from '@angular/common';
 import { AuthService } from '../../_services/auth.service';
 import { EventImpl } from '@fullcalendar/core/internal';
+const views =["dayGridMonth","timeGridWeek","timeGridDay","listMonth","listWeek","listDay"];
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
@@ -34,7 +36,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   tests:EventImpl=null as any;
   allEvents:any[]=[];
   dateIsSelected:boolean=false;
-  colorInput:string='#007bff';
+  colorInput:string='#6c757d';
   DeleteclickedEvent=false;
   addnotEditEvent=true;
   clicktodelete=false;
@@ -51,7 +53,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   fadeModel=false;
   modelShowenDelete=false;
   fadeModelDelete=false;
-  viewType: number = 0;
+  viewType: number = -1;
+  islistview:boolean=false;
   datSelectionArg:DateSelectArg=null as any;
   calendarApi: Calendar = null as any;
   calendarOptions: CalendarOptions = {
@@ -78,7 +81,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       this.datSelectionArg=null as any;
       this.dateselected=false;
     },
-    plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin],
+    plugins: [dayGridPlugin, interactionPlugin, timeGridPlugin,listGridPlugin],
     headerToolbar: false,
     /*{
       start: 'title', // will normally be on the left. if RTL, will be on the right
@@ -144,6 +147,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.calendarApi = this.calendarElement.getApi();
     this.calendarTitle = this.calendarApi.view.title;
     this.cdr.detectChanges();
+    this.nextView();
     this.authService.getEvents().subscribe({
       next:data=>{
         data.data.forEach((element:any) => {
@@ -174,18 +178,12 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
   nextView() {
     this.viewType = (this.viewType + 1) % 3
-    switch (this.viewType) {
-      case 0:
-        this.calendarApi.changeView("dayGridMonth" )
-        break;
-
-      case 1:
-        this.calendarApi.changeView("timeGridWeek")
-        break;
-      case 2:
-        this.calendarApi.changeView("timeGridDay")
-        break;
-    }
+    this.calendarApi.changeView(views[this.viewType+(this.islistview?1:0)*3])
+    this.calendarTitle = this.calendarApi.view.title;
+  }
+  changetype(){
+    this.islistview=!this.islistview;
+    this.calendarApi.changeView(views[this.viewType+(this.islistview?1:0)*3])
     this.calendarTitle = this.calendarApi.view.title;
   }
   addevent(){
@@ -210,11 +208,18 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     
   }
   showDeleteModal(){
-    this.showDD=false;
     this.allEvents=this.calendarApi.getEvents();
-    console.log(this.allEvents);
+    if(this.allEvents.length==0){
+      this.DeleteclickedEvent=true;
+      this.showDD=false;
+    //   this.blockHostListener=true;
+    // setTimeout(() => {
+    //   this.blockHostListener=false;
+    // }, 300);
+    }else{
+      this.showDD=false;
       this.showModel(2);
-    
+    }
   }
   ShowDD(){
     this.showDD=!this.showDD;

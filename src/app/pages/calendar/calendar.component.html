@@ -3,16 +3,24 @@
 		<div class="section-body ">
 
 			<div class=" calendarCard card card-primary">
-				<div *ngIf="clicktodelete||clicktoEdit" class="clickAlert">
-					<div *ngIf="true" class="alert alert-info   ">
-						click an event
+				<div *ngIf="clicktoEdit" class="clickAlert {{allEvents.length==0?'clickAlertNoEv':''}}">
+					<div  class="alert alert-info {{allEvents.length!=0?'alert-info':'alert-warning'}}   ">
+					  {{allEvents.length!=0?'click an event':'there is no event to edit'}}
 					</div>
-				</div>
+				  </div>
+				  <div *ngIf="clicktodelete" class="clickAlert {{allEvents.length==0?'clickAlertNoEv':''}}">
+					<div  class="alert alert-info {{allEvents.length!=0?'alert-info':'alert-warning'}}   ">
+					  {{allEvents.length!=0?'click an event':'there is no event to delete'}}
+					</div>
+				  </div>
 
 				<div class="card-header">
 					<h4>{{calendarTitle}}</h4>
 					<div class="card-header-action2">
 						<!--<a (click)="addevent()" class="btn preventunselect" [ngClass]="{'btn-primary':!dateselected,'btn-info':dateselected}" ><span>add Event</span></a>-->
+						<a (click)="changetype()" class="btn btn-primary">
+							<span>type :{{islistview?'List':'Calendar'}}</span>
+						  </a>
 						<a (click)="nextView()" class="btn btn-primary"><span>View :
 								{{viewType==0?'Month':viewType==1?'Week':'Day'}}</span></a>
 						<div class="btn-group">
@@ -54,7 +62,7 @@
 	<div class="modal-dialog " role="document" #modalDialog>
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="formModal">ADD Event</h5>
+				<h5 class="modal-title" id="formModal">{{addnotEditEvent?'Add Event':'Edit Event'}}</h5>
 				<button type="button" class="close" (click)="closeModel()">
 					<span>&times;</span>
 				</button>
@@ -82,7 +90,7 @@
 						<input name="endDate" [(ngModel)]="form.endDate" type="date" class="form-control">
 						<input name="endTime" [(ngModel)]="form.endTime" type="time" class="form-control">
 					</div>
-					<div class="row gutters-xs d-flex justify-content-center ">
+					<!-- <div class="row gutters-xs d-flex justify-content-center ">
 						<div class="col-auto">
 							<label class="colorinput">
 								<input [(ngModel)]="colorInput" name="color" type="radio" value="#007bff"
@@ -99,19 +107,12 @@
 						</div>
 						<div class="col-auto">
 							<label class="colorinput">
-								<input [(ngModel)]="colorInput" name="color" type="radio" value="#ffc107"
-									class="colorinput-input" />
-								<span class="colorinput-color bg-warning"></span>
-							</label>
-						</div>
-						<div class="col-auto">
-							<label class="colorinput">
 								<input [(ngModel)]="colorInput" name="color" type="radio" value="#17a2b8"
 									class="colorinput-input" />
 								<span class="colorinput-color bg-info"></span>
 							</label>
 						</div>
-					</div>
+					</div> -->
 					<div class="d-flex align-items-center justify-content-center">
 						<button (click)="submitModal()" type="button"
 							class="btn btn-primary m-t-15 waves-effect ">{{addnotEditEvent?'Add Event':'Edit Event'}}</button>

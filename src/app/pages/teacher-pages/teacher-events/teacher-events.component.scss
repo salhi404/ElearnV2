@@ -151,10 +151,22 @@
   width: 125px;
   white-space: nowrap;
 }
+
 #calendar  .fc-event{
   cursor: pointer!important;
 }
 
 .hiddenCalendar{
   visibility: hidden;
+}
+.clickAlertNoEv>div{
+  width: 250px;
+}
+.dropdown{
+  position: absolute;
+  top:10px;
+  right: 0;
+}
+.card-header-action2{
+  padding-right: 25px;
 }
