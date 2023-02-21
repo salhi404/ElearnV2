@@ -53,11 +53,12 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   fadeModel=false;
   modelShowenDelete=false;
   fadeModelDelete=false;
-  viewType: number = -1;
+  viewType: number = 0;
   islistview:boolean=false;
   datSelectionArg:DateSelectArg=null as any;
   calendarApi: Calendar = null as any;
   calendarOptions: CalendarOptions = {
+    eventDisplay:"block",
     initialView: 'dayGridMonth',
     eventClick: this.handleEventClick(), // MUST ensure `this` context is maintained
     eventMouseEnter:this.handleEventEnter(),
@@ -141,13 +142,13 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     //this.calendarApi=this.calendarComponent.getApi();
     //console.log(this.calendarApi.view);
+   // this.nextView();
 
   }
   ngAfterViewInit() {
     this.calendarApi = this.calendarElement.getApi();
     this.calendarTitle = this.calendarApi.view.title;
     this.cdr.detectChanges();
-    this.nextView();
     this.authService.getEvents().subscribe({
       next:data=>{
         data.data.forEach((element:any) => {
@@ -275,9 +276,36 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       this.closeModelDelete();
     }
   }
-  editEvent(){
+  selectEvent(){
+    this.allEvents=this.calendarApi.getEvents();
     this.EditclickedEvent=true;
+    this.closeModel();
+  }
+  editEvent(){
+    this.allEvents=this.calendarApi.getEvents();
+    this.eventToEdit="-1"
+    this.addnotEditEvent=false;
+    this.showModel(1);
     this.showDD=false;
+  }
+  editoption(){
+   // this.eventToEdit=this.allEvents[ind].id;
+   const eventt=this.allEvents.find(ev=>ev.id==this.eventToEdit)
+   console.log("editoption",eventt);
+   if(eventt){
+    this.form.event=eventt.title;
+    this.form.startDate=this.datepipe.transform(eventt.start,'yyyy-MM-dd')||'';
+    this.form.endDate=this.datepipe.transform(eventt.end,'yyyy-MM-dd')||'';
+    if(!eventt.allDay){
+      this.form.startTime=this.datepipe.transform(eventt.start,'HH:mm')||'';
+      this.form.endTime=this.datepipe.transform(eventt.end,'HH:mm')||'';
+    }
+    this.colorInput=eventt.backgroundColor;
+   }else{
+    this.form={event:'',startDate:'',startTime:'',endDate:'',endTime:'',}
+   }
+   
+    
   }
   submitModal(){
     if(this.form.event==='')this.form.event="My Event";

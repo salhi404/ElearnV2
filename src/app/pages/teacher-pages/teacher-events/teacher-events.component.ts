@@ -71,6 +71,7 @@ export class TeacherEventsComponent implements OnInit, AfterViewInit {
   datSelectionArg:DateSelectArg=null as any;
   calendarApi: Calendar = null as any;
   calendarOptions: CalendarOptions = {
+    eventDisplay:"block",
     initialView: 'dayGridMonth',
     eventClick: this.handleEventClick(), // MUST ensure `this` context is maintained
     eventMouseEnter:this.handleEventEnter(),
@@ -115,7 +116,7 @@ export class TeacherEventsComponent implements OnInit, AfterViewInit {
         if(this.chosenClass)this.getclassevents(this.chosenClass.uuid);
       }
       if (state.task == this.events.TASKCONNECTEDRECIEVED) {
-        if(this.chosenClass.uuid===state.data.connectedfor) this.chosenClass = state.data.chosenClass;
+        if(this.chosenClass&&this.chosenClass.uuid===state.data.connectedfor) this.chosenClass = state.data.chosenClass;
       }
     })
     this.events.changeTaskState({task:this.events.TASKGETCHOSENCLASS,data:null})
@@ -321,9 +322,36 @@ for (var i = 0; i < len; i++) {
       this.closeModelDelete();
     }
   }
-  editEvent(){
+  selectEvent(){
+    this.allEvents=this.calendarApi.getEvents();
     this.EditclickedEvent=true;
+    this.closeModel();
+  }
+  editEvent(){
+    this.allEvents=this.calendarApi.getEvents();
+    this.eventToEdit="-1"
+    this.addnotEditEvent=false;
+    this.showModel(1);
     this.showDD=false;
+  }
+  editoption(){
+   // this.eventToEdit=this.allEvents[ind].id;
+   const eventt=this.allEvents.find(ev=>ev.id==this.eventToEdit)
+   console.log("editoption",eventt);
+   if(eventt){
+    this.form.event=eventt.title;
+    this.form.startDate=this.datepipe.transform(eventt.start,'yyyy-MM-dd')||'';
+    this.form.endDate=this.datepipe.transform(eventt.end,'yyyy-MM-dd')||'';
+    if(!eventt.allDay){
+      this.form.startTime=this.datepipe.transform(eventt.start,'HH:mm')||'';
+      this.form.endTime=this.datepipe.transform(eventt.end,'HH:mm')||'';
+    }
+    this.colorInput=eventt.backgroundColor;
+   }else{
+    this.form={event:'',startDate:'',startTime:'',endDate:'',endTime:'',}
+   }
+   
+    
   }
   submitModal(){
     if(this.form.event==='')this.form.event="My Event";

@@ -37,7 +37,7 @@ export class TeacherClassesComponent implements OnInit, OnDestroy {
         if (this.selectedUser) this.selectedUser = this.chosenClass.enrollers.find((userr: any) => userr.email == this.selectedUser.email);
       }
       if (state.task == this.events.TASKCONNECTEDRECIEVED) {
-        if(this.chosenClass.uuid===state.data.connectedfor) this.chosenClass = state.data.chosenClass;
+        if(this.chosenClass&&this.chosenClass.uuid===state.data.connectedfor) this.chosenClass = state.data.chosenClass;
       }
     })
     this.events.changeTaskState({task:this.events.TASKGETCHOSENCLASS,data:null});

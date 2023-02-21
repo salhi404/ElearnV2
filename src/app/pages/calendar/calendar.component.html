@@ -69,10 +69,22 @@
 			</div>
 			<div class="modal-body">
 				<form class="">
-					<div *ngIf="dateIsSelected&&addnotEditEvent" class="d-flex justify-content-center">
+					<!-- <div *ngIf="dateIsSelected&&addnotEditEvent" class="d-flex justify-content-center">
 						<div class="alert alert-primary alert-has-icon p-1 px-3">
 							<div class="alert-icon"><i class="far fa-lightbulb"></i></div>
 							<span class="mt-1">you can slect a date then click add event</span>
+						</div>
+					</div> -->
+					<div class="input-group">
+						<select  (click)="editoption()" *ngIf="!addnotEditEvent" class="custom-select"
+							[(ngModel)]="eventToEdit" #EditSelect="ngModel" name="EditSelect">
+							<option  value="-1">click select then click an event or choose from this list </option>
+							<option  *ngFor="let event of allEvents ,index as i" [ngValue]="event.id">"{{event.title}}"
+								from:{{datepipe.transform(event.start,'dd-MM-yyyy HH:mm')}}
+								to:{{datepipe.transform(event.end,'dd-MM-yyyy HH:mm')}}</option>
+						</select>
+						<div *ngIf="!addnotEditEvent" class="input-group-append">
+							<button (click)="selectEvent()" class="btn btn-primary" type="button">Select </button>
 						</div>
 					</div>
 					<div class="form-group mb-2">
