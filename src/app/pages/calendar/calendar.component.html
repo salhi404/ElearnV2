@@ -164,9 +164,9 @@
 						</div>
 					</div> -->
 					<div class="d-flex align-items-center justify-content-center">
-						<button (click)="submitModal()" type="button"
-							class="btn btn-primary m-t-15 waves-effect ">{{addnotEditEvent?'Add Event':'Edit
-							Event'}}</button>
+						<button *ngIf="!addnotEditEvent&&eventToEdit==='-1'" type="button"class="btn btn-secondary m-t-15 waves-effect ">Edit Event</button>
+						<button *ngIf="addnotEditEvent||eventToEdit!=='-1'" (click)="submitModal()" type="button"
+							class="btn btn-primary m-t-15 waves-effect ">{{addnotEditEvent?'Add Event':'Edit Event'}}</button>
 					</div>
 				</form>
 			</div>
