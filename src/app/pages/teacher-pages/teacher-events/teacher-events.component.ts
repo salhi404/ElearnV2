@@ -111,20 +111,26 @@ export class TeacherEventsComponent implements OnInit, AfterViewInit {
     //this.calendarApi=this.calendarComponent.getApi();
     //console.log(this.calendarApi.view);
     this.subscription = this.events.taskEvent.subscribe(state => {
+      console.log("taskEvent",state);
       if (state.task == this.events.TASKCHOOSECLASSES) {
+        console.log("TASKCHOOSECLASSES");
         this.chosenClass = state.data.chosenClass;
         if(this.chosenClass)this.getclassevents(this.chosenClass.uuid);
       }
       if (state.task == this.events.TASKCONNECTEDRECIEVED) {
+        console.log("TASKCONNECTEDRECIEVED");
         if(this.chosenClass&&this.chosenClass.uuid===state.data.connectedfor) this.chosenClass = state.data.chosenClass;
       }
     })
     this.events.changeTaskState({task:this.events.TASKGETCHOSENCLASS,data:null})
   }
   ngAfterViewInit() {
+    console.log("ngAfterViewInit");
+    console.log(this.calendarElement);
+    
     this.calendarApi = this.calendarElement.getApi();
     this.calendarTitle = this.calendarApi.view.title;
-    console.log("this.calendarTitle",this.calendarTitle);
+    
     this.nextView();
     this.cdr.detectChanges();
   }
@@ -145,13 +151,14 @@ export class TeacherEventsComponent implements OnInit, AfterViewInit {
 
 //-----------------------------------------------------------------------------------------------------
 getclassevents(uuid:string){
-var eventSources = this.calendarApi.getEvents()
-var len = eventSources.length;
-for (var i = 0; i < len; i++) { 
-    eventSources[i].remove(); 
-} 
+
   this.teacherservice.getClassEvents(uuid).subscribe({
     next:data=>{
+      var eventSources = this.calendarApi.getEvents()
+      var len = eventSources.length;
+      for (var i = 0; i < len; i++) { 
+          eventSources[i].remove(); 
+      }
       console.log("getclassevents data",data);
       data.events.forEach((element:any) => {
       this.calendarApi.addEvent(this.parsEvent(element));

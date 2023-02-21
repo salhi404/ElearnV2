@@ -1,18 +1,56 @@
 <div class="main-content">
 	<section class="section">
 		<div class="section-body ">
-
+			<div class="row">
+				<div *ngIf="personalEvents" class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div (click)="toggleClass(-1)" class="card card-statistic-1 grow2 classCard classCardPersonal "
+						[ngClass]="{'active-class':personalEvents.class.chosen}">
+						<div class="h-100 flex-containerr">
+							<div class="padding-20">
+								<div class="flex-containerr">
+									<h4 class="text-dark mb-2">{{personalEvents.class.name}}</h4>
+									<span class="font-dark  text-dark">
+										<i class="ti-arrow-up text-dark">events : {{personalEvents.class.count}}</i>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div *ngFor="let class of MyClasses index as i" class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div (click)="toggleClass(i)" class="card card-statistic-1 grow2 classCard"
+						[ngClass]="{'active-class':class.class.chosen}">
+						<div class="card-icon classCardIcon">
+							<div class="d-flex flex-column justify-content-center align-items-center h-100 ">
+								<i class="fas {{parsesubjectIcon(class.class.subject)}} mb-1"></i>
+								<span class=" text-light"
+									style="font-size: 15px;line-height: 15px; font-weight: 500;">{{parsesubject(class.class.subject)}}</span>
+							</div>
+						</div>
+						<div class="h-100 flex-containerr">
+							<div class="padding-20">
+								<div class="flex-containerr">
+									<h4 class="text-light mb-2">{{class.class.name}}</h4>
+									<span class="font-light  text-light">
+										<i class="ti-arrow-up text-light">events : {{class.class.count}}</i>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 			<div class=" calendarCard card card-primary">
 				<div *ngIf="clicktoEdit" class="clickAlert {{allEvents.length==0?'clickAlertNoEv':''}}">
-					<div  class="alert alert-info {{allEvents.length!=0?'alert-info':'alert-warning'}}   ">
-					  {{allEvents.length!=0?'click an event':'there is no event to edit'}}
+					<div class="alert alert-info {{allEvents.length!=0?'alert-info':'alert-warning'}}   ">
+						{{allEvents.length!=0?'click an event':'there is no event to edit'}}
 					</div>
-				  </div>
-				  <div *ngIf="clicktodelete" class="clickAlert {{allEvents.length==0?'clickAlertNoEv':''}}">
-					<div  class="alert alert-info {{allEvents.length!=0?'alert-info':'alert-warning'}}   ">
-					  {{allEvents.length!=0?'click an event':'there is no event to delete'}}
+				</div>
+				<div *ngIf="clicktodelete" class="clickAlert {{allEvents.length==0?'clickAlertNoEv':''}}">
+					<div class="alert alert-info {{allEvents.length!=0?'alert-info':'alert-warning'}}   ">
+						{{allEvents.length!=0?'click an event':'there is no event to delete'}}
 					</div>
-				  </div>
+				</div>
 
 				<div class="card-header">
 					<h4>{{calendarTitle}}</h4>
@@ -20,7 +58,7 @@
 						<!--<a (click)="addevent()" class="btn preventunselect" [ngClass]="{'btn-primary':!dateselected,'btn-info':dateselected}" ><span>add Event</span></a>-->
 						<a (click)="changetype()" class="btn btn-primary">
 							<span>type :{{islistview?'List':'Calendar'}}</span>
-						  </a>
+						</a>
 						<a (click)="nextView()" class="btn btn-primary"><span>View :
 								{{viewType==0?'Month':viewType==1?'Week':'Day'}}</span></a>
 						<div class="btn-group">
@@ -76,10 +114,10 @@
 						</div>
 					</div> -->
 					<div class="input-group">
-						<select  (click)="editoption()" *ngIf="!addnotEditEvent" class="custom-select"
+						<select (click)="editoption()" *ngIf="!addnotEditEvent" class="custom-select"
 							[(ngModel)]="eventToEdit" #EditSelect="ngModel" name="EditSelect">
-							<option  value="-1">click select then click an event or choose from this list </option>
-							<option  *ngFor="let event of allEvents ,index as i" [ngValue]="event.id">"{{event.title}}"
+							<option value="-1">click select then click an event or choose from this list </option>
+							<option *ngFor="let event of allEvents ,index as i" [ngValue]="event.id">"{{event.title}}"
 								from:{{datepipe.transform(event.start,'dd-MM-yyyy HH:mm')}}
 								to:{{datepipe.transform(event.end,'dd-MM-yyyy HH:mm')}}</option>
 						</select>
@@ -127,7 +165,8 @@
 					</div> -->
 					<div class="d-flex align-items-center justify-content-center">
 						<button (click)="submitModal()" type="button"
-							class="btn btn-primary m-t-15 waves-effect ">{{addnotEditEvent?'Add Event':'Edit Event'}}</button>
+							class="btn btn-primary m-t-15 waves-effect ">{{addnotEditEvent?'Add Event':'Edit
+							Event'}}</button>
 					</div>
 				</form>
 			</div>

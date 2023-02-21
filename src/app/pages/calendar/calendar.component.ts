@@ -9,6 +9,7 @@ import { FullCalendarComponent } from '@fullcalendar/angular';
 import { DatePipe } from '@angular/common';
 import { AuthService } from '../../_services/auth.service';
 import { EventImpl } from '@fullcalendar/core/internal';
+import { parsegrade,parseroles,getmainrole, getmainrolecode, parsesubject ,parsesubjectIcon } from 'app/functions/parsers';
 const views =["dayGridMonth","timeGridWeek","timeGridDay","listMonth","listWeek","listDay"];
 @Component({
   selector: 'app-calendar',
@@ -57,6 +58,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   islistview:boolean=false;
   datSelectionArg:DateSelectArg=null as any;
   calendarApi: Calendar = null as any;
+  MyClasses:any[]=[];
+  personalEvents:any=null;
   calendarOptions: CalendarOptions = {
     eventDisplay:"block",
     initialView: 'dayGridMonth',
@@ -149,10 +152,26 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.calendarApi = this.calendarElement.getApi();
     this.calendarTitle = this.calendarApi.view.title;
     this.cdr.detectChanges();
+    this.getEvents();
+  }
+  getEvents(){
     this.authService.getEvents().subscribe({
       next:data=>{
-        data.data.forEach((element:any) => {
-        this.calendarApi.addEvent(this.parsEvent(element));
+        console.log("getEvents",data);
+        this.MyClasses=[];
+        data.events.forEach((element:any) => {
+          element.class.chosen=true;
+          element.class.count=element.data.length;
+          if(element.class.uuid!=='personal'){
+            this.MyClasses.push(element);
+          }else{
+            this.personalEvents=element;
+          }
+          element.data.forEach((ell:any) => {
+            ell.id=element.class.uuid+ell.id;
+            this.calendarApi.addEvent(this.parsEvent(ell));
+            console.log("ell",ell);
+          });   
         
         });
       },
@@ -364,6 +383,26 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     this.closeModel();
 
     
+  }
+  parsesubject(subject:number):string{
+    return parsesubject(subject);
+  }
+  parsesubjectIcon(subject:number):string{
+    return parsesubjectIcon(subject);
+  }
+  toggleClass(ind:number){
+    const classAt = ind!=-1?this.MyClasses[ind]:this.personalEvents;
+    classAt.class.chosen=!classAt.class.chosen;
+    if( classAt.class.chosen){
+      classAt.data.forEach((element:any) => {
+        this.calendarApi.addEvent(this.parsEvent(element));
+      });
+    }else{
+      classAt.data.forEach((element:any) => {
+        console.log("toggleClass",element.id);
+        this.calendarApi.getEventById(element.id)?.remove();
+      });
+    }
   }
   @HostListener('document:click', ['$event'])
   clickout(event:any) {
