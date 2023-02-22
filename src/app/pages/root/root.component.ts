@@ -136,8 +136,8 @@ export class RootComponent implements OnInit, OnDestroy {
       console.log("user");
       console.log(this.user);
       //this.prepsubscription();
-      //this.socketService.setupSocketConnection(this.storageService.getTokent()); //noio
-      // this.socketService.getMsg(); //noio
+      this.socketService.setupSocketConnection(this.storageService.getTokent());
+      this.socketService.getMsg();
       //this.getMailUpdate();
       /*setInterval(() => {
         this.getMailUpdate();

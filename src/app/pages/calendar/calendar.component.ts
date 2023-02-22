@@ -287,6 +287,8 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         next: data => {
           console.log('data delete');
           console.log(data);
+          this.personalEvents.data=this.personalEvents.data.filter((ev:any)=>ev.id!=id);
+          this.personalEvents.class.count--;
         },
         error: err => {
           console.log('err delete');

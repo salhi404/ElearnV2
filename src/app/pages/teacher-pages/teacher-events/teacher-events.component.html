@@ -62,15 +62,15 @@
           <span>&times;</span>
         </button>
       </div>
-      <div class="modal-body">
-          <form class="">
+      <div class="modal-body overScroll">
+          <form >
             <!-- <div *ngIf="dateIsSelected&&addnotEditEvent" class="d-flex justify-content-center">
               <div class="alert alert-primary alert-has-icon p-1 px-3">
                 <div class="alert-icon"><i class="far fa-lightbulb"></i></div>
                 <span class="mt-1">you can slect a date then click add event</span>
               </div>
             </div> -->
-            <div class="input-group">
+            <div class="input-group mb-2">
               <select  (click)="editoption()" *ngIf="!addnotEditEvent" class="custom-select"
                 [(ngModel)]="eventToEdit" #EditSelect="ngModel" name="EditSelect">
                 <option  value="-1">click select then click an event or choose from this list </option>
@@ -82,51 +82,90 @@
                 <button (click)="selectEvent()" class="btn btn-primary" type="button">Select </button>
               </div>
             </div>
+            <div class="form-group mb-0 ">
+              <div class="selectgroup selectgroup-pills mb-0">
+                    <label class="form-label mb-0">
+                      <h6 class="mr-3">type</h6>
+                    </label>
+                    <label class="selectgroup-item mb-0 ">
+                      <input (click)="updateType()" type="radio" name="type" [(ngModel)]="form.type" value="0" class="selectgroup-input">
+                      <span class="selectgroup-button">Event</span>
+                    </label>
+                    <label class="selectgroup-item mb-0 ">
+                      <input (click)="updateType()" type="radio" name="type" [(ngModel)]="form.type" value="1"
+                        class="selectgroup-input">
+                      <span class="selectgroup-button">Live Stream</span>
+                    </label>
+                   <!-- <label class="selectgroup-item mb-0 ">
+                       <input (click)="updateType()" type="radio" name="type" [(ngModel)]="form.type" value="2"
+                        class="selectgroup-input">
+                      <span class="selectgroup-button">Moderator</span>
+                    </label>
+                    <label class="selectgroup-item mb-0 ">
+                      <input (click)="updateType()" type="radio" name="type" [(ngModel)]="form.type" value="3"
+                        class="selectgroup-input">
+                      <span class="selectgroup-button">Admin</span>
+                    </label> -->
+              </div>
+            </div>
           <div class="form-group mb-2">
             <label class="mb-1">Event : </label>
-            <input name="event" [(ngModel)]="form.event" type="text" class="form-control" placeholder="My Event">
-          </div>
+            <input name="event" [(ngModel)]="form.event" type="text" class="form-control" placeholder="My Event" [attr.disabled]="form.type=='1' ? '' : null">
+          </div> 
           <div class="form-group mb-2">
             <label class="mb-1">From : </label>
-            <input name="startDate" [(ngModel)]="form.startDate" type="date" class="form-control">
-            <input name="startTime" [(ngModel)]="form.startTime" type="time" class="form-control">
+            <input  [ngClass]="{'border-danger':form.startDate===''&&form.endDate===''}" name="startDate" [(ngModel)]="form.startDate" type="date" class="form-control">
+            <input name="startTime" [(ngModel)]="form.startTime" type="time" class="form-control" 
+            [ngClass]="{'border-danger':form.type=='1'&&form.startTime==''}">
+            <div class="invalid-feedback" *ngIf="form.type=='1'&&form.startTime==''">
+              live stream needs a start time
+            </div>
           </div>
           <div class="form-group mb-3">
             <label class="mb-1">To : </label>
-            <input name="endDate" [(ngModel)]="form.endDate" type="date" class="form-control">
-            <input name="endTime" [(ngModel)]="form.endTime" type="time" class="form-control">
+            <input  [ngClass]="{'border-danger':form.startDate===''&&form.endDate===''}" name="endDate" [(ngModel)]="form.type==='1' ?form.startDate:form.endDate" type="date" class="form-control" [attr.disabled]="form.type=='1' ? '' : null">
+            <input name="endTime" [(ngModel)]="form.endTime" type="time" class="form-control"
+            [ngClass]="{'border-danger':form.type=='1'&&form.startTime==''}">
+            <div class="invalid-feedback" *ngIf="form.type=='1'&&form.endTime==''">
+              live stream needs a end time
+            </div>
           </div>
           <div class="row gutters-xs d-flex justify-content-center ">
             <div class="col-auto">
               <label class="colorinput">
-                <input [(ngModel)]="colorInput" name="color" type="radio" value="#007bff" class="colorinput-input" />
+                <input [(ngModel)]="colorInput" name="color" type="radio" value="#007bff" class="colorinput-input" [attr.disabled]="form.type=='1' ? '' : null" />
                 <span class="colorinput-color bg-primary"></span>
               </label>
             </div>
             <div class="col-auto">
               <label class="colorinput">
-                <input [(ngModel)]="colorInput" name="color" type="radio" value="#dc3545" class="colorinput-input" />
+                <input [(ngModel)]="colorInput" name="color" type="radio" value="#dc3545" class="colorinput-input" [attr.disabled]="form.type=='1' ? '' : null" />
                 <span class="colorinput-color bg-danger"></span>
               </label>
             </div>
             <div class="col-auto">
               <label class="colorinput">
-                <input [(ngModel)]="colorInput" name="color" type="radio" value="#28a745" class="colorinput-input" />
+                <input [(ngModel)]="colorInput" name="color" type="radio" value="#28a745" class="colorinput-input" [attr.disabled]="form.type=='1' ? '' : null" />
                 <span class="colorinput-color bg-success"></span>
               </label>
             </div>
             <div class="col-auto">
 							<label class="colorinput">
-								<input [(ngModel)]="colorInput" name="color" type="radio" value="#ffc107"
-									class="colorinput-input" />
+								<input [(ngModel)]="colorInput" name="color" type="radio" value="#ffc107" class="colorinput-input" [attr.disabled]="form.type=='1' ? '' : null" />
 								<span class="colorinput-color bg-warning"></span>
 							</label>
 						</div>
           </div>
-          <div class="d-flex align-items-center justify-content-center">
-            <button (click)="submitModal()" type="button"
+          <div class="d-flex align-items-center justify-content-center flex-column">
+            <button *ngIf="(form.type=='1'&&(form.startTime==''||form.endTime==''))||(form.startDate===''&&form.endDate==='')"  type="button"
+              class="btn btn-secondary m-t-15 waves-effect ">{{addnotEditEvent?'Add Event':'Edit Event'}}</button>
+              <button *ngIf="(form.type!='1'||(form.startTime!=''&&form.endTime!=''))&&(form.startDate!==''||form.endDate!=='')" (click)="submitModal()" type="button"
               class="btn btn-primary m-t-15 waves-effect ">{{addnotEditEvent?'Add Event':'Edit Event'}}</button>
-          </div>
+              <div class="invalid-feedback text-center mt-2 " *ngIf="(form.startDate===''&&form.endDate==='')">
+                please provid start or end Date
+              </div>
+            </div>
+          
         </form>
       </div>
     </div>

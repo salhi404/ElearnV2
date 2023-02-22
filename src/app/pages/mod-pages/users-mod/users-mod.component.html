@@ -47,10 +47,10 @@
                     *ngFor="let role of user.roles.reverse()  ">{{role}}</span> </td>
                 <td>
                   <div class="status">
-                  <i class="material-icons {{user.OnlineStat==-1?'online':'offline'}}">fiber_manual_record</i>
-                  <span>{{user.OnlineStat==-1?'Online':''+ datepipe.transform(user.OnlineStat,'HH:mm dd/MM/yy')}}</span> 
-                </div>
-              </td>
+                    <i class="material-icons {{user.OnlineStat==-1?'online':'offline'}}">fiber_manual_record</i>
+                    <span>{{user.OnlineStat==-1?'Online':''+ datepipe.transform(user.OnlineStat,'HH:mm dd/MM/yy')}}</span>
+                  </div>
+                </td>
                 <td>{{user.fName}}</td>
                 <td>{{user.lName}}</td>
                 <td>{{user.email}}</td>
@@ -101,31 +101,34 @@
                 <li class="list-group-item d-flex  align-items-center">
                   <label class="form-label mb-0">
                     <h6 class="mr-3">Roles</h6>
-                </label>
-              <label   class="selectgroup-item mb-0 ">
-                <input type="checkbox" name="user" [(ngModel)]="form.user" value="user" class="selectgroup-input">
-                <span class="selectgroup-button">User</span>
-              </label>
-              <label  class="selectgroup-item mb-0 ">
-                <input type="checkbox" name="teacher" [(ngModel)]="form.teacher" value="teacher"
-                  class="selectgroup-input">
-                <span class="selectgroup-button">Teacher</span>
-              </label>
-              <label  class="selectgroup-item mb-0 ">
-                <input type="checkbox" name="moderator" [(ngModel)]="form.moderator" value="moderator"
-                  class="selectgroup-input">
-                <span class="selectgroup-button">Moderator</span>
-              </label>
-              <label  class="selectgroup-item mb-0 ">
-                <input type="checkbox" name="admin" [(ngModel)]="form.admin" value="admin" class="selectgroup-input">
-                <span class="selectgroup-button">Admin</span>
-              </label>
-              <span (click)="submitRoles()" [ngClass]="{'btn-info pointer':changeRoleResult==-1,'btn-success':changeRoleResult==1,'btn-danger':changeRoleResult==2}" class="btn btn-info d-flex justify-content-center align-items-center" >
-                {{changeRoleResult==-1?'Submit':changeRoleResult==1?'success':'failed'}}
-              <span *ngIf="loading" class="mx-2"></span>
-              <app-spinner *ngIf="loading" [type]="1"></app-spinner></span>
-            </li>
-          </ul>
+                  </label>
+                  <label class="selectgroup-item mb-0 ">
+                    <input type="checkbox" name="user" [(ngModel)]="form.user" value="user" class="selectgroup-input">
+                    <span class="selectgroup-button">User</span>
+                  </label>
+                  <label class="selectgroup-item mb-0 ">
+                    <input type="checkbox" name="teacher" [(ngModel)]="form.teacher" value="teacher"
+                      class="selectgroup-input">
+                    <span class="selectgroup-button">Teacher</span>
+                  </label>
+                  <label class="selectgroup-item mb-0 ">
+                    <input type="checkbox" name="moderator" [(ngModel)]="form.moderator" value="moderator"
+                      class="selectgroup-input">
+                    <span class="selectgroup-button">Moderator</span>
+                  </label>
+                  <label class="selectgroup-item mb-0 ">
+                    <input type="checkbox" name="admin" [(ngModel)]="form.admin" value="admin"
+                      class="selectgroup-input">
+                    <span class="selectgroup-button">Admin</span>
+                  </label>
+                  <span (click)="submitRoles()"
+                    [ngClass]="{'btn-info pointer':changeRoleResult==-1,'btn-success':changeRoleResult==1,'btn-danger':changeRoleResult==2}"
+                    class="btn btn-info d-flex justify-content-center align-items-center">
+                    {{changeRoleResult==-1?'Submit':changeRoleResult==1?'success':'failed'}}
+                    <span *ngIf="loading" class="mx-2"></span>
+                    <app-spinner *ngIf="loading" [type]="1"></app-spinner></span>
+                </li>
+              </ul>
             </div>
           </div>
 

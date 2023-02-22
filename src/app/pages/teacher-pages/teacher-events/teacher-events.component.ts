@@ -15,6 +15,7 @@ import { Subject, Subscription } from 'rxjs';
 import { EventsService } from 'app/services/events.service';
 import { TeacherService } from 'app/_services/teacher.service';
 import { parsesubject, parsesubjectIcon, parsegrade } from 'app/functions/parsers';
+import { el } from '@fullcalendar/core/internal-common';
 const views =["dayGridMonth","timeGridWeek","timeGridDay","listMonth","listWeek","listDay"];
 @Component({
   selector: 'app-teacher-events',
@@ -38,13 +39,7 @@ export class TeacherEventsComponent implements OnInit, AfterViewInit {
     /*{ title: 'event 1', date: '2023-01-01', },
     { title: 'event 2', start: new Date() , end:'2023-01-30',color:'red'}*/
   ]
-  form={
-    event:'',
-    startDate:'',
-    startTime:'',
-    endDate:'',
-    endTime:'',
-  }
+  form={event:'',startDate:'',startTime:'',endDate:'',endTime:'',Recurring :false,type:'0'}
   tempId:string='';
   tests:EventImpl=null as any;
   allEvents:any[]=[];
@@ -70,6 +65,7 @@ export class TeacherEventsComponent implements OnInit, AfterViewInit {
   islistview:boolean=false;
   datSelectionArg:DateSelectArg=null as any;
   calendarApi: Calendar = null as any;
+  oldEventType='0';
   calendarOptions: CalendarOptions = {
     eventDisplay:"block",
     initialView: 'dayGridMonth',
@@ -139,7 +135,34 @@ export class TeacherEventsComponent implements OnInit, AfterViewInit {
     this.subscription1.unsubscribe();
   }
 
+  updateType(){
+    setTimeout(() => {
+      console.log("updateType :",this.form.type);
+    
+      switch (this.form.type) {
+        case '0':
+          if(this.oldEventType!='0') {
+            this.form.event="";
+            this.colorInput="#007bff";
+          }
+          break;  
+        case '1':
+          this.form.event="live Stream";
+          this.colorInput="#dc3545";
+          if(this.form.startDate!==''){
+            this.form.endDate=this.form.startDate;
+          }else{
+            if(this.form.endDate!==''){
+              this.form.startDate=this.form.endDate;
+            }
+          }
+          break;
+      
+      }
+      this.oldEventType=this.form.type;
+    }, 10);
 
+  }
 
 
 
@@ -296,7 +319,7 @@ getclassevents(uuid:string){
   }
   closeModel(){
     this.fadeModel=false;
-    this.form={event:'',startDate:'',startTime:'',endDate:'',endTime:'',}
+    this.form={event:'',startDate:'',startTime:'',endDate:'',endTime:'',Recurring :false,type:'0'}
     setTimeout(() => {
       this.modelShowen=false;
     }, 150);
@@ -355,7 +378,7 @@ getclassevents(uuid:string){
     }
     this.colorInput=eventt.backgroundColor;
    }else{
-    this.form={event:'',startDate:'',startTime:'',endDate:'',endTime:'',}
+    this.form={event:'',startDate:'',startTime:'',endDate:'',endTime:'',Recurring :false,type:'0'}
    }
    
     
@@ -366,7 +389,7 @@ getclassevents(uuid:string){
     if(this.form.startDate==='')this.form.startTime==='';
     if(this.form.endDate==='')this.form.endTime==='';
     if(this.form.startDate===''&&this.form.endDate===''){
-      console.log("no date was provided");
+      console.log("no date was provided"); // TODO implement form control
     }else{
       if(this.form.startDate===''&&this.form.endDate!==''){
         this.form.startDate=this.form.endDate;
