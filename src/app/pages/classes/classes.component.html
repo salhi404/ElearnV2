@@ -37,7 +37,6 @@
                     <div class="invalid-feedback" *ngIf="(submiterrcode!=-1&&submittduuid==retreaveduuid)">{{submiterrstr}}</div>
                     
                   </div>
-                  <!-- TODO add loading animation  -->
                    <button (click)="oppenAddClass(uuid.errors)" title="add new class" [ngClass]="{'add-bttn-Expanded':expandAddcard}" class="add-bttn grow3">
                     <i *ngIf="!loading"  class="fas fa-plus col-white "></i>
                     <i> <app-spinner *ngIf="loading" [type]="1"></app-spinner></i>

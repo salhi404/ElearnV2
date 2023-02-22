@@ -9,8 +9,8 @@ import { Pref } from '../Interfaces/user';
 // const URL_API = 'http://192.168.1.103:3000/'; 
 // const URL_API = 'https://shoppingapptracker.herokuapp.com/';
 //const URL_API = 'https://encouraging-crow.cyclic.app/';
-//const URL_API = 'https://frantic-colt-leather-jacket.cyclic.app/';
-const URL_API = 'https://starter-express-api-production-816a.up.railway.app/';
+const URL_API = 'https://frantic-colt-leather-jacket.cyclic.app/';
+// const URL_API = 'https://starter-express-api-production-816a.up.railway.app/';
 const AUTH_API = URL_API+'api/auth/';
 const DATA_API = URL_API+'api/data/';
 const USERDATA_API = URL_API+'api/userdata/';
@@ -19,7 +19,7 @@ const MOD_API = URL_API+'api/mod/';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
-
+// TODO - groupe initiation reqeuests in a single request if posible
 @Injectable({
   providedIn: 'root',
 })

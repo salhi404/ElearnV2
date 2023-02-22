@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   SOCKET_ENDPOINTLOCAL: 'http://192.168.1.103:3000',
-  SOCKET_ENDPOINT:'https://starter-express-api-production-816a.up.railway.app'
+  SOCKET_ENDPOINT:'https://starter-express-api-production-816a.up.railway.app',
+  SOCKET_ENDPOINT2 : 'https://frantic-colt-leather-jacket.cyclic.app'
 };
 
 /*
