@@ -111,7 +111,7 @@ export class TeacherEventsComponent implements OnInit, AfterViewInit {
       if (state.task == this.events.TASKCHOOSECLASSES) {
         console.log("TASKCHOOSECLASSES");
         this.chosenClass = state.data.chosenClass;
-        if(this.chosenClass)this.getclassevents(this.chosenClass.uuid);
+        if(this.chosenClass)this.loadevents(); //this.getclassevents(this.chosenClass.uuid);
       }
       if (state.task == this.events.TASKCONNECTEDRECIEVED) {
         console.log("TASKCONNECTEDRECIEVED");
@@ -173,7 +173,7 @@ export class TeacherEventsComponent implements OnInit, AfterViewInit {
 
 
 //-----------------------------------------------------------------------------------------------------
-getclassevents(uuid:string){
+/*getclassevents(uuid:string){
 
   this.teacherservice.getClassEvents(uuid).subscribe({
     next:data=>{
@@ -191,6 +191,17 @@ getclassevents(uuid:string){
       console.log('err');
       console.log(err);
     }
+  });
+}*/
+loadevents(){
+  var eventSources = this.calendarApi.getEvents()
+  var len = eventSources.length;
+  for (var i = 0; i < len; i++) { 
+      eventSources[i].remove(); 
+  }
+  console.log("getclassevents data",this.chosenClass.data.events);
+  this.chosenClass.data.events.forEach((element:any) => {
+  this.calendarApi.addEvent(this.parsEvent(element));
   });
 }
   handleEventClick(){
