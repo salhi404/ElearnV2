@@ -44,28 +44,33 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
   }
   @ViewChild("modalDialog") modalDialog!: ElementRef;
   constructor(private storageService: StorageService, private authService: AuthService, private teacherservice: TeacherService, private events: EventsService, private router: Router) { }
+  swithroutes(url:string){
+    switch (url) {
+      case "/teacher-dashboard/users":
+        this.activeroute = 1
+        break;
+      case "/teacher-dashboard/events":
+        this.activeroute = 2
+        break;
+      case "/teacher-dashboard/notifications":
+        this.activeroute = 3
+        break;
+      case "/teacher-dashboard/liveStreams":
+        this.activeroute = 4
+        break;
+      default:
+        this.activeroute = -1
+        break;
+    }
+  }
+  
   ngOnInit(): void {
-
+    this.swithroutes(this.router.url);
     this.router.events.pipe(
       filter((event: any) => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
-      switch (this.router.url) {
-        case "/teacher-dashboard/users":
-          this.activeroute = 1
-          break;
-        case "/teacher-dashboard/events":
-          this.activeroute = 2
-          break;
-        case "/teacher-dashboard/notifications":
-          this.activeroute = 3
-          break;
-        case "/teacher-dashboard/liveStreams":
-          this.activeroute = 4
-          break;
-        default:
-          this.activeroute = -1
-          break;
-      }
+      console.log("router event change");
+      this.swithroutes(this.router.url);
     });
 
 
@@ -152,17 +157,13 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
   getclasses(refresh: boolean) {
     this.subscription1 = this.teacherservice.getClasses().subscribe({
       next: data => {
-        console.log("getClasses");
-        console.log(data);
-        // this.attemptogetClasses++;
+        console.log("getClasses",data);
         if (data.classes) {
           this.classes = data.classes;
-          console.log("this.classes before", this.classes);
           this.classes.sort(function (a, b) {
             return (new Date(a.created).getTime()) - (new Date(b.created).getTime());
           });
           this.getTodeyCalender();
-          console.log("this.classes after sort", this.classes);
           if (refresh) {
             this.events.changeclassInfoState({ state: 2, classes: this.classes });
 
@@ -260,8 +261,7 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
     if (this.form.class === '') this.form.class = parsesubject(+this.form.subject) + ' Class';
     this.subscription2 = this.teacherservice.addclass(this.form.class, +this.form.subject).subscribe({
       next: data => {
-        console.log("getClasses");
-        console.log(data);
+        console.log("getClasses",data);
         // TODO add loading fase + push only new class
         this.getclasses(false);
       },

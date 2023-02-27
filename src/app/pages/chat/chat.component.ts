@@ -62,7 +62,6 @@ export class ChatComponent implements OnInit, OnDestroy {
       //this.user = this.storageService.getUser();
       this.subscription1=this.events.userdataEvent.subscribe(
         state=>{
-          console.log("userdataEvent 11");
           if(state.state==this.events.UPDATEUSER){
             this.user=state.userdata;
           }
@@ -73,8 +72,6 @@ export class ChatComponent implements OnInit, OnDestroy {
       )
       this.subscription = this.socketService.recieveMsg.subscribe(data => {
         if (this.firstrecieveMsgfired) {
-          console.log("recieveMsg fired ");
-          console.log(data);
           if (data.code == 1) {
             console.log(data.data);
             const chat: Chat = { msg: data.data.message, date: data.data.date, isSent: false, isoppened: false }
@@ -97,11 +94,9 @@ export class ChatComponent implements OnInit, OnDestroy {
               this.storageService.saveChatters(this.chatters);
               this.authService.putcontacts(this.chatters.filter(el => el.email != this.user.email)).subscribe({
                 next: data => {
-                  console.log('data');
-                  console.log(data);
                 },
                 error: err => {
-                  console.log('err');
+                  console.log(' putcontacts in chat err');
                   console.log(err);
                 }
               });
@@ -138,17 +133,11 @@ export class ChatComponent implements OnInit, OnDestroy {
       }, 20000);
 
     }
-    console.log("chaters");
-    console.log(this.chatters);
-    console.log("chatersinfo");
-    console.log(this.chattersinfo);
 
   }
   getconnectedchaters() {
     this.authService.getconnectedchatters(this.chatters.map(e => e.email)).subscribe({
       next: (data: any) => {
-        /* console.log("connected chaters data recieved ");
-         console.log(data);*/
         this.chattersinfo.forEach(el => {
           if (el.chatter.email != this.user.email) el.chatter.OnlineStat = data.find((ell: any) => ell.user == el.chatter.email).date;
         })
@@ -182,8 +171,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   getchat(from: ChatInfo) {
     this.authService.getChatLog(from.chatter.email).subscribe({
       next: (data) => {
-        console.log("data recieved for user :" + from);
-        console.log(data);
         from.chat = data as Chat[];
         from.unoppenedcount = from.chat.filter(el => !el.isoppened).length;
         from.loaded = true;
@@ -202,8 +189,6 @@ export class ChatComponent implements OnInit, OnDestroy {
       )
         .subscribe({
           next: (data) => {
-            console.log("data recieved for user :" + from);
-            console.log(data);
             resolve(data as Chat[]);
           },
           error: (err) => {
@@ -263,16 +248,12 @@ export class ChatComponent implements OnInit, OnDestroy {
       if (this.chatters.filter(chatter => chatter.email == this.emailAdd).length == 0) {
         this.authService.verifyMail(this.emailAdd).subscribe({
           next: data => {
-            console.log('recieved data mail : ');
-            console.log(data);
             this.chatters.push({ username: data.username, email: data.email, OnlineStat: -1, profileImage: data.profileImage });
             this.chattersinfo.push({ chatter: this.chatters[this.chatters.length - 1], chat: [], chatroom: this.chatters[this.chatters.length - 1].email, loaded: true, unoppenedcount: 0 })
             this.storageService.saveChatters(this.chatters);
             if (this.chatters.length > 1) {
               this.authService.putcontacts(this.chatters.filter(el => el.email != this.user.email)).subscribe({
                 next: data => {
-                  console.log('data');
-                  console.log(data);
                 },
                 error: err => {
                   console.log('err');
@@ -316,16 +297,12 @@ export class ChatComponent implements OnInit, OnDestroy {
       if ((this.usernameAdd !== this.user.username) && (this.chatters.filter(chatter => chatter.username == this.usernameAdd).length == 0)) {
         this.authService.verifyUsername(this.usernameAdd).subscribe({
           next: data => {
-            console.log('recieved data verifyUsername : ');
-            console.log(data);
             this.chatters.push({ username: data.username, email: data.email, OnlineStat: -1, profileImage: data.profileImage });
             this.chattersinfo.push({ chatter: this.chatters[this.chatters.length - 1], chat: [], chatroom: this.chatters[this.chatters.length - 1].email, loaded: true, unoppenedcount: 0 })
             this.storageService.saveChatters(this.chatters);
             if (this.chatters.length > 1) {
               this.authService.putcontacts(this.chatters.filter(el => el.email != this.user.email)).subscribe({
                 next: data => {
-                  console.log('data');
-                  console.log(data);
                 },
                 error: err => {
                   console.log('err');
@@ -359,12 +336,9 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.alerthidden = false;
     this.alertDismissed = false;
     this.timeout1 = setTimeout(() => {
-      console.log("timeout1 fired ");
       this.alerthidden = true;
     }, 3500);
     this.timeout2 = setTimeout(() => {
-      console.log("timeout2 fired ");
-
       this.alertDismissed = true;
     }, 4000);
   }
@@ -384,7 +358,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     } catch (error) {
     }
     if (unreadexists) {
-      console.log("unoppened exists");
+      // console.log("unoppened exists");
       this.markasoppened();
     }
 
@@ -403,7 +377,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.sendtotalunoppenedcount();
     this.authService.marckchatasoppened(this.activeChatter.chatter.email).subscribe({
       next: data => {
-        console.log(data);
+        // console.log(data);
       }, error: err => {
         console.log(err);
       }

@@ -44,10 +44,7 @@ export class RootComponent implements OnInit, OnDestroy {
       if(!this.storageService.isLoggedIn()&&event.url!="/login"&&event.url!="/signup"){
         this.router.navigate(["/"]);
       }
-      this.interfaceLayout=false;
-      console.log("split");
-      console.log(event.url.split('/'));
-      
+      this.interfaceLayout=false;      
       switch (event.url.split('/')[1]) {
         case "":
           if(this.storageService.isLoggedIn())this.router.navigate(["home"]);
@@ -85,8 +82,6 @@ export class RootComponent implements OnInit, OnDestroy {
           this.interfaceLayout=true;
         break
       } 
-      console.log(event);
-      console.log(this.currentRoute);
 
     });
   }
@@ -133,8 +128,6 @@ export class RootComponent implements OnInit, OnDestroy {
       this.events.changeuserdataState({state:1,userdata:this.user});
     }
     if (this.isLoggedIn) {
-      console.log("user");
-      console.log(this.user);
       //this.prepsubscription();
       this.socketService.setupSocketConnection(this.storageService.getTokent());
       this.socketService.getMsg();
@@ -184,7 +177,6 @@ export class RootComponent implements OnInit, OnDestroy {
         }
       })
       this.subscription5=this.events.infostatusEvent.subscribe(state=>{
-        console.log(state);
         if(state.unoppenedchatCount){
           this.unoppenedchatCount=state.unoppenedchatCount;
         }
@@ -276,10 +268,6 @@ export class RootComponent implements OnInit, OnDestroy {
         info.TodayEventsCount=todeyCount;
         info.nextEvent=nextDate;
         this.events.changeInfoState(info);
-        console.log("calendar dates");
-        
-        console.log(data);
-        
       },
       error: err => {
 
@@ -287,12 +275,8 @@ export class RootComponent implements OnInit, OnDestroy {
     })
   }
   getnoppenedchat() {
-    console.log('getnoppenedchat');
-
     this.authService.getunoppenedchat().subscribe({
       next: data => {
-        console.log('getnoppenedchat data :');
-        console.log(data);
         if (data.count) this.unoppenedchatCount = data.count;
           var info=this.events.infoEvent.getValue();
           info.unoppenedchatCount=this.unoppenedchatCount;
@@ -308,7 +292,7 @@ export class RootComponent implements OnInit, OnDestroy {
   logout() {
     this.authService.sendPref({ darkTheme: this.DarkTheme, miniSideBar: this.showMiniSideBar }).subscribe({
       next: res => {
-        console.log("sendPref sessefull");
+        // console.log("sendPref sessefull");
       },
       error: err => {
         console.log("sendPref errrrrrrr :" + err);
@@ -319,11 +303,9 @@ export class RootComponent implements OnInit, OnDestroy {
     if (chatter.length > 1) {
       this.authService.putcontacts(chatter.filter(el => el.email != this.user.email)).subscribe({
         next: data => {
-          console.log('data');
-          console.log(data);
         },
         error: err => {
-          console.log('err');
+          console.log(' putcontacts err');
           console.log(err);
         }
       });
@@ -337,7 +319,7 @@ export class RootComponent implements OnInit, OnDestroy {
   test() {
     if (this.isLoggedIn) this.authService.sendPref(this.storageService.getPrefrences(true)).subscribe({
       next: res => {
-        console.log("sendPref sessefull");
+        // console.log("sendPref sessefull");
       },
       error: err => {
         console.log("sendPref errrrrrrr :" + err);
@@ -366,7 +348,7 @@ export class RootComponent implements OnInit, OnDestroy {
     this.storageService.setPrefrences({ darkTheme: this.DarkTheme, miniSideBar: this.showMiniSideBar });
     if (this.isLoggedIn) this.authService.sendPref(this.storageService.getPrefrences(true)).subscribe({
       next: res => {
-        console.log("sendPref sessefull");
+        // console.log("sendPref sessefull");
       },
       error: err => {
         console.log("sendPref errrrrrrr :" + err);

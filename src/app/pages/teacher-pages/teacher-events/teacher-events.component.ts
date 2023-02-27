@@ -106,29 +106,24 @@ export class TeacherEventsComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     //this.calendarApi=this.calendarComponent.getApi();
     //console.log(this.calendarApi.view);
+    
+  }
+  ngAfterViewInit() {
+    this.calendarApi = this.calendarElement.getApi();
+    this.calendarTitle = this.calendarApi.view.title;
     this.subscription = this.events.taskEvent.subscribe(state => {
-      console.log("taskEvent",state);
       if (state.task == this.events.TASKCHOOSECLASSES) {
-        console.log("TASKCHOOSECLASSES");
         this.chosenClass = state.data.chosenClass;
         if(this.chosenClass)this.loadevents(); //this.getclassevents(this.chosenClass.uuid);
       }
       if (state.task == this.events.TASKCONNECTEDRECIEVED) {
-        console.log("TASKCONNECTEDRECIEVED");
         if(this.chosenClass&&this.chosenClass.uuid===state.data.connectedfor) this.chosenClass = state.data.chosenClass;
       }
     })
     this.events.changeTaskState({task:this.events.TASKGETCHOSENCLASS,data:null})
-  }
-  ngAfterViewInit() {
-    console.log("ngAfterViewInit");
-    console.log(this.calendarElement);
-    
-    this.calendarApi = this.calendarElement.getApi();
-    this.calendarTitle = this.calendarApi.view.title;
-    
     this.nextView();
     this.cdr.detectChanges();
+    if(this.chosenClass)this.loadevents();
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
@@ -137,8 +132,6 @@ export class TeacherEventsComponent implements OnInit, AfterViewInit {
 
   updateType(){
     setTimeout(() => {
-      console.log("updateType :",this.form.type);
-    
       switch (this.form.type) {
         case '0':
           if(this.oldEventType!='0') {
@@ -194,12 +187,11 @@ export class TeacherEventsComponent implements OnInit, AfterViewInit {
   });
 }*/
 loadevents(){
-  var eventSources = this.calendarApi.getEvents()
+  var eventSources = this.calendarApi.getEvents();
   var len = eventSources.length;
   for (var i = 0; i < len; i++) { 
       eventSources[i].remove(); 
   }
-  console.log("getclassevents data",this.chosenClass.data.events);
   this.chosenClass.data.events.forEach((element:any) => {
   this.calendarApi.addEvent(this.parsEvent(element));
   });
@@ -208,13 +200,11 @@ loadevents(){
     const context=this;
     return (args: EventClickArg) =>{ 
       if(this.DeleteclickedEvent){
-        console.log("deleeeeeet");
         context.eventToDelete=args.event.id;
         context.showDeleteModal();
       }
       if(this.EditclickedEvent){
         context.eventToEdit=args.event.id;
-        console.log("ediiiiit"+context.eventToEdit);
         this.form.event=args.event.title;
         this.form.startDate=this.datepipe.transform(args.event.start,'yyyy-MM-dd')||'';
         this.form.endDate=this.datepipe.transform(args.event.end,'yyyy-MM-dd')||'';
@@ -276,7 +266,6 @@ loadevents(){
   }
   addevent(){
     this.showDD=false;
-    console.log(this.datSelectionArg);
     const args=this.datSelectionArg;
     this.dateIsSelected=!args;
     if(!args){
@@ -352,8 +341,6 @@ loadevents(){
       this.calendarApi.getEventById(id)?.remove();
       this.teacherservice.deleteclassevent(this.chosenClass.uuid,id).subscribe({
         next:data=>{
-          console.log('data delete');
-          console.log(data);
         },
         error:err=>{
           console.log('err delete');
@@ -378,7 +365,6 @@ loadevents(){
   editoption(){
    // this.eventToEdit=this.allEvents[ind].id;
    const eventt=this.allEvents.find(ev=>ev.id==this.eventToEdit)
-   console.log("editoption",eventt);
    if(eventt){
     this.form.event=eventt.title;
     this.form.startDate=this.datepipe.transform(eventt.start,'yyyy-MM-dd')||'';
@@ -396,7 +382,6 @@ loadevents(){
   }
   submitModal(){
     if(this.form.event==='')this.form.event="My Event";
-    console.log(this.form);
     if(this.form.startDate==='')this.form.startTime==='';
     if(this.form.endDate==='')this.form.endTime==='';
     if(this.form.startDate===''&&this.form.endDate===''){
@@ -414,8 +399,6 @@ loadevents(){
         this.calendarApi.addEvent(this.parsEvent(tempevent));
         this.teacherservice.addclassevent(this.chosenClass.uuid,event).subscribe({
           next:data=>{
-            console.log('data addEvent');
-            console.log(data);
             this.calendarApi.getEventById(this.tempId)?.setProp('id',data.event.id);
           },
           error:err=>{
@@ -423,12 +406,7 @@ loadevents(){
             console.log(err);
           }
         });
-        console.log("event");
-        console.log(event);
       }else{
-        console.log("submi edit event");
-        console.log(event);
-        console.log("id :"+this.eventToEdit);
         this.calendarApi.getEventById(this.eventToEdit)?.setProp('title',event.title);
         if(event.start)this.calendarApi.getEventById(this.eventToEdit)?.setStart(event.start);
         if(event.end)this.calendarApi.getEventById(this.eventToEdit)?.setEnd(event.end);
@@ -436,8 +414,6 @@ loadevents(){
         this.calendarApi.getEventById(this.eventToEdit)?.setProp('color',event.color);
         this.teacherservice.editclassevent(this.chosenClass.uuid,this.eventToEdit,event).subscribe({
           next:data=>{
-            console.log('data EditEvent');
-            console.log(data);
           },
           error:err=>{
             console.log('err');

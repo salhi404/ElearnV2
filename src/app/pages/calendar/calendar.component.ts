@@ -98,13 +98,11 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     const context = this;
     return (args: EventClickArg) => {
       if (this.DeleteclickedEvent) {
-        console.log("deleeeeeet");
         context.eventToDelete = args.event.id;
         context.showDeleteModal();
       }
       if (this.EditclickedEvent) {
         context.eventToEdit = args.event.id;
-        console.log("ediiiiit" + context.eventToEdit);
         this.form.event = args.event.title;
         this.form.startDate = this.datepipe.transform(args.event.start, 'yyyy-MM-dd') || '';
         this.form.endDate = this.datepipe.transform(args.event.end, 'yyyy-MM-dd') || '';
@@ -124,7 +122,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     const context = this;
     return (args: any) => {
       if (this.DeleteclickedEvent) {
-        console.log("enteer");
+        console.log(" Event enteer");
       }
 
     }
@@ -133,7 +131,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     const context = this;
     return (args: any) => {
       if (this.DeleteclickedEvent) {
-        console.log("leave");
+        console.log("Event leave");
       }
 
     }
@@ -157,7 +155,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   getEvents() {
     this.authService.getEvents().subscribe({
       next: data => {
-        console.log("getEvents", data);
         this.MyClasses = [];
         data.events.forEach((element: any) => {
           element.class.chosen = true;
@@ -170,7 +167,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
           element.data.forEach((ell: any) => {
             ell.id = element.class.uuid + ell.id;
             this.calendarApi.addEvent(this.parsEvent(ell));
-            console.log("ell", ell);
           });
 
         });
@@ -208,7 +204,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
   addevent() {
     this.showDD = false;
-    console.log(this.datSelectionArg);
     const args = this.datSelectionArg;
     this.dateIsSelected = !args;
     if (!args) {
@@ -285,8 +280,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       this.calendarApi.getEventById(id)?.remove();
       this.authService.DeleteEvent(id.slice(8)).subscribe({
         next: data => {
-          console.log('data delete');
-          console.log(data);
           this.personalEvents.data=this.personalEvents.data.filter((ev:any)=>ev.id!=id);
           this.personalEvents.class.count--;
         },
@@ -327,7 +320,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   editoption() {
     // this.eventToEdit=this.allEvents[ind].id;
     const eventt = this.allEvents.find(ev => ev.id == this.eventToEdit)
-    console.log("editoption", eventt);
     if (eventt) {
       this.form.event = eventt.title;
       this.form.startDate = this.datepipe.transform(eventt.start, 'yyyy-MM-dd') || '';
@@ -345,7 +337,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   }
   submitModal() {
     if (this.form.event === '') this.form.event = "My Event";
-    console.log(this.form);
     if (this.form.startDate === '') this.form.startTime === '';
     if (this.form.endDate === '') this.form.endTime === '';
     if (this.form.startDate === '' && this.form.endDate === '') {
@@ -384,8 +375,6 @@ export class CalendarComponent implements OnInit, AfterViewInit {
         // console.log("event",event);
         this.authService.editEvent(event, this.eventToEdit.slice(8)).subscribe({
           next: data => {
-            console.log('data EditEvent');
-            console.log(data);
           },
           error: err => {
             console.log('err');

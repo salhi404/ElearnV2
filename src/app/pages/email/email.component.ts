@@ -84,14 +84,10 @@ export class EmailComponent implements OnInit,OnDestroy {
 
   }
   ngOnInit(): void {
-    console.log("state");
-    console.log(this.state);
     if(this.state.openMail){
       this.openWindow(3);
       this.openedMail=this.state.mail;
       this.markedAsOppen=this.openedMail;
-      console.log("markedAsOppen1");
-      console.log(this.markedAsOppen);
       this.replacedBody=this.openedMail.body.split(/(\r\n|\r|\n)/g);
       this.replacedBody.forEach;
     }
@@ -101,8 +97,6 @@ export class EmailComponent implements OnInit,OnDestroy {
         this.openedMail=state.data.mail;
         this.markedAsOppen=this.openedMail;
         if(this.markedAsOppen)this.markAsOppen(this.recievedMail.find(e=>e.id==this.markedAsOppen.id))
-        console.log("markedAsOppen2");
-        console.log(this.markedAsOppen);
         this.replacedBody=this.openedMail.body.split(/(\r\n|\r|\n)/g);
         this.replacedBody.forEach;
       }
@@ -113,7 +107,6 @@ export class EmailComponent implements OnInit,OnDestroy {
       //this.user=this.storageService.getUser() ;
       this.subscription2=this.events.userdataEvent.subscribe(
         state=>{
-          console.log("userdataEvent 11");
           if(state.state==this.events.UPDATEUSER){
             this.user=state.userdata;
           }
@@ -167,9 +160,6 @@ export class EmailComponent implements OnInit,OnDestroy {
   }
   ToggleStar(id:string,fosync:boolean){
     this.recievedMail.forEach((element,ind)=>{
-      console.log("id:"+element.id);
-      console.log("element id:"+id);
-      
       if(element.id===id){
         if(element.tags.includes("starred")){
           element.tags = element.tags.filter(e => e !== 'starred');
@@ -189,9 +179,7 @@ export class EmailComponent implements OnInit,OnDestroy {
   starSelected(){
     for (let index = 0; index < this.filteredMail.length; index++) {
       if(this.selected[index]){
-        console.log("ind :"+index);
         const elem=this.filteredMail[this.filteredMail.length-index-1];
-        console.log(elem); 
           if(!elem.tags.includes("starred")){
             elem.tags.push("starred");
             this.StarredMail.push(elem);
@@ -224,9 +212,7 @@ export class EmailComponent implements OnInit,OnDestroy {
   deleteSelected(){
       for (let index = 0; index < this.filteredMail.length; index++) {
         if(this.selected[index]){
-          console.log("ind :"+index);
           const elem=this.filteredMail[this.filteredMail.length-index-1];
-          console.log(elem); 
             if(!elem.tags.includes("bin")){
               elem.tags.push("bin");
               this.BinMail.push(elem);
@@ -245,22 +231,17 @@ export class EmailComponent implements OnInit,OnDestroy {
     for (let index = 0; index < this.filteredMail.length; index++) {
       if(this.selected[index]){
         const elem=this.filteredMail[this.filteredMail.length-index-1];
-        console.log(elem); 
         mails.push(elem.id);
         this.deleteItem(elem,1);
         this.modifiedMail=this.modifiedMail.filter(element=>element.mail!=elem.id)
       }
     }
-    console.log("deleteeeeeeeee");
-    console.log(mails);
-    console.log("this.BinMail");
-    console.log(this.BinMail);
     this.storageService.saveModMail(this.modifiedMail);
     this.refilter(this.slectedFilter);
     this.toggleSelectAll(false);
     this.authService.deleteMail(mails).subscribe({
       next: data => {
-        console.log(data);
+        // console.log("deleteMail ",data);
       },
       error: err => {
         console.log(err.error.message);
@@ -274,9 +255,7 @@ export class EmailComponent implements OnInit,OnDestroy {
   undeleteSelected(){
     for (let index = 0; index < this.filteredMail.length; index++) {
       if(this.selected[index]){
-        console.log("ind :"+index);
         const elem=this.filteredMail[this.filteredMail.length-index-1];
-        console.log(elem); 
           if(elem.tags.includes("bin")){
             elem.tags=elem.tags.filter(e=>e!="bin");
           }
@@ -298,10 +277,7 @@ export class EmailComponent implements OnInit,OnDestroy {
   toggleOppened(id:string){
     this.recievedMail.forEach((element,ind)=>{
       if(element.id===id){
-        console.log("foundddddddd");
-        console.log(element);
         if(!element.tags.includes("oppened")) element.tags.push("oppened"); 
-        console.log(element);
       }
     })
   }
@@ -325,12 +301,8 @@ export class EmailComponent implements OnInit,OnDestroy {
       elem=this.recievedMail.find(el=>el.id==element.mail);
       if(elem) mailtags.push({mailId:element.mail,tag:elem.tags});
     });
-    console.log("synced1");
     this.authService.syncMailTags(mailtags).subscribe({
-      next: data => {
-        console.log(data);
-        console.log("synced2");
-        
+      next: data => {;
       },
       error: err => {
         console.log(err.error.message);
@@ -446,14 +418,8 @@ export class EmailComponent implements OnInit,OnDestroy {
   }
   markAsOppen(mail:Mail|undefined)
   {
-    console.log("mail");
-    console.log(mail);
-    
-    
     if(typeof(mail)!="undefined"){
       if(!mail.tags.includes("oppened")){
-        console.log("mak as oppened");
-        console.log(mail);
         mail.tags.push("oppened");
         this.modifiedMail.push({mail:mail.id,modType:3});
         this.storageService.saveModMail(this.modifiedMail);
@@ -513,7 +479,6 @@ export class EmailComponent implements OnInit,OnDestroy {
     this.sending=true;
     this.authService.sendMail(mail,1).subscribe({
       next: data => {
-        console.log(data);
         this.sending=false;
         this.ShowSeccesfull=true;
         this.MsgSentSeccesfull=true;
@@ -564,14 +529,6 @@ export class EmailComponent implements OnInit,OnDestroy {
       label:-1,
     };
     this.chooseFilter(1,1);
-  }
-  test(event:any,id:string){
-    /*console.log("id");
-    console.log(id);
-    console.log("event");
-    console.log(event);
-    */
-    
   }
   
 }

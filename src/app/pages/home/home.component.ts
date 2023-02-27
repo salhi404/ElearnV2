@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit , OnDestroy{
   constructor(private events: EventsService,) { }
   ngOnInit(): void {
     this.subscription=this.events.infostatusEvent.subscribe(state=>{
-      console.log(state);
+      // console.log(state);
       if(state.unoppenedchatCount){
         this.unoppenedchatCount=state.unoppenedchatCount;
       }

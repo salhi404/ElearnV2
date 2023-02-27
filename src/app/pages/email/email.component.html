@@ -197,7 +197,7 @@
                       *ngFor="let mail of filteredMail.slice().reverse() ; index as i" class="unread pointer">
                       <td class="flex-centerr"  >
                         <label  class="form-check-label">
-                          <input type="checkbox" [(ngModel)]="selected[i]" (ngModelChange)="test($event,mail.id)">
+                          <input type="checkbox" [(ngModel)]="selected[i]" >
                           <span class="form-check-sign"></span>
                         </label>
                       </td>
