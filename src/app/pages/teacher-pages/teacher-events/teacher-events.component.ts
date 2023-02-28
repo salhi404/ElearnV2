@@ -385,7 +385,7 @@ loadevents(){
     if(this.form.startDate==='')this.form.startTime==='';
     if(this.form.endDate==='')this.form.endTime==='';
     if(this.form.startDate===''&&this.form.endDate===''){
-      console.log("no date was provided"); // TODO implement form control
+      console.log("no date was provided");
     }else{
       if(this.form.startDate===''&&this.form.endDate!==''){
         this.form.startDate=this.form.endDate;

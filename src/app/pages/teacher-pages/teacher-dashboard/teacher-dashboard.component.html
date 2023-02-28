@@ -59,29 +59,39 @@
     <section class="section">
       <div class="divider"><span></span><span>Classes</span><span></span></div>
       <div class="row">
-        <!-- // TODO -add leadig state   -->
-        <div *ngFor="let class of classes index as i" class="col-lg-3 col-md-6 col-sm-6 col-12">  
-          <div (click)="chooseClass(i)" class="card card-statistic-1 grow2 classCard" [ngClass]="{'active-class':chosenIndex==i}">
-            <div class="card-icon classCardIcon">
-              <div class="d-flex flex-column justify-content-center align-items-center h-100 ">
-                <i class="fas {{parsesubjectIcon(class.subject)}} mb-1"></i>
-                <span class=" text-light" style="font-size: 15px;line-height: 15px; font-weight: 500;">{{parsesubject(class.subject)}}</span>
+        <!-- // TODO -add leadig state  loadingClasses  -->
+        <ng-container *ngIf="!loadingClasses">
+          <div *ngFor="let class of classes index as i" class="col-lg-3 col-md-6 col-sm-6 col-12">  
+            <div (click)="chooseClass(i)" class="card card-statistic-1 grow2 classCard" [ngClass]="{'active-class':chosenIndex==i}">
+              <div class="card-icon classCardIcon">
+                <div class="d-flex flex-column justify-content-center align-items-center h-100 ">
+                  <i class="fas {{parsesubjectIcon(class.subject)}} mb-1"></i>
+                  <span class=" text-light" style="font-size: 15px;line-height: 15px; font-weight: 500;">{{parsesubject(class.subject)}}</span>
+                </div>
               </div>
-            </div>
-            <div class="h-100 flex-containerr">
-              <div class="padding-20">
-                <div class="flex-containerr">
-                  <h4 class="text-light mb-2">{{class.name}}</h4>
-                  <span class="font-light  text-light">
-                    <i class="ti-arrow-up text-light">code : {{class.uuid}}</i>
-                  </span>
-                  
+              <div class="h-100 flex-containerr">
+                <div class="padding-20">
+                  <div class="flex-containerr">
+                    <h4 class="text-light mb-2">{{class.name}}</h4>
+                    <span class="font-light  text-light">
+                      <i class="ti-arrow-up text-light">code : {{class.uuid}}</i>
+                    </span>
+                    
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="{{classes&&classes.length%4==0?'col-12 ':'col-lg-3 col-md-6 col-sm-6 col-12'}} ">
+        </ng-container>
+        <ng-container *ngIf="loadingClasses">
+          <div *ngFor="let i of [].constructor(classesCount)" class="col-lg-3 col-md-6 col-sm-6 col-12">
+            <div class="card card-statistic-1 grow2 classCard">
+              <app-sceleton-load [type]="1" [height]="100" [width]="-1" [border]="10"></app-sceleton-load>
+            </div> 
+          </div>
+        </ng-container>
+
+        <div class="{{(classes&&classes.length%4==0&&!loadingClasses)||(classesCount%4==0)?'col-12':'col-lg-3 col-md-6 col-sm-6 col-12'}} ">
           <div class=" add-bttn d-flex flex-column justify-content-center align-items-center grow3  ">
             <button (click)="openModel(true)" title="add new class" class="button-four"><i
                 class="fas fa-plus col-white "></i></button>

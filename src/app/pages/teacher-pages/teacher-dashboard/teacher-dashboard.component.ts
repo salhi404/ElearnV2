@@ -38,11 +38,13 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
   addnotEdit = true;
   selectedEventCount: number[] = [];
   selectedEventCounttoday: number[] = [];
+  classesCount:number=0;
   form: any = {
     class: '',
     subject: 1,
   }
   @ViewChild("modalDialog") modalDialog!: ElementRef;
+  loadingClasses: boolean=true;
   constructor(private storageService: StorageService, private authService: AuthService, private teacherservice: TeacherService, private events: EventsService, private router: Router) { }
   swithroutes(url:string){
     switch (url) {
@@ -84,11 +86,12 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
             this.roles = parseroles(this.user.roles);
             this.mainRole = getmainrole(this.roles);
             this.mainRolecode = getmainrolecode(this.user.roles);
+            this.classesCount = this.user.info.classesCount;
+            // console.log("this.classesCount = ",this.classesCount);
             // if(!this.roles.includes('Teacher')){
             //   this.navigationExtras={ state: {errorNbr:403} };
             //   this.router.navigate(['/error'],this.navigationExtras);
             //   console.log("not autherised");
-
             // }
           }
           if (state.state == this.events.DALETEUSER) {
@@ -125,14 +128,8 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
         if (state.task == this.events.TASKGETCHOSENCLASS) {
           this.events.changeTaskState({ task: this.events.TASKCHOOSECLASSES, data: { chosenIndex: this.chosenIndex, chosenClass: this.chosenClass } })
         }
-
-
       })
-
-
-      this.getclasses(false); // TODO - implement reload with socket or add a button 
-
-
+      this.getclasses(false); // TODO - implement reload (online + new enrollers ...) with socket or add a button 
     } else {
       this.navigationExtras = { state: { errorNbr: 403 } };
       this.router.navigate(['/error'], this.navigationExtras);
@@ -159,17 +156,18 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
       next: data => {
         console.log("getClasses",data);
         if (data.classes) {
-          this.classes = data.classes;
-          this.classes.sort(function (a, b) {
+          this.classes = data.classes.sort(function (a:any, b:any) {
             return (new Date(a.created).getTime()) - (new Date(b.created).getTime());
           });
+          this.loadingClasses=false;
           this.getTodeyCalender();
           if (refresh) {
             this.events.changeclassInfoState({ state: 2, classes: this.classes });
+          }
+          else { 
+            this.events.changeclassInfoState({ state: 1, classes: this.classes }); 
 
           }
-          else { this.events.changeclassInfoState({ state: 1, classes: this.classes }); }
-         
         }
       },
       error: err => { console.log(err); }
@@ -177,7 +175,6 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
   }
   getTodeyCalender() {
     const todayDate = new Date();
-   
     let nextDate: Date = null as any;
     let date: Date;
     this.classes.forEach((classe:any,indd)=>{
@@ -259,9 +256,14 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
   }
   submitModal() {
     if (this.form.class === '') this.form.class = parsesubject(+this.form.subject) + ' Class';
+    this.loadingClasses=true;
     this.subscription2 = this.teacherservice.addclass(this.form.class, +this.form.subject).subscribe({
       next: data => {
         console.log("getClasses",data);
+        this.classesCount=data.count;
+        let tempp=this.user.info;
+        tempp.classesCount=this.classesCount;
+        this.storageService.alterUser({info:tempp});
         // TODO add loading fase + push only new class
         this.getclasses(false);
       },

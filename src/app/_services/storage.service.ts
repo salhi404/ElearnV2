@@ -73,7 +73,6 @@ export class StorageService {
   }
   public getUser(): User {
     const user = localStorage.getItem(USER_KEY);
-    //console.log(user);
     if (user) {
       const temp= JSON.parse(user);
       return this.parseUser(temp);
@@ -102,7 +101,7 @@ export class StorageService {
   }
   parseUser(json:any) :User{//alterauthuserdata   
     var user:User={username:"null",email:"null",roles:[],verified:false,pref:{darkTheme:false,miniSideBar:false},
-      profileImage:'??',USERDETAILS:{},contacts:[],fName:'',lName:'', birthDate:new Date(0),grade:-1}
+      profileImage:'??',USERDETAILS:{},contacts:[],fName:'',lName:'', birthDate:new Date(0),grade:-1,info:{classesCount:0,classesenrollCount:0}}//adduserinfo
     user.username=json.username?json.username:user.username;
     user.email=json.email?json.email:user.email;
     user.roles=json.roles?json.roles:user.roles;
@@ -115,6 +114,7 @@ export class StorageService {
     user.grade=json.grade?json.grade:user.grade;
     user.profileImage=json.profileImage?json.profileImage:user.profileImage;
     user.USERDETAILS=json.USERDETAILS?json.USERDETAILS:user.USERDETAILS;
+    user.info=json.info?json.info:user.info;
     return user;
   }
   public saveModMail(mod:any[]){
@@ -132,8 +132,6 @@ export class StorageService {
     localStorage.removeItem(MODMAIL_KEY);
   }
   public saveChatters(list:any[]){
-    console.log("chatters ");
-    console.log(list);
     localStorage.removeItem(Chatters_KEY);
     localStorage.setItem(Chatters_KEY, JSON.stringify(list));
   }

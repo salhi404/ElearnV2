@@ -2,6 +2,7 @@
     <section style="min-height: 800px;" class="section">
         <div class="divider"><span></span><span>Classes</span><span></span></div>
         <div class="row">
+          <ng-container *ngIf="!loadingClasses">
             <div *ngFor="let class of MyClasses index as i" class="col-lg-3 col-md-6 col-sm-6 col-12">
               <div (click)="chooseClass(i)" class="card card-statistic-1 grow2 classCard" [ngClass]="{'active-class':chosenIndex==i}" >
                 <div class="card-icon classCardIcon">
@@ -24,7 +25,16 @@
                 </div>
               </div>
             </div>
-            <div class="{{MyClasses&&MyClasses.length%4==0?' col-lg-6 offset-lg-3  col-md-8 offset-md-2 col-sm-12 col-12 ':'col-lg-3 col-md-6 col-sm-6 col-12'}} 2">
+          </ng-container>
+          <ng-container *ngIf="loadingClasses">
+            <div *ngFor="let i of [].constructor(classesenrollCount)" class="col-lg-3 col-md-6 col-sm-6 col-12">
+              <div class="card card-statistic-1 grow2 classCard">
+                <app-sceleton-load [type]="1" [height]="100" [width]="-1" [border]="10"></app-sceleton-load>
+              </div> 
+            </div>
+          </ng-container>
+
+            <div class="{{(MyClasses&&MyClasses.length%4==0&&!loadingClasses)||(classesenrollCount%4==0)?' col-lg-6 offset-lg-3  col-md-8 offset-md-2 col-sm-12 col-12 ':'col-lg-3 col-md-6 col-sm-6 col-12'}} 2">
                 <div   class="  d-flex flex-column justify-content-center align-items-center  ">
                 <div [ngClass]="{'add-bttn-Card-Expanded':expandAddcard}"  class="card add-bttn-Card  "  #cardAdd>
                   <div  [ngClass]="{'uuid-input-Expanded':expandAddcard,'uuid-input-display-non':!uuidDisplay}" class="uuid-input">

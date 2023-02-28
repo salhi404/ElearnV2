@@ -1,5 +1,6 @@
 import { Component , OnInit, OnDestroy, ViewChild, ElementRef, HostListener} from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
+import { StorageService } from 'app/_services/storage.service';
 import { User } from 'app/Interfaces/user';
 import { EventsService } from 'app/services/events.service';
 import { StudentService } from "app/_services/student.service";
@@ -27,11 +28,12 @@ export class ClassesComponent implements OnInit, OnDestroy {
   blockHostListener: boolean=false;
   submited=false;
   loading: boolean=false;
+  classesenrollCount:number=0;
+  loadingClasses: boolean=true;
+
   @ViewChild("cardAdd") cardAdd!: ElementRef;
   
-
-
-  constructor(private events: EventsService,private StudentService:StudentService) { }
+  constructor(private events: EventsService,private StudentService:StudentService,private storageService: StorageService) { }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
     this.subscription1.unsubscribe();
@@ -42,6 +44,7 @@ export class ClassesComponent implements OnInit, OnDestroy {
         console.log("userdataEvent 11");
         if(state.state==this.events.UPDATEUSER){
           this.user=state.userdata;
+          this.classesenrollCount = this.user.info.classesenrollCount;
         }
         if(state.state==this.events.DALETEUSER){
           this.user=null as any;
@@ -55,10 +58,10 @@ export class ClassesComponent implements OnInit, OnDestroy {
 
       next:data=>{
         console.log('get student classses data',data);
-        this.MyClasses=data.classes; //[{subject:"math",name:"rerer",uuid:'sdsd'}]
-        this.MyClasses.sort(function(a,b){          
+        this.MyClasses=data.classes.sort(function(a:any,b:any){          
           return (b.accepted?1:0)-(a.accepted?1:0)
         })
+          this.loadingClasses=false;
       },
       error:err=>{
         console.log('get student classes error',err);
@@ -103,6 +106,10 @@ export class ClassesComponent implements OnInit, OnDestroy {
         next:data=>{
           this.submited=false;
           this.closeAddClass();
+          this.classesenrollCount=data.count;
+          let tempp=this.user.info;
+          tempp.classesenrollCount=this.classesenrollCount;
+          this.storageService.alterUser({info:tempp});
           this.getClasses();
           this.loading=false;
         },

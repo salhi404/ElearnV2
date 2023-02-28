@@ -12,6 +12,7 @@ export interface User{
     grade:number,
     profileImage:string,
     USERDETAILS:any,
+    info:any,
     //fromTo:User
 }
 export interface UserPublic{

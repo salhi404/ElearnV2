@@ -8,7 +8,7 @@ import { Component, OnInit,Input } from '@angular/core';
 export class SceletonLoadComponent implements OnInit {
   @Input()type:number=2;
   @Input()height:number=8;
-  @Input()width:number=8;
+  @Input()width:number=-1;
   @Input()border:number=8;
   constructor() { }
 
