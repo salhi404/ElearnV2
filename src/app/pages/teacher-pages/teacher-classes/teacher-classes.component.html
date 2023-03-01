@@ -93,7 +93,7 @@
                 {{selectedUser.accepted?'Accepted':'Waiting'}}</span>
               <span (click)="changeStatus()"
                 [ngClass]="{'btn-info':changeRoleResult==-1&&!selectedUser.accepted,'btn-warning':changeRoleResult==-1&&selectedUser.accepted,' pointer':changeRoleResult==-1,'btn-success':changeRoleResult==1,'btn-danger':changeRoleResult==2}"
-                class="btn btn-info d-flex justify-content-center align-items-center">
+                class="btn d-flex justify-content-center align-items-center">
                 {{changeRoleResult==-1?selectedUser.accepted?'Reject':'Accept':changeRoleResult==1?'success':'failed'}}
                 <span *ngIf="loading" class="mx-2"></span>
                 <app-spinner *ngIf="loading" [type]="1"></app-spinner></span>
