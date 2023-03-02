@@ -7,6 +7,7 @@ import { AuthService } from 'app/_services/auth.service';
 import { TeacherService } from 'app/_services/teacher.service';
 import { EventsService } from 'app/services/events.service';
 import { parsegrade, parseroles, getmainrole, getmainrolecode, parsesubject, parsesubjectIcon } from 'app/functions/parsers';
+import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-teacher-dashboard',
   templateUrl: './teacher-dashboard.component.html',
@@ -38,7 +39,9 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
   addnotEdit = true;
   selectedEventCount: number[] = [];
   selectedEventCounttoday: number[] = [];
+  selectednextEvent: Date[] = [];
   classesCount:number=0;
+  datepipe: DatePipe = new DatePipe('en-US');
   form: any = {
     class: '',
     subject: 1,
@@ -65,7 +68,6 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
         break;
     }
   }
-  
   ngOnInit(): void {
     this.swithroutes(this.router.url);
     this.router.events.pipe(
@@ -127,6 +129,20 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
         }
         if (state.task == this.events.TASKGETCHOSENCLASS) {
           this.events.changeTaskState({ task: this.events.TASKCHOOSECLASSES, data: { chosenIndex: this.chosenIndex, chosenClass: this.chosenClass } })
+        }
+        if (state.task == this.events.TASKUPDATECLASSEVENT) {
+          if(state.data.tasktype==1){
+            this.classes.find(cll=>cll.uuid==state.data.classid)?.data.events.push(state.data.event);
+            this.updateventcount(new Date(state.data.event.start),state.data.classind,true);
+          }
+          if(state.data.tasktype==2){
+            const findclass=this.classes.find(cll=>cll.uuid==state.data.classid);
+            if(findclass){
+              const index = findclass.data.events.findIndex((evv:any)=>evv.id==state.data.event.id);
+              findclass.data.events[index] = state.data.event
+            }
+            this.updateventcount(new Date(state.data.event.start),state.data.classind,false);
+          }
         }
       })
       this.getclasses(false); // TODO - implement reload (online + new enrollers ...) with socket or add a button 
@@ -192,9 +208,22 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
       })
       this.selectedEventCount[indd]=classe.data.events.length;
       this.selectedEventCounttoday[indd]=todeyCount;
+      this.selectednextEvent[indd]=nextDate;
     })
     // console.log("todeyCount :   ",todeyCount);
     
+
+  }
+  updateventcount(date:any,indd:number,addnotedit:boolean){
+    const todayDate = new Date();
+    let nextDate: Date = this.selectednextEvent[indd];
+    if(addnotedit)this.selectedEventCount[indd]++;
+    if (
+      date.getDate() === todayDate.getDate() &&
+      date.getMonth() === todayDate.getMonth() &&
+      date.getFullYear() === todayDate.getFullYear()
+    )this.selectedEventCounttoday[indd]++;
+    if ( date.getTime() < nextDate.getTime())this.selectednextEvent[indd]=date;
 
   }
   getconnectedchaters(uuid: string) {

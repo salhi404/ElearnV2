@@ -27,7 +27,7 @@ export class TeacherEventsComponent implements OnInit, AfterViewInit {
   subscription: Subscription = new Subscription();
   subscription1: Subscription = new Subscription();
   chosenClass: any = null;
-  
+  chosenIndex:number=-1;
   //-------------------------------------------------------------------------------
   
   @ViewChild(FullCalendarComponent) calendarElement!: FullCalendarComponent;
@@ -114,6 +114,7 @@ export class TeacherEventsComponent implements OnInit, AfterViewInit {
     this.subscription = this.events.taskEvent.subscribe(state => {
       if (state.task == this.events.TASKCHOOSECLASSES) {
         this.chosenClass = state.data.chosenClass;
+        this.chosenIndex= state.data.chosenIndex;
         if(this.chosenClass)this.loadevents(); //this.getclassevents(this.chosenClass.uuid);
       }
       if (state.task == this.events.TASKCONNECTEDRECIEVED) {
@@ -400,6 +401,7 @@ loadevents(){
         this.teacherservice.addclassevent(this.chosenClass.uuid,event).subscribe({
           next:data=>{
             this.calendarApi.getEventById(this.tempId)?.setProp('id',data.event.id);
+            this.events.changeTaskState({task:this.events.TASKUPDATECLASSEVENT,data:{tasktype:1,classid:this.chosenClass.uuid,classind:this.chosenIndex,event:data.event}});
           },
           error:err=>{
             console.log('err');
@@ -414,6 +416,7 @@ loadevents(){
         this.calendarApi.getEventById(this.eventToEdit)?.setProp('color',event.color);
         this.teacherservice.editclassevent(this.chosenClass.uuid,this.eventToEdit,event).subscribe({
           next:data=>{
+            this.events.changeTaskState({task:this.events.TASKUPDATECLASSEVENT,data:{tasktype:2,classid:this.chosenClass.uuid,classind:this.chosenIndex,event:event}});
           },
           error:err=>{
             console.log('err');
@@ -422,11 +425,7 @@ loadevents(){
         });
       }
       }
-
-    
     this.closeModel();
-
-    
   }
   @HostListener('document:click', ['$event'])
   clickout(event:any) {

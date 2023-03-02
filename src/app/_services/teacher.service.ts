@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { StorageService } from './storage.service';
-// const URL_API = 'http://192.168.1.103:3000/'; 
+const URL_API = 'http://192.168.1.103:3000/'; 
 // const URL_API = 'https://frantic-colt-leather-jacket.cyclic.app/';
-const URL_API = 'https://starter-express-api-production-816a.up.railway.app/';
+// const URL_API = 'https://starter-express-api-production-816a.up.railway.app/';
 const TEACHER_API = URL_API+'api/teacher/';
 //Teacher service  
 const httpOptions = {
@@ -28,6 +28,8 @@ export class TeacherService {
     const token = this.storageService.getTokent();
     return this.http.post(TEACHER_API + 'editacceptedstudent', {token,classrm,student,isAccepting}, httpOptions);
   }
+
+  //------------- Events -------------//
   getClassEvents(uuid:string): Observable<any> {
     const token = this.storageService.getTokent();
     return this.http.post(TEACHER_API + 'getclassevents', {token,uuid}, httpOptions);
@@ -45,8 +47,18 @@ export class TeacherService {
     const token = this.storageService.getTokent();
     return this.http.post(TEACHER_API + 'deleteclassevent', {token,uuid,eventId}, httpOptions);
   }
-  
-
-
+    //------------- Notifications -------------//
+    getclassnotif(uuid:string): Observable<any> {
+      const token = this.storageService.getTokent();
+      return this.http.post(TEACHER_API + 'getclassnotif', {token,uuid}, httpOptions);
+    }
+  addclassnotif(uuid:string,notif:any): Observable<any> {
+    const token = this.storageService.getTokent();
+    return this.http.post(TEACHER_API + 'addclassnotif', {token,uuid,notif}, httpOptions);
+  }
+  editclassnotif(uuid:string,notif:any): Observable<any> {
+    const token = this.storageService.getTokent();
+    return this.http.post(TEACHER_API + 'editclassnotif', {token,uuid,notif}, httpOptions);
+  }
 
 }

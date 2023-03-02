@@ -25,17 +25,33 @@
       <div class="card-body">
         <div *ngIf="!editing" class="table-responsive">
           <table class="table table-striped">
-            <thead class="centerColumn">
+            <thead> <!--class="centerColumn"--> 
               <th>Type</th>
               <th>Time</th>
               <th>Notification</th>
               <th>Status</th>
+              <th>Action</th>
               <th>Edit</th>
             </thead>
             <tbody>
-              <tr *ngFor="let notification of chosenClass?.data.notifications">
+              <tr *ngFor="let notification of chosenClass?.data.notifications ,index as i">
                 <td>
+                  <div *ngIf="notification.type==1" class="d-flex justify-content-start align-items-center flex-row" ><i class="material-icons text-muted mr-1">event</i> <span class="text-muted">Event</span> </div>
+                  <div *ngIf="notification.type==2" class="d-flex justify-content-start align-items-center flex-row" ><i class="material-icons text-danger mr-1">voice_chat</i> <span class="text-danger">Live Stream</span> </div>             
+                  <div *ngIf="notification.type==3" class="d-flex justify-content-start align-items-center flex-row" ><i class="material-icons text-muted mr-1">notifications</i> <span class="text-muted">Notification</span> </div> 
                 </td>
+                <td>{{notification.send==1?'now':notification.send==2?datepipe.transform(notification.time,'dd-MM-yyyy HH:mm'):''}}</td>
+                <td> {{notification.notification}}</td>
+                <td>
+                  <span *ngIf="notification.status==1" class="text-danger" >not sent</span>
+                  <span *ngIf="notification.status==2" class="text-info" >en queue</span>
+                  <span *ngIf="notification.status==3" class="text-success" >sent</span>
+                  <td>
+                    <div (click)="notification" *ngIf="notification.status==1" class="btn btn-success pointer">send</div>
+                    <div (click)="notification" *ngIf="notification.status==2" class="btn btn-warning pointer">un queue</div>
+                    <div (click)="notification" *ngIf="notification.status==3" class="btn btn-warning pointer">unsend</div>
+                  </td>
+                <td><div (click)="editNotif(i)"  class="btn btn-info pointer">edit</div></td>
               </tr>
               <tr *ngIf="chosenClass?.data.notifications.length==0">
                 <td></td>
@@ -43,12 +59,14 @@
                 <td><span class="d-flex justify-content-center align-items-center">click the plus button to add a
                     notification</span></td>
                 <td></td>
+                <td></td>
                 <td> </td>
               </tr>
               <tr class="invisible2">
                 <td>live stream</td>
                 <td>2/28/2023 15:50</td>
                 <td>this is an example of a notification and it's used as a place holder </td>
+                <td>Action btn</td>
                 <td>sent</td>
                 <td> <span class="btn btn-info d-flex justify-content-center align-items-center">send</span></td>
               </tr>

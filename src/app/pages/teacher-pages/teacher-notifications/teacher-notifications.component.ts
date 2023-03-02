@@ -4,7 +4,7 @@ import { User } from 'app/Interfaces/user';
 import { EventsService } from 'app/services/events.service';
 import { AuthService } from 'app/_services/auth.service';
 import { TeacherService } from 'app/_services/teacher.service';
-import { parsesubject, parsesubjectIcon, parsegrade } from 'app/functions/parsers';
+import { parsenotifstatus } from 'app/functions/parsers';
 import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-teacher-notifications',
@@ -23,6 +23,7 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
   addnotEdit:boolean=true;
   formInvalid:number=-1;
   formInvalidmsg:string='';
+  notifIdToedit=-1;
   form={
     type:'',
     send:'',
@@ -55,6 +56,22 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
     this.editing = true;
     this.addnotEdit=true;
   }
+  editNotif(ind:number){
+    this.form={
+      type:this.chosenClass.data.notifications[ind].type+'',
+      send:this.chosenClass.data.notifications[ind].send+'',//2023-03-22T00:31
+      time:this.datepipe.transform(this.chosenClass.data.notifications[ind].time,'yyyy-MM-ddThh:mm')||'',
+      notification:this.chosenClass.data.notifications[ind].notification,
+      status:this.chosenClass.data.notifications[ind].status+''
+    }
+    console.log("this.chosenClass.data.notifications[ind]",this.chosenClass.data.notifications[ind]);
+    
+    this.notifIdToedit=this.chosenClass.data.notifications[ind].id;
+    this.formInvalid=-1;
+    this.formInvalidmsg='';
+    this.editing = true;
+    this.addnotEdit=false;
+  }
   testt(){
   }
   edit(user: string) {
@@ -76,14 +93,49 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
         this.formInvalidmsg='';
       }
     }
+    if(this.form.notification==='')this.form.notification="new Notification";
+    let notifTosend:any={type:+this.form.type,send:+this.form.send,time:new Date(this.form.time),notification:this.form.notification,status:+this.form.status};
+    console.log("notifTosend = ",notifTosend);
+    if(notifTosend.send==1)notifTosend.time=new Date();
     if(this.addnotEdit){
+      notifTosend.status='1';
+       this.teacherservice.addclassnotif(this.chosenClass.uuid,notifTosend).subscribe({
+        next:data=>{
+          console.log("addclassnotif : ",data);
+          this.backToList();
+        },
+        error:err=>{
+          console.log('err');
+          console.log(err);
+        }
+      });
+    }else{
+      notifTosend.id=this.notifIdToedit;
+      console.log("this.notifIdToedit",this.notifIdToedit);
       
+      this.teacherservice.editclassnotif(this.chosenClass.uuid,notifTosend).subscribe({
+        next:data=>{
+          console.log("editclassnotif : ",data);
+          this.backToList();
+        },
+        error:err=>{
+          console.log('err');
+          console.log(err);
+        }
+      });
     }
     return 0
   }
+  clean(){
+    this.form={type:'',send:'',time:'',notification:'',status:'',};
+  }
   backToList() {
     //this.form={user:false,teacher:false,moderator:false,admin:false}
+    this.clean();
     this.editing = false;
     console.log("backToList");
+  }
+  parsenotifstatus(status:number):string{
+    return parsenotifstatus(status)
   }
 }

@@ -114,13 +114,22 @@ export class RootComponent implements OnInit, OnDestroy {
     if (this.isLoggedIn) {
       this.user = this.storageService.getUser();
       this.authService.verifyJwt().subscribe({next:data=>{
-        if(!data.verified)this.logout();
+        if(!data.verified){
+          this.logout();
+        }else{
+          if(data.user){
+            this.storageService.alterUser(data.user);
+            this.user = this.storageService.getUser();
+            // console.log("user updated ",this.user);
+            this.events.changeuserdataState({state:1,userdata:this.user});
+          }
+        }
       },error:err=>{
        // if(!err.verified)this.logout();
        // TODO - add a "server is down page"
-       // TODO - handle user deletion or so "
+       // TODO - handle user update,deletion ... "
       }});
-      this.events.changeuserdataState({state:1,userdata:this.user});
+      
     }
     if (this.state.islogged) {
       this.isLoggedIn = this.state.islogged;

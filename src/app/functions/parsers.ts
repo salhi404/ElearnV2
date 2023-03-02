@@ -63,3 +63,17 @@ export function getmainrole(roles:string[]):string{
 export function getmainrolecode(roles:string[]):number{
     return roles.includes('ROLE_ADMIN')?1:roles.includes('ROLE_MODERATOR')?2:roles.includes('ROLE_TEACHER')?3:4;
 }
+
+
+export function parsenotifstatus(status:number):string{
+  switch (status) {
+      case 1: return 'not sent';
+      case 2: return 'en queue';
+      case 3: return 'sent';
+  }
+  return '';
+}
+
+
+
+
