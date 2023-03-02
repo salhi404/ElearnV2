@@ -39,7 +39,7 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
   addnotEdit = true;
   selectedEventCount: number[] = [];
   selectedEventCounttoday: number[] = [];
-  selectednextEvent: Date[] = [];
+  // selectednextEvent: Date[] = [];
   classesCount:number=0;
   datepipe: DatePipe = new DatePipe('en-US');
   form: any = {
@@ -208,7 +208,7 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
       })
       this.selectedEventCount[indd]=classe.data.events.length;
       this.selectedEventCounttoday[indd]=todeyCount;
-      this.selectednextEvent[indd]=nextDate;
+      // this.selectednextEvent[indd]=nextDate;
     })
     // console.log("todeyCount :   ",todeyCount);
     
@@ -216,14 +216,14 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
   }
   updateventcount(date:any,indd:number,addnotedit:boolean){
     const todayDate = new Date();
-    let nextDate: Date = this.selectednextEvent[indd];
+    // let nextDate: Date = this.selectednextEvent[indd];
     if(addnotedit)this.selectedEventCount[indd]++;
     if (
       date.getDate() === todayDate.getDate() &&
       date.getMonth() === todayDate.getMonth() &&
       date.getFullYear() === todayDate.getFullYear()
     )this.selectedEventCounttoday[indd]++;
-    if ( date.getTime() < nextDate.getTime())this.selectednextEvent[indd]=date;
+    // if ( date.getTime() < nextDate.getTime())this.selectednextEvent[indd]=date;
 
   }
   getconnectedchaters(uuid: string) {

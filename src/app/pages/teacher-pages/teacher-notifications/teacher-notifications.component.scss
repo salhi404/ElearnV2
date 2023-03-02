@@ -25,3 +25,25 @@
   .centerColumn>*{
     text-align: center;
   }
+
+  .showDD{
+    display: block;
+  }
+  .tablenotif{
+    // border: 2px solid red;
+    // overflow: hidden;
+    padding-bottom: 50px;
+  }
+  .spacerinTable{
+    height: 10px;
+  }
+  .iconBtnActive{
+    border: 1px solid #007bff;
+  }
+  .DDicon{
+    font-size: 19px!important;
+    width: 19px;
+    margin-left: 2px;
+    position: relative;
+    bottom: 3px;
+  }

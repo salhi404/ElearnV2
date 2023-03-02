@@ -23,9 +23,9 @@
         </div>
       </div>
       <div class="card-body">
-        <div *ngIf="!editing" class="table-responsive">
-          <table class="table table-striped">
-            <thead> <!--class="centerColumn"--> 
+        <div *ngIf="!editing" class="table-responsive tablenotif">
+          <table class="  table table-striped">
+            <thead> <!--class="centerColumn"-->
               <th>Type</th>
               <th>Time</th>
               <th>Notification</th>
@@ -36,22 +36,50 @@
             <tbody>
               <tr *ngFor="let notification of chosenClass?.data.notifications ,index as i">
                 <td>
-                  <div *ngIf="notification.type==1" class="d-flex justify-content-start align-items-center flex-row" ><i class="material-icons text-muted mr-1">event</i> <span class="text-muted">Event</span> </div>
-                  <div *ngIf="notification.type==2" class="d-flex justify-content-start align-items-center flex-row" ><i class="material-icons text-danger mr-1">voice_chat</i> <span class="text-danger">Live Stream</span> </div>             
-                  <div *ngIf="notification.type==3" class="d-flex justify-content-start align-items-center flex-row" ><i class="material-icons text-muted mr-1">notifications</i> <span class="text-muted">Notification</span> </div> 
+                  <div *ngIf="notification.type==1" class="d-flex justify-content-start align-items-center flex-row"><i
+                      class="material-icons text-muted mr-1">event</i> <span class="text-muted">Event</span> </div>
+                  <div *ngIf="notification.type==2" class="d-flex justify-content-start align-items-center flex-row"><i
+                      class="material-icons text-danger mr-1">voice_chat</i> <span class="text-danger">Live
+                      Stream</span> </div>
+                  <div *ngIf="notification.type==3" class="d-flex justify-content-start align-items-center flex-row"><i
+                      class="material-icons text-muted mr-1">notifications</i> <span
+                      class="text-muted">Notification</span> </div>
                 </td>
                 <td>{{notification.send==1?'now':notification.send==2?datepipe.transform(notification.time,'dd-MM-yyyy HH:mm'):''}}</td>
                 <td> {{notification.notification}}</td>
                 <td>
-                  <span *ngIf="notification.status==1" class="text-danger" >not sent</span>
-                  <span *ngIf="notification.status==2" class="text-info" >en queue</span>
-                  <span *ngIf="notification.status==3" class="text-success" >sent</span>
-                  <td>
-                    <div (click)="notification" *ngIf="notification.status==1" class="btn btn-success pointer">send</div>
-                    <div (click)="notification" *ngIf="notification.status==2" class="btn btn-warning pointer">un queue</div>
-                    <div (click)="notification" *ngIf="notification.status==3" class="btn btn-warning pointer">unsend</div>
-                  </td>
-                <td><div (click)="editNotif(i)"  class="btn btn-info pointer">edit</div></td>
+                  <span *ngIf="notification.status==1" class="text-danger">not sent</span>
+                  <span *ngIf="notification.status==2" class="text-info">en queue</span>
+                  <span *ngIf="notification.status==3" class="text-success">sent</span>
+                <td>
+                  <div (click)="notification" *ngIf="notification.status==1" class="btn btn-success pointer">send</div>
+                  <div (click)="notification" *ngIf="notification.status==2" class="btn btn-warning pointer">un queue
+                  </div>
+                  <div (click)="notification" *ngIf="notification.status==3" class="btn btn-warning pointer">unsend
+                  </div>
+                </td>
+                <td>
+                  <div class="dropdown preventunselect">
+                    <div (click)="toggleDD(i)" class="iconBtn" [ngClass]="{'iconBtnActive':showDD[i]}" >
+                      <div class="iconBtnBack ">
+                        <a class="col-dark-gray waves-effect">
+                          <i class="material-icons">more_vert</i>
+                        </a>
+                      </div>
+                    </div>
+                    <div [ngClass]="{'showDD':showDD[i]}" class="dropdown-menu dropdown-menu-right" #moreDD>
+                      <a (click)="editNotif(i)" class="dropdown-item has-icon col-black pointer"><i class="far fa-edit"></i>
+                        Edit</a>
+                      <div class="dropdown-divider"></div>
+                      <a (click)="removeNotif(i)" class="dropdown-item has-icon text-danger pointer">
+                        <i class="far fa-trash-alt"></i>
+                        remove (from list)</a>
+                      <a (click)="deleteNotif(i)" class="dropdown-item has-icon text-danger pointer">
+                        <i class="material-icons text-danger DDicon">delete_forever</i>
+                        
+                        Delete (for everyone)</a>
+                    </div>
+                  </div>
               </tr>
               <tr *ngIf="chosenClass?.data.notifications.length==0">
                 <td></td>
@@ -70,81 +98,85 @@
                 <td>sent</td>
                 <td> <span class="btn btn-info d-flex justify-content-center align-items-center">send</span></td>
               </tr>
+              <div class="spacerinTable "></div>
             </tbody>
           </table>
         </div>
         <div *ngIf="editing">
-            <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
-              <div class="form-group row">
-                <label for="type" class="col-sm-2 col-form-label">Type :</label>
-                <div class="col-sm-8">
-                  <select class="form-control" [(ngModel)]="form.type" required #type="ngModel"
-                  type="text" name="type" id="type" autocomplete="off"
-                  [ngClass]="{'border-danger':(type.errors && f.submitted)}" ><!--(change)="userExisted=false;changed=true"-->
+          <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
+            <div class="form-group row">
+              <label for="type" class="col-sm-2 col-form-label">Type :</label>
+              <div class="col-sm-8">
+                <select class="form-control" [(ngModel)]="form.type" required #type="ngModel" type="text" name="type"
+                  id="type" autocomplete="off"
+                  [ngClass]="{'border-danger':(type.errors && f.submitted)}"><!--(change)="userExisted=false;changed=true"-->
                   <option value="1">event</option>
                   <option value="2">liveStream</option>
                   <option value="3">custom</option>
                 </select>
-                </div>
+              </div>
 
-                <!-- <div class="invalid-feedback" *ngIf="(type.errors && f.submitted)">
+              <!-- <div class="invalid-feedback" *ngIf="(type.errors && f.submitted)">
                   <div>type date is required</div>
                 </div> -->
-              </div>
-              <fieldset class="form-group">
-                <div class="row">
-                  <div class="col-form-label col-sm-2 pt-0">Date to send</div>
-                  <div class="col-sm-9">
-                      <div class="custom-control custom-radio">
-                        <input type="radio" id="now" class="custom-control-input"
-                        name="send" value="1" [(ngModel)]="form.send" #now >
-                        <label class="custom-control-label" for="now">now</label>
-                      </div>
-                      <div class="custom-control custom-radio"> 
-                      <div class="row">
-                        <div class="col-sm-2 mt-2">
-                          <input type="radio" id="later" class="custom-control-input" 
-                          name="send" value="2" [(ngModel)]="form.send" #later>
-                          <label  class="custom-control-label" for="later">Later at :</label>
-                        </div>
-                        <div class="col-sm-9 ">
-                          <input [ngClass]="{'border-danger':((time.errors && f.submitted)||formInvalid==1)&&form.send==='2'}" required id="time" class="form-control"
-                           name="time"  [(ngModel)]="form.time" #time="ngModel" type="datetime-local" [disabled]="form.send==='2' ? false :true">
-                          <div class="invalid-feedback" *ngIf="(time.errors && f.submitted)">
-                            <div>you need to se a date</div>
-                          </div>
-                          <div class="invalid-feedback" *ngIf="(formInvalid==1)&&form.send==='2'">
-                            {{formInvalidmsg}}
-                          </div>
-                        </div>
-
-                      </div>
-                      </div>
-                  </div>
-                </div>
-              </fieldset>
-              <div class="form-group row ">
-                <div class="col-form-label col-sm-2 pt-2">Notification</div>
+            </div>
+            <fieldset class="form-group">
+              <div class="row">
+                <div class="col-form-label col-sm-2 pt-0">Date to send</div>
                 <div class="col-sm-9">
-                  <input id="notification" type="text" class="form-control" name="notification" [(ngModel)]="form.notification"
-                   maxlength="200" #notification="ngModel" placeholder="new Notification " type="text">
-                </div>
-                <div class="invalid-feedback" *ngIf="notification.errors ">
-                  <div *ngIf="notification.errors['required']">Last Name is required</div>
-                  <div *ngIf="notification.errors['maxlength']">
-                    the Notification text must be at most 200 characters
+                  <div class="custom-control custom-radio">
+                    <input type="radio" id="now" class="custom-control-input" name="send" value="1"
+                      [(ngModel)]="form.send" #now>
+                    <label class="custom-control-label" for="now">now</label>
+                  </div>
+                  <div class="custom-control custom-radio">
+                    <div class="row">
+                      <div class="col-sm-2 mt-2">
+                        <input type="radio" id="later" class="custom-control-input" name="send" value="2"
+                          [(ngModel)]="form.send" #later>
+                        <label class="custom-control-label" for="later">Later at :</label>
+                      </div>
+                      <div class="col-sm-9 ">
+                        <input
+                          [ngClass]="{'border-danger':((time.errors && f.submitted)||formInvalid==1)&&form.send==='2'}"
+                          required id="time" class="form-control" name="time" [(ngModel)]="form.time" #time="ngModel"
+                          type="datetime-local" [disabled]="form.send==='2' ? false :true">
+                        <div class="invalid-feedback" *ngIf="(time.errors && f.submitted)">
+                          <div>you need to se a date</div>
+                        </div>
+                        <div class="invalid-feedback" *ngIf="(formInvalid==1)&&form.send==='2'">
+                          {{formInvalidmsg}}
+                        </div>
+                      </div>
+
+                    </div>
                   </div>
                 </div>
               </div>
-                <button class=" registerBtn btn btn-primary ml-auto">
-                  <span>{{addnotEdit?'Add':'Edit'}}</span>
-                  <span *ngIf="loading" class="mx-2"></span>
-                  <app-spinner *ngIf="loading" [type]="1"></app-spinner>
-                </button>
-                <!-- <div class="invalid-feedback" *ngIf="formInvalid>-1">
+            </fieldset>
+            <div class="form-group row ">
+              <div class="col-form-label col-sm-2 pt-2">Notification</div>
+              <div class="col-sm-9">
+                <input id="notification" type="text" class="form-control" name="notification"
+                  [(ngModel)]="form.notification" maxlength="200" #notification="ngModel"
+                  placeholder="new Notification " type="text">
+              </div>
+              <div class="invalid-feedback" *ngIf="notification.errors ">
+                <div *ngIf="notification.errors['required']">Last Name is required</div>
+                <div *ngIf="notification.errors['maxlength']">
+                  the Notification text must be at most 200 characters
+                </div>
+              </div>
+            </div>
+            <button class=" registerBtn btn btn-primary ml-auto">
+              <span>{{addnotEdit?'Add':'Edit'}}</span>
+              <span *ngIf="loading" class="mx-2"></span>
+              <app-spinner *ngIf="loading" [type]="1"></app-spinner>
+            </button>
+            <!-- <div class="invalid-feedback" *ngIf="formInvalid>-1">
                   {{formInvalidmsg}}
                 </div> -->
-            </form>
+          </form>
         </div>
       </div>
     </div>

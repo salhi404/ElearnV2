@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, HostListener } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
-import { User } from 'app/Interfaces/user';
+import {  Subscription } from 'rxjs';
 import { EventsService } from 'app/services/events.service';
 import { AuthService } from 'app/_services/auth.service';
 import { TeacherService } from 'app/_services/teacher.service';
@@ -12,6 +11,7 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./teacher-notifications.component.scss']
 })
 export class TeacherNotificationsComponent implements OnInit, OnDestroy {
+  @ViewChild("moreDD") moreDD!: ElementRef;
   subscription: Subscription = new Subscription();
   subscription1: Subscription = new Subscription();
   subscription2: Subscription = new Subscription();
@@ -24,6 +24,9 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
   formInvalid:number=-1;
   formInvalidmsg:string='';
   notifIdToedit=-1;
+  showDD: boolean[] = [];
+  blockcloseDD: boolean = false;
+  openedDD:number=-1;
   form={
     type:'',
     send:'',
@@ -40,14 +43,28 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscription = this.events.taskEvent.subscribe(state => {
       if (state.task == this.events.TASKCHOOSECLASSES) {
-        this.chosenClass = state.data.chosenClass;
+        console.log("reciever class TASKCHOOSECLASSES 1",state.data.chosenClass);
+        
+        this.putClass(state.data.chosenClass)
         // if (this.selectedUser) this.selectedUser = this.chosenClass.enrollers.find((userr: any) => userr.email == this.selectedUser.email);
       }
       if (state.task == this.events.TASKCONNECTEDRECIEVED) {
-        if(this.chosenClass&&this.chosenClass.uuid===state.data.connectedfor) this.chosenClass = state.data.chosenClass;
+        console.log("reciever class TASKCONNECTEDRECIEVED 2",state.data.chosenClass);
+        if(this.chosenClass&&this.chosenClass.uuid===state.data.connectedfor){
+          this.putClass(state.data.chosenClass)
+        } 
       }
     })
     this.events.changeTaskState({task:this.events.TASKGETCHOSENCLASS,data:null});
+  }
+  putClass(classe:any){
+    this.chosenClass =classe;
+    if(classe){
+      this.showDD= Array(classe.data.notifications.length).fill(false);
+      console.log("this.showDD = ",this.showDD);
+    }
+
+    
   }
   addNotif(){
     this.form={type:'3',send:'1',time:'',notification:'',status:''}
@@ -65,12 +82,20 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
       status:this.chosenClass.data.notifications[ind].status+''
     }
     console.log("this.chosenClass.data.notifications[ind]",this.chosenClass.data.notifications[ind]);
-    
     this.notifIdToedit=this.chosenClass.data.notifications[ind].id;
     this.formInvalid=-1;
     this.formInvalidmsg='';
     this.editing = true;
     this.addnotEdit=false;
+    this.toggleDD(this.openedDD);
+  }
+  deleteNotif(ind:number){
+    const notifToDelete=this.chosenClass.data.notifications[ind].id;
+    
+  }
+  removeNotif(ind:number){
+    const notifToDelete=this.chosenClass.data.notifications[ind].id;
+    
   }
   testt(){
   }
@@ -138,4 +163,25 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
   parsenotifstatus(status:number):string{
     return parsenotifstatus(status)
   }
+  toggleDD(ind:number) {
+    if (this.openedDD!=-1&&this.openedDD!=ind) {
+      this.showDD[this.openedDD] = false;
+    }
+    this.showDD[ind] = !this.showDD[ind];
+    this.openedDD=ind;
+    this.blockcloseDD = true;
+    setTimeout(() => {
+      this.blockcloseDD = false;
+    }, 300);
+  }
+  @HostListener('document:click', ['$event'])
+  clickout(event: any) {
+    if (this.chosenClass&&this.showDD.length>0) {
+      if (!this.moreDD?.nativeElement.contains(event.target) && !this.blockcloseDD && this.openedDD>-1) {
+        this.showDD[this.openedDD] = false;
+        this.openedDD=-1;
+    }
+    }
+
+}
 }

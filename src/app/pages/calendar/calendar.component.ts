@@ -236,7 +236,7 @@ export class CalendarComponent implements OnInit, AfterViewInit {
       this.showModel(2);
     }
   }
-  ShowDD() {
+  toggleDD() {
     this.showDD = !this.showDD;
     this.blockcloseDD = true;
     setTimeout(() => {

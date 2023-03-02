@@ -23,6 +23,7 @@ export class TeacherClassesComponent implements OnInit, OnDestroy {
   loading: boolean = false;
   changeRoleResult = -1;
   datepipe: DatePipe = new DatePipe('en-US');
+  // TODO - implement adding a new student 
   constructor(private events: EventsService, private teacherservice: TeacherService, private authService: AuthService,) { }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
