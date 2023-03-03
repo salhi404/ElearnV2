@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { StorageService } from './storage.service';
-// const URL_API = 'http://192.168.1.103:3000/'; 
+const URL_API = 'http://192.168.1.103:3000/'; 
 // const URL_API = 'https://frantic-colt-leather-jacket.cyclic.app/';
-const URL_API = 'https://starter-express-api-production-816a.up.railway.app/';
+// const URL_API = 'https://starter-express-api-production-816a.up.railway.app/';
 const TEACHER_API = URL_API+'api/teacher/';
 //Teacher service  
 const httpOptions = {
@@ -56,9 +56,16 @@ export class TeacherService {
     const token = this.storageService.getTokent();
     return this.http.post(TEACHER_API + 'addclassnotif', {token,uuid,notif}, httpOptions);
   }
-  editclassnotif(uuid:string,notif:any): Observable<any> {
+  editclassnotif(uuid:string,notif:any,sidetask:number): Observable<any> {
     const token = this.storageService.getTokent();
     return this.http.post(TEACHER_API + 'editclassnotif', {token,uuid,notif}, httpOptions);
   }
-
+  removeclassnotif(uuid:string,notifId:any): Observable<any> {
+    const token = this.storageService.getTokent();
+    return this.http.post(TEACHER_API + 'removeclassnotif', {token,uuid,notifId}, httpOptions);
+  }
+  updateclassnotifschedule(uuid:string,notif:any,task:number): Observable<any> {
+    const token = this.storageService.getTokent();
+    return this.http.post(TEACHER_API + 'updateclassnotifschedule', {token,uuid,notif,task}, httpOptions);
+  }
 }

@@ -47,3 +47,17 @@
     position: relative;
     bottom: 3px;
   }
+  .loop-icon{
+    size: 5px;
+    font-size: 18px;
+    position: relative;
+    top:5px;
+    cursor: pointer;
+    scale: 1;
+    transform: rotate(0deg);
+    transition: scale,transform  .2s ease-out ;
+  }
+  .loop-icon:hover{
+    scale: 1.1;
+    transform: rotate(-90deg);
+  }

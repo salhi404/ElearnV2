@@ -19,6 +19,7 @@ export class EventsService {
   public TASKGETCHOSENCLASS=7;  
   public TASKUPDATECLASSEVENT=8;
   public TASKUPDATECLASSNOTIF=9;
+  public TASKDELETECLASSNOTIFSCHEDULE=10;
   public UPDATEUSER=1;
   public DALETEUSER=2;
   public layoutEvent = new BehaviorSubject(-1);

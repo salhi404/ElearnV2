@@ -16,6 +16,7 @@ import { DatePipe } from '@angular/common';
 
 export class TeacherDashboardComponent implements OnInit, OnDestroy {
   user: User = null as any;
+  timeouts:any[]=[];
   classes: any[] = [];
   roles: string[] = [];
   mainRole: String = '';
@@ -144,6 +145,28 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
             this.updateventcount(new Date(state.data.event.start),state.data.classind,false);
           }
         }
+        // if (state.task == this.events.TASKDELETECLASSNOTIFSCHEDULE) {
+        //   let findNtfSchd = this.classes.find((cll:any)=>cll.uuid===state.data.classuuid)?.data.notifschedule;
+        //   findNtfSchd = findNtfSchd.filter((ntf:any)=>ntf!=state.data.id);
+        // }
+        if (state.task == this.events.TASKUPDATECLASSNOTIF) {
+          if(state.data.tasktype==1){
+            this.classes.find(cll=>cll.uuid==state.data.classid)?.data.notifications.push(state.data.notif);
+          }
+          if(state.data.tasktype==2){
+            const findclassnotif=this.classes.find(cll=>cll.uuid==state.data.classid);
+            if(findclassnotif){
+              const index = findclassnotif.data.notifications.findIndex((notiff:any)=>notiff.id==state.data.notif.id);
+              findclassnotif.data.notifications[index] = state.data.notif
+            }
+          }
+          if(state.data.tasktype==3){
+            let notifToDelete =  this.classes.find(cll=>cll.uuid==state.data.classid)?.data.notifications;
+            if(notifToDelete){
+              notifToDelete = notifToDelete.filter((ntf:any)=>ntf.id!=state.data.notifId);
+            }
+          }
+        }
       })
       this.getclasses(false); // TODO - implement reload (online + new enrollers ...) with socket or add a button 
     } else {
@@ -165,7 +188,6 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
     if (ind == 4) {
       this.router.navigate(['/teacher-dashboard/liveStreams']);
     }
-
   }
   getclasses(refresh: boolean) {
     this.subscription1 = this.teacherservice.getClasses().subscribe({
@@ -177,6 +199,7 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
           });
           this.loadingClasses=false;
           this.getTodeyCalender();
+          // this.checkscheduleedNotif();
           if (refresh) {
             this.events.changeclassInfoState({ state: 2, classes: this.classes });
           }
@@ -189,6 +212,51 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
       error: err => { console.log(err); }
     })
   }
+  // checkscheduleedNotif(){
+  //   this.classes.forEach((classe:any,indd)=>{
+  //   classe.data.notifschedule.forEach((nttf:any) => {
+  //     console.log("found schedule 1 ",nttf);
+  //     const nowtemp = new Date();
+  //     const formTime = new Date(nttf.time);
+  //     const timeDif =formTime.getTime() - nowtemp.getTime()
+  //   if (timeDif<0) {
+  //     console.log("found schedule to edit ",nttf);
+  //     nttf.status = 3;
+  //     this.editNotifSubmit(classe.uuid,nttf,true,1);
+  //     this.events.changeTaskState({ task: this.events.TASKDELETECLASSNOTIFSCHEDULE, data: { classuuid:classe.uuid, id:nttf.id  } })
+  //     // classe.data.notifschedule.pop(nttf);
+  //   }else{
+  //     if(timeDif<300000){
+  //       console.log("found schedule to schedule ",nttf);
+  //       console.log("schedule in",timeDif);
+  //       let nttf2={...nttf}
+  //       nttf2.status = 3;
+  //       this.timeouts.push( // TODO clear time out
+  //         setTimeout(() => {
+  //           this.editNotifSubmit(classe.uuid,nttf2,true,1);
+  //           this.events.changeTaskState({ task: this.events.TASKDELETECLASSNOTIFSCHEDULE, data: { classuuid:classe.uuid, id:nttf.id  } })
+  //           // classe.data.notifschedule.pop(nttf);
+  //         }, timeDif+2000)
+  //       )
+  //     }
+
+  //   }
+  //   });
+
+  //   })
+  // }
+  // editNotifSubmit(classeuuid:string,notifTosend: any,update:boolean,task:number) {
+  //   this.teacherservice.editclassnotif(classeuuid, notifTosend,task).subscribe({
+  //     next: data => {
+  //       console.log("editclassnotif from dash: ", data);
+  //        if(update) this.events.changeTaskState({ task: this.events.TASKUPDATECLASSNOTIF, data: { tasktype: 2, classid: this.chosenClass.uuid, notif: data.notif } });
+  //     },
+  //     error: err => {
+  //       console.log('err');
+  //       console.log(err);
+  //     }
+  //   });
+  // }
   getTodeyCalender() {
     const todayDate = new Date();
     let nextDate: Date = null as any;
@@ -256,7 +324,14 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
       this.events.changeTaskState({ task: this.events.TASKCHOOSECLASSES, data: { chosenIndex: -1, chosenClass: null } })
     }
   }
-
+  testt(){
+    console.log("notifschedule = ");
+    this.classes.forEach((classe:any,indd)=>{
+      classe.data.notifschedule.forEach((nttf:any) => {
+        console.log("classe name = ",classe.name);
+        console.log("notif = ",nttf);
+      })});
+  }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
     this.subscription1.unsubscribe();

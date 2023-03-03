@@ -29,7 +29,7 @@
               <th>Type</th>
               <th>Time</th>
               <th>Notification</th>
-              <th>Status</th>
+              <th>Status<i (click)="checkschedule()" class="material-icons loop-icon">loop</i></th>
               <th>Action</th>
               <th>Edit</th>
             </thead>
@@ -45,18 +45,19 @@
                       class="material-icons text-muted mr-1">notifications</i> <span
                       class="text-muted">Notification</span> </div>
                 </td>
-                <td>{{notification.send==1?'now':notification.send==2?datepipe.transform(notification.time,'dd-MM-yyyy HH:mm'):''}}</td>
+                <td>{{notification.send==1&&notification.status==1?'now':notification.send==2||notification.status==3?datepipe.transform(notification.time,'dd-MM-yyyy HH:mm'):''}}</td>
                 <td> {{notification.notification}}</td>
                 <td>
                   <span *ngIf="notification.status==1" class="text-danger">not sent</span>
-                  <span *ngIf="notification.status==2" class="text-info">en queue</span>
+                  <span *ngIf="notification.status==2" class="text-info">in queue</span>
                   <span *ngIf="notification.status==3" class="text-success">sent</span>
                 <td>
-                  <div (click)="notification" *ngIf="notification.status==1" class="btn btn-success pointer">send</div>
-                  <div (click)="notification" *ngIf="notification.status==2" class="btn btn-warning pointer">un queue
-                  </div>
-                  <div (click)="notification" *ngIf="notification.status==3" class="btn btn-warning pointer">unsend
-                  </div>
+                  <div  (click)="actionFunc(1,i)" *ngIf="notification.status==1 && notification.send===1" class="btn btn-success pointer">send</div>
+                  <div  (click)="actionFunc(1,i)" (mouseenter)="checkqueTime(1,i)" *ngIf="notification.status==1 && notification.send===2" class="btn btn-info pointer">queue</div>
+                  
+                  <div (click)="actionFunc(2,i)" (mouseenter)="checkqueTime(2,i)" *ngIf="notification.status==2" class="btn btn-warning pointer">unqueue</div>
+                  
+                  <!-- <div (click)="actionFunc(3,i)" *ngIf="notification.status==3" class="btn btn-warning pointer">unsend</div> -->
                 </td>
                 <td>
                   <div class="dropdown preventunselect">
@@ -104,22 +105,18 @@
         </div>
         <div *ngIf="editing">
           <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
-            <div class="form-group row">
+            <!-- <div class="form-group row">
               <label for="type" class="col-sm-2 col-form-label">Type :</label>
               <div class="col-sm-8">
                 <select class="form-control" [(ngModel)]="form.type" required #type="ngModel" type="text" name="type"
                   id="type" autocomplete="off"
-                  [ngClass]="{'border-danger':(type.errors && f.submitted)}"><!--(change)="userExisted=false;changed=true"-->
+                  [ngClass]="{'border-danger':(type.errors && f.submitted)}">
                   <option value="1">event</option>
                   <option value="2">liveStream</option>
                   <option value="3">custom</option>
                 </select>
               </div>
-
-              <!-- <div class="invalid-feedback" *ngIf="(type.errors && f.submitted)">
-                  <div>type date is required</div>
-                </div> -->
-            </div>
+            </div> -->
             <fieldset class="form-group">
               <div class="row">
                 <div class="col-form-label col-sm-2 pt-0">Date to send</div>
