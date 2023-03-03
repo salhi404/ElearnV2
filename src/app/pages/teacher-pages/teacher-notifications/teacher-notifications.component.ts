@@ -137,11 +137,11 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
       this.editNotifSubmit(notifToEdit,0);
     }
   }
-  checkschedule(){
-    this.chosenClass.data.notifschedule.forEach((element:any,ind:number) => {
-      this.checkqueTime(element.status,ind);
-    });
-  }
+  // checkschedule(){
+  //   this.chosenClass.data.notifschedule.forEach((element:any,ind:number) => {
+  //     this.checkqueTime(element.status,ind);
+  //   });
+  // }
   checkqueTime(type:number, ind: number) {
     let notifToEdit = { ...this.chosenClass.data.notifications[ind] };
     const nowtemp = new Date();
