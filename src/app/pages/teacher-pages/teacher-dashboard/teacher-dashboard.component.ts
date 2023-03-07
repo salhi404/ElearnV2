@@ -8,6 +8,9 @@ import { TeacherService } from 'app/_services/teacher.service';
 import { EventsService } from 'app/services/events.service';
 import { parsegrade, parseroles, getmainrole, getmainrolecode, parsesubject, parsesubjectIcon } from 'app/functions/parsers';
 import { DatePipe } from '@angular/common';
+import { SocketioService } from 'app/services/socketio.service';
+
+
 @Component({
   selector: 'app-teacher-dashboard',
   templateUrl: './teacher-dashboard.component.html',
@@ -25,6 +28,7 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
   subscription1: Subscription = new Subscription();
   subscription2: Subscription = new Subscription();
   subscription3: Subscription = new Subscription();
+  subscription4: Subscription = new Subscription();
   isLoggedIn: boolean = false;
   activeroute: number = 1;
   navigationExtras: NavigationExtras = { state: null as any };
@@ -49,7 +53,13 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
   }
   @ViewChild("modalDialog") modalDialog!: ElementRef;
   loadingClasses: boolean=true;
-  constructor(private storageService: StorageService, private authService: AuthService, private teacherservice: TeacherService, private events: EventsService, private router: Router) { }
+  constructor(private storageService: StorageService,
+     private authService: AuthService,
+     private teacherservice: TeacherService,
+     private events: EventsService,
+     private router: Router,
+     private socketService: SocketioService,
+     ) { }
   swithroutes(url:string){
     switch (url) {
       case "/teacher-dashboard/users":
@@ -77,8 +87,6 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
       console.log("router event change");
       this.swithroutes(this.router.url);
     });
-
-
     this.isLoggedIn = this.storageService.isLoggedIn();
     if (this.isLoggedIn) {
       this.user = this.storageService.getUser();
@@ -105,6 +113,19 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
           }
         }
       )
+      this.subscription4 = this.socketService.recieveTask.subscribe(data => {
+        console.log("subscription4",data);
+        
+        if (data.code == 1) {
+          data.data.forEach((element:any) => {
+            console.log("element",element);
+            
+            let notifToEdit =  this.classes.find((cll:any)=>cll.uuid===element.classId)?.data.notifications.find((nttf:any)=>nttf.id==element.notifId)
+            if(notifToEdit) notifToEdit.status=3;
+            console.log("notifToEdit",notifToEdit);
+          });
+        }
+      });
       /*this.subscription1=this.events.modinfostatusEvent.subscribe(state=>{
         if(state.usersCount){
           this.usersCount=state.usersCount;
@@ -337,6 +358,7 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
     this.subscription1.unsubscribe();
     this.subscription2.unsubscribe();
     this.subscription3.unsubscribe();
+    this.subscription4.unsubscribe();
   }
   openModel(issAdd: boolean) {
     this.addnotEdit = issAdd;
