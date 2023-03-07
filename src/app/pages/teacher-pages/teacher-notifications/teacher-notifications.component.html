@@ -53,10 +53,11 @@
                   <span *ngIf="notification.status==3" class="text-success">sent</span>
                 <td>
                   <div  (click)="actionFunc(1,i)" *ngIf="notification.status==1 && notification.send===1" class="btn btn-success pointer">send</div>
-                  <div  (click)="actionFunc(1,i)" (mouseenter)="checkqueTime(1,i)" *ngIf="notification.status==1 && notification.send===2" class="btn btn-info pointer">queue</div>
+                  <div  (click)="actionFunc(1,i)"  *ngIf="notification.status==1 && notification.send===2" class="btn btn-info pointer">queue</div>
+                  <!--(mouseenter)="checkqueTime(1,i)"-->
                   
-                  <div (click)="actionFunc(2,i)" (mouseenter)="checkqueTime(2,i)" *ngIf="notification.status==2" class="btn btn-warning pointer">unqueue</div>
-                  
+                  <div (click)="actionFunc(2,i)"  *ngIf="notification.status==2" class="btn btn-warning pointer">unqueue</div>
+                  <!--(mouseenter)="checkqueTime(2,i)"-->
                   <!-- <div (click)="actionFunc(3,i)" *ngIf="notification.status==3" class="btn btn-warning pointer">unsend</div> -->
                 </td>
                 <td>

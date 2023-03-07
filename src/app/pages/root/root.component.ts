@@ -16,10 +16,10 @@ import { getmainrolecode } from 'app/functions/parsers'
   styleUrls: ['./root.component.scss']
 })
 export class RootComponent implements OnInit, OnDestroy {
-  elementfooterHeight:number=0;
-  currentRoute:number = 0;
-  interfaceLayout:boolean = false;
-  unoppenedchatCount: number=0;
+  elementfooterHeight: number = 0;
+  currentRoute: number = 0;
+  interfaceLayout: boolean = false;
+  unoppenedchatCount: number = 0;
   constructor(
     private router: Router,
     private events: EventsService,
@@ -41,52 +41,52 @@ export class RootComponent implements OnInit, OnDestroy {
     this.router.events.pipe(
       filter((event: any) => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
-      if(!this.storageService.isLoggedIn()&&event.url!="/login"&&event.url!="/signup"){
+      if (!this.storageService.isLoggedIn() && event.url != "/login" && event.url != "/signup") {
         this.router.navigate(["/"]);
       }
-      this.interfaceLayout=false;      
+      this.interfaceLayout = false;
       switch (event.url.split('/')[1]) {
         case "":
-          if(this.storageService.isLoggedIn())this.router.navigate(["home"]);
-          this.currentRoute=0;
-          this.interfaceLayout=true;
+          if (this.storageService.isLoggedIn()) this.router.navigate(["home"]);
+          this.currentRoute = 0;
+          this.interfaceLayout = true;
           break;
         case "home":
-          this.currentRoute=1;
+          this.currentRoute = 1;
           this.getTodeyCalender();
           break;
         case "email":
-          this.currentRoute=2;
+          this.currentRoute = 2;
           break;
         case "chat":
-          this.currentRoute=3;
+          this.currentRoute = 3;
           break;
         case "calendar":
-        this.currentRoute=4;
-        break;
+          this.currentRoute = 4;
+          break;
         case "profile":
-        this.currentRoute=5;
-        break;
+          this.currentRoute = 5;
+          break;
         case "mod-dashboard":
-        this.currentRoute=6;
-        break;
+          this.currentRoute = 6;
+          break;
         case "teacher-dashboard":
-        this.currentRoute=7;
-        break;  
+          this.currentRoute = 7;
+          break;
         case "classes":
-        this.currentRoute=8;
-        break;
+          this.currentRoute = 8;
+          break;
         default:
-          if(this.storageService.isLoggedIn())this.router.navigate(["/home"]);
-          this.currentRoute=0;
-          this.interfaceLayout=true;
-        break
-      } 
+          if (this.storageService.isLoggedIn()) this.router.navigate(["/home"]);
+          this.currentRoute = 0;
+          this.interfaceLayout = true;
+          break
+      }
 
     });
   }
-  width:number=0;
-  height:number=0;
+  width: number = 0;
+  height: number = 0;
   unoppenedMail: Mail[] = [];
   unoppenedMailCount: number = 0;
   showSettingPanel: boolean = false
@@ -105,36 +105,38 @@ export class RootComponent implements OnInit, OnDestroy {
   user: User = null as any;
   state: any = { user: this.user, islogged: false, remember: true };
   userSent: boolean = false;
-  roles:string[]=[];
-  mainrole:number=-1;
+  roles: string[] = [];
+  mainrole: number = -1;
 
   ngOnInit(): void {
     this.onWindowResize();
     this.isLoggedIn = this.storageService.isLoggedIn();
     if (this.isLoggedIn) {
       this.user = this.storageService.getUser();
-      this.authService.verifyJwt().subscribe({next:data=>{
-        if(!data.verified){
-          this.logout();
-        }else{
-          if(data.user){
-            this.storageService.alterUser(data.user);
-            this.user = this.storageService.getUser();
-            // console.log("user updated ",this.user);
-            this.events.changeuserdataState({state:1,userdata:this.user});
+      this.authService.verifyJwt().subscribe({
+        next: data => {
+          if (!data.verified) {
+            this.logout();
+          } else {
+            if (data.user) {
+              this.storageService.alterUser(data.user);
+              this.user = this.storageService.getUser();
+              // console.log("user updated ",this.user);
+              this.events.changeuserdataState({ state: 1, userdata: this.user });
+            }
           }
+        }, error: err => {
+          // if(!err.verified)this.logout();
+          // TODO - add a "server is down page"
+          // TODO - handle user update,deletion ... "
         }
-      },error:err=>{
-       // if(!err.verified)this.logout();
-       // TODO - add a "server is down page"
-       // TODO - handle user update,deletion ... "
-      }});
-      
+      });
+
     }
     if (this.state.islogged) {
       this.isLoggedIn = this.state.islogged;
       this.user = this.state.user;
-      this.events.changeuserdataState({state:1,userdata:this.user});
+      this.events.changeuserdataState({ state: 1, userdata: this.user });
     }
     if (this.isLoggedIn) {
       //this.prepsubscription();
@@ -144,17 +146,17 @@ export class RootComponent implements OnInit, OnDestroy {
       /*setInterval(() => {
         this.getMailUpdate();
       }, 12000);*/
-      this.subscription7=this.events.userdataEvent.subscribe(
-        state=>{
-          if(state.state==this.events.UPDATEUSER){
-            this.user=state.userdata;
-            this.roles=state.userdata.roles;
-            this.mainrole=getmainrolecode(this.roles);
+      this.subscription7 = this.events.userdataEvent.subscribe(
+        state => {
+          if (state.state == this.events.UPDATEUSER) {
+            this.user = state.userdata;
+            this.roles = state.userdata.roles;
+            this.mainrole = getmainrolecode(this.roles);
           }
-          if(state.state==this.events.DALETEUSER){
-            this.user=state.userdata;
-            this.roles=[];
-            this.mainrole=-1;
+          if (state.state == this.events.DALETEUSER) {
+            this.user = state.userdata;
+            this.roles = [];
+            this.mainrole = -1;
           }
           const pref = this.storageService.getPrefrences();
           this.DarkTheme = pref.darkTheme;
@@ -164,35 +166,43 @@ export class RootComponent implements OnInit, OnDestroy {
       this.getnoppenedMail();
       this.getnoppenedchat();
       this.updateContacts();
+      this.authService.updateschedule().subscribe({
+        next: data => {
+          console.log("updateschedule",data);
+        },
+        error: err => {
+          console.log("updateschedule failed",err); 
+        }
+      })
       this.subscription3 = this.socketService.recieveMsg.subscribe(data => {
         if (data.code == 1) this.unoppenedchatCount++;
-        var info=this.events.infoEvent.getValue();
-        info.unoppenedchatCount=this.unoppenedchatCount;
+        var info = this.events.infoEvent.getValue();
+        info.unoppenedchatCount = this.unoppenedchatCount;
         this.events.changeInfoState(info);
       });
       this.subscription4 = this.events.currentchatEvent.subscribe(state => {
         if (state >= 0) {
           this.unoppenedchatCount = state;
-          var info=this.events.infoEvent.getValue();
-          info.unoppenedchatCount=this.unoppenedchatCount;
+          var info = this.events.infoEvent.getValue();
+          info.unoppenedchatCount = this.unoppenedchatCount;
           this.events.changeInfoState(info);
         }
       })
       this.subscription6 = this.events.updateEvent.subscribe(state => {
         if (state == this.events.UPDATEUSER) {
           this.user = this.storageService.getUser();
-          this.events.changeuserdataState({state:1,userdata:this.user});
+          this.events.changeuserdataState({ state: 1, userdata: this.user });
 
         }
       })
-      this.subscription5=this.events.infostatusEvent.subscribe(state=>{
-        if(state.unoppenedchatCount){
-          this.unoppenedchatCount=state.unoppenedchatCount;
+      this.subscription5 = this.events.infostatusEvent.subscribe(state => {
+        if (state.unoppenedchatCount) {
+          this.unoppenedchatCount = state.unoppenedchatCount;
         }
-        if(state.unoppenedMailCount){
-          this.unoppenedMailCount=state.unoppenedMailCount;
+        if (state.unoppenedMailCount) {
+          this.unoppenedMailCount = state.unoppenedMailCount;
         }
-        
+
       })
     }
     this.subscription2 = this.events.loggingStatusEvent.subscribe(state => {
@@ -240,13 +250,13 @@ export class RootComponent implements OnInit, OnDestroy {
   getnoppenedMail() {
     this.authService.getUnoppenedMail().subscribe({
       next: data => {
-        if (data.mails){
-          this.unoppenedMail = data.mails.map((e:any)=>{e['id']=e['_id'];delete e['_id'];return e });
+        if (data.mails) {
+          this.unoppenedMail = data.mails.map((e: any) => { e['id'] = e['_id']; delete e['_id']; return e });
         }
-        if (data.count){ 
+        if (data.count) {
           this.unoppenedMailCount = data.count;
-          var info=this.events.infoEvent.getValue();
-          info.unoppenedMailCount=data.count;
+          var info = this.events.infoEvent.getValue();
+          info.unoppenedMailCount = data.count;
           this.events.changeInfoState(info);
         }
       },
@@ -259,23 +269,23 @@ export class RootComponent implements OnInit, OnDestroy {
     this.authService.geteventsDates().subscribe({
       next: data => {
         const todayDate = new Date();
-        let todeyCount=0;
-        let nextDate:Date=null as any;
-        let date:Date;
-        data.data.forEach((datee:Date)=>{
-          date=new Date(datee);
+        let todeyCount = 0;
+        let nextDate: Date = null as any;
+        let date: Date;
+        data.data.forEach((datee: Date) => {
+          date = new Date(datee);
           if (
             date.getDate() === todayDate.getDate() &&
             date.getMonth() === todayDate.getMonth() &&
             date.getFullYear() === todayDate.getFullYear()
-          )todeyCount++;
-          if(date.getTime()>todayDate.getTime()){
-            if(!nextDate||date.getTime()<nextDate.getTime())nextDate=date;
+          ) todeyCount++;
+          if (date.getTime() > todayDate.getTime()) {
+            if (!nextDate || date.getTime() < nextDate.getTime()) nextDate = date;
           }
         })
-        var info=this.events.infoEvent.getValue();
-        info.TodayEventsCount=todeyCount;
-        info.nextEvent=nextDate;
+        var info = this.events.infoEvent.getValue();
+        info.TodayEventsCount = todeyCount;
+        info.nextEvent = nextDate;
         this.events.changeInfoState(info);
       },
       error: err => {
@@ -287,9 +297,9 @@ export class RootComponent implements OnInit, OnDestroy {
     this.authService.getunoppenedchat().subscribe({
       next: data => {
         if (data.count) this.unoppenedchatCount = data.count;
-          var info=this.events.infoEvent.getValue();
-          info.unoppenedchatCount=this.unoppenedchatCount;
-          this.events.changeInfoState(info);
+        var info = this.events.infoEvent.getValue();
+        info.unoppenedchatCount = this.unoppenedchatCount;
+        this.events.changeInfoState(info);
       },
       error: err => {
         console.log('getnoppenedchat error :');
@@ -322,7 +332,7 @@ export class RootComponent implements OnInit, OnDestroy {
     this.isLoggedIn = false;
     this.storageService.clearUser();
     this.events.changeLoggingState(-1);
-    this.events.changeuserdataState({state:2,userdata:null as any});
+    this.events.changeuserdataState({ state: 2, userdata: null as any });
     this.router.navigate([""]);
   }
   test() {
@@ -345,12 +355,14 @@ export class RootComponent implements OnInit, OnDestroy {
       */
     }
   }
-  updateContacts(){
-    this.authService.getcontacts().subscribe({next:data=>{
-      if(data.contacts)this.storageService.saveChatters(data.contacts);
-    },error:err=>{
-      console.log("updateContacts error",err);
-    }});
+  updateContacts() {
+    this.authService.getcontacts().subscribe({
+      next: data => {
+        if (data.contacts) this.storageService.saveChatters(data.contacts);
+      }, error: err => {
+        console.log("updateContacts error", err);
+      }
+    });
   }
   @HostListener('window:beforeunload')
   ngOnDestroy() {
@@ -376,8 +388,8 @@ export class RootComponent implements OnInit, OnDestroy {
   }
   @HostListener('window:resize', ['$event'])
   onWindowResize() {
-    this.width=window.innerWidth;
-    this.height=window.innerHeight;
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
     if (window.innerWidth <= 1024) this.isTabletMode = true;
     else this.isTabletMode = false;
   }
