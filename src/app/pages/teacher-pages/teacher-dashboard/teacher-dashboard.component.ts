@@ -119,9 +119,8 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
         if (data.code == 1) {
           data.data.forEach((element:any) => {
             console.log("element",element);
-            
             let notifToEdit =  this.classes.find((cll:any)=>cll.uuid===element.classId)?.data.notifications.find((nttf:any)=>nttf.id==element.notifId)
-            if(notifToEdit) notifToEdit.status=3;
+            if(notifToEdit) notifToEdit.status=element.notif.status;
             console.log("notifToEdit",notifToEdit);
           });
         }

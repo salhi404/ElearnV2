@@ -79,15 +79,21 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
     this.addnotEdit = true;
   }
   editNotif(ind: number) {
+    const Notlength=this.chosenClass.data.notifications.length;
+    console.log("notifications.length",this.chosenClass.data.notifications.length);
+    console.log("ind",ind);
+    console.log("Notlength",Notlength);
+    console.log("Notlength-1-ind",Notlength-1-ind);
     this.form = {
-      type: this.chosenClass.data.notifications[ind].type + '',
-      send: this.chosenClass.data.notifications[ind].send + '',//2023-03-22T00:31
-      time: this.datepipe.transform(this.chosenClass.data.notifications[ind].time, 'yyyy-MM-ddThh:mm') || '',
-      notification: this.chosenClass.data.notifications[ind].notification,
-      status: this.chosenClass.data.notifications[ind].status + ''
+      type: this.chosenClass.data.notifications[Notlength-1-ind].type + '',
+      send: this.chosenClass.data.notifications[Notlength-1-ind].send + '',//2023-03-22T00:31
+      time: this.datepipe.transform(this.chosenClass.data.notifications[Notlength-1-ind].time, 'yyyy-MM-ddTHH:mm') || '',
+      notification: this.chosenClass.data.notifications[Notlength-1-ind].notification,
+      status: this.chosenClass.data.notifications[Notlength-1-ind].status + ''
     }
-    console.log("this.chosenClass.data.notifications[ind]", this.chosenClass.data.notifications[ind]);
-    this.notifIdToedit = this.chosenClass.data.notifications[ind].id;
+    if(this.form.send=='1')this.form.time='';
+    // console.log("this.chosenClass.data.notifications[ind]", this.chosenClass.data.notifications[Notlength-1-ind]);
+    this.notifIdToedit = this.chosenClass.data.notifications[Notlength-1-ind].id;
     this.formInvalid = -1;
     this.formInvalidmsg = '';
     this.editing = true;
@@ -95,11 +101,13 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
     this.toggleDD(this.openedDD);
   }
   deleteNotif(ind: number) {
-    const notifToDelete = this.chosenClass.data.notifications[ind].id;
+    const Notlength=this.chosenClass.data.notifications.length;
+    const notifToDelete = this.chosenClass.data.notifications[Notlength-1-ind].id;
 
   }
   removeNotif(ind: number) {
-    const notifToDelete = this.chosenClass.data.notifications[ind].id;
+    const Notlength=this.chosenClass.data.notifications.length;
+    const notifToDelete = this.chosenClass.data.notifications[Notlength-1-ind].id;
     this.teacherservice.removeclassnotif(this.chosenClass.uuid, notifToDelete).subscribe({
       next: data => {
         console.log("removeclassnotif : ", data);
@@ -114,7 +122,8 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
     });
   }
   actionFunc(type: number, ind: number) {
-    let notifToEdit = { ...this.chosenClass.data.notifications[ind] };
+    const Notlength=this.chosenClass.data.notifications.length;
+    let notifToEdit = { ...this.chosenClass.data.notifications[Notlength-1-ind] };
     if (type == 1) {
       if (notifToEdit.send == 1) {
         notifToEdit.time = new Date();
@@ -143,7 +152,8 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
   //   });
   // }
   checkqueTime(type:number, ind: number) {
-    let notifToEdit = { ...this.chosenClass.data.notifications[ind] };
+    const Notlength=this.chosenClass.data.notifications.length;
+    let notifToEdit = { ...this.chosenClass.data.notifications[Notlength-1-ind] };
     const nowtemp = new Date();
     const formTime = new Date(notifToEdit.time);
     if (formTime.getTime() < nowtemp.getTime()) {
@@ -166,6 +176,8 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
   }
   onSubmit(): number {
     console.log("Submit");
+    console.log('this.form.time',this.form.time);
+    console.log('is this.form.time',!!this.form.time);
     if (this.form.send === '2') {
       const nowtemp = new Date();
       const formTime = new Date(this.form.time);
@@ -179,7 +191,7 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
       }
     }
     if (this.form.notification === '') this.form.notification = "new Notification";
-    let notifTosend: any = { type: +this.form.type, send: +this.form.send, time: new Date(this.form.time), notification: this.form.notification, status: +this.form.status };
+    let notifTosend: any = { type: +this.form.type, send: +this.form.send, time:new Date(this.form.time), notification: this.form.notification, status: +this.form.status };
     if (notifTosend.send == 1) {
       notifTosend.time = new Date();
     }

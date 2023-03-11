@@ -85,6 +85,7 @@ export class RootComponent implements OnInit, OnDestroy {
 
     });
   }
+  interval1:any;
   width: number = 0;
   height: number = 0;
   unoppenedMail: Mail[] = [];
@@ -169,14 +170,8 @@ export class RootComponent implements OnInit, OnDestroy {
       this.getnoppenedMail();
       this.getnoppenedchat();
       this.updateContacts();
-      this.authService.updateschedule().subscribe({
-        next: data => {
-          console.log("updateschedule",data);
-        },
-        error: err => {
-          console.log("updateschedule failed",err); 
-        }
-      })
+      this.updateschedule();
+      this.interval1 = setInterval(this.updateschedule, 150000);
       this.subscription3 = this.socketService.recieveMsg.subscribe(data => {
         if (data.code == 1) this.unoppenedchatCount++;
         var info = this.events.infoEvent.getValue();
@@ -250,6 +245,16 @@ export class RootComponent implements OnInit, OnDestroy {
       }
     })
   }*/
+  updateschedule () {
+    this.authService.updateschedule().subscribe({
+      next: data => {
+        console.log("updateschedule",data);
+      },
+      error: err => {
+        console.log("updateschedule failed",err); 
+      }
+    })
+  }
   getnoppenedMail() {
     this.authService.getUnoppenedMail().subscribe({
       next: data => {
@@ -386,6 +391,7 @@ export class RootComponent implements OnInit, OnDestroy {
     this.subscription5.unsubscribe();
     this.subscription6.unsubscribe();
     this.subscription7.unsubscribe();
+    clearInterval(this.interval1);
     if (!this.state.remember && this.isLoggedIn) this.logout();
     this.socketService.disconnect();
   }
