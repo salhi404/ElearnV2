@@ -171,7 +171,7 @@ export class RootComponent implements OnInit, OnDestroy {
       this.getnoppenedchat();
       this.updateContacts();
       this.updateschedule();
-      this.interval1 = setInterval(this.updateschedule, 150000);
+      this.interval1 = setInterval(()=>{this.updateschedule();}, 150000);
       this.subscription3 = this.socketService.recieveMsg.subscribe(data => {
         if (data.code == 1) this.unoppenedchatCount++;
         var info = this.events.infoEvent.getValue();

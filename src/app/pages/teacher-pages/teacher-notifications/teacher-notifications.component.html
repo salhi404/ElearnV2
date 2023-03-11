@@ -3,18 +3,18 @@
       !! </span></div>
   <div class="col-12">
     <div class="card NotifCard" [ngClass]="{'classhidden':!chosenClass}" *ngIf="chosenClass">
-      <div class="card-header">
-        <div [ngClass]="{'invisible2':!editing}" (click)="backToList()" class="iconBtn">
+      <div class="card-header d-flex justify-content-center align-items-center">
+        <div [ngClass]="{'invisible2':!editing}" (click)="backToList()" class="iconBtn BtnToLeft">
           <div class="iconBtnBack ">
             <a data-toggle="tooltip">
               <i class="material-icons">arrow_back</i>
             </a>
           </div>
         </div>
-        <h4 class="text-center width-per-100">
-          <span style="left: -12px;" class="position-relative"> {{editing?addnotEdit?'New Notification':'Edit Notification':'Notifications'}} </span>
+        <h4 class="text-center my-2">
+          <span> {{editing?addnotEdit?'New Notification':'Edit Notification':'Notifications'}} </span>
         </h4>
-        <div (click)="addNotif()" class="iconBtn">
+        <div *ngIf="!editing&&addnotEdit" (click)="addNotif()" class="iconBtn BtnToRight">
           <div class="iconBtnBack ">
             <a data-toggle="tooltip">
               <i class="material-icons">add</i>
@@ -75,11 +75,10 @@
                       <div class="dropdown-divider"></div>
                       <a (click)="removeNotif(i)" class="dropdown-item has-icon text-danger pointer">
                         <i class="far fa-trash-alt"></i>
-                        remove (from list)</a>
+                        Delete (for everyone)</a>
                       <a (click)="deleteNotif(i)" class="dropdown-item has-icon text-danger pointer">
                         <i class="material-icons text-danger DDicon">delete_forever</i>
-                        
-                        Delete (for everyone)</a>
+                        hide from list</a>
                     </div>
                   </div>
               </tr>
