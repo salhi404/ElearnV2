@@ -18,6 +18,8 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
   chosenClass: any = null;
   editing: boolean = false;
   loading: boolean = false;
+  highlightnew:boolean=false;
+  highlightfade:boolean=false;
   datepipe: DatePipe = new DatePipe('en-US');
   selectedNotif: any = null;
   addnotEdit: boolean = true;
@@ -66,10 +68,23 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
     this.chosenClass = classe;
     if (classe) {
       this.showDD = Array(classe.data.notifications.length).fill(false);
-      console.log("this.showDD = ", this.showDD);
+      console.log("newNotifCount",this.chosenClass.newNotifCount);
+      if(this.chosenClass.newNotifCount){
+        this.highlightnew=true;
+        this.highlightfade=true;
+        this.events.changeTaskState({ task: this.events.TASKUPDATECLASSNOTIF, data: { tasktype: 5, classid: this.chosenClass.uuid} });
+      }
+      
+      setTimeout(() => {
+        this.highlightnew=false;
+        setTimeout(() => {
+          this.highlightfade=false;
+        }, 1000);
+      }, 2000);
+      
     }
-
-
+    
+    
   }
   addNotif() {
     this.form = { type: '3', send: '1', time: '', notification: '', status: '' }
@@ -106,6 +121,7 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
 
   }
   removeNotif(ind: number) {
+    // TODO add confirmation dialog 
     const Notlength=this.chosenClass.data.notifications.length;
     const notifToDelete = this.chosenClass.data.notifications[Notlength-1-ind].id;
     this.teacherservice.removeclassnotif(this.chosenClass.uuid, notifToDelete).subscribe({
@@ -175,9 +191,6 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
     // this.selectedNotif =
   }
   onSubmit(): number {
-    console.log("Submit");
-    console.log('this.form.time',this.form.time);
-    console.log('is this.form.time',!!this.form.time);
     if (this.form.send === '2') {
       const nowtemp = new Date();
       const formTime = new Date(this.form.time);

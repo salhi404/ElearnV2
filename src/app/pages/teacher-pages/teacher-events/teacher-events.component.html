@@ -2,12 +2,12 @@
   </span> </div>
 <div [ngClass]="{'hiddenCalendar':!chosenClass}" class=" calendarCard card card-primary">
   <div *ngIf="clicktoEdit" class="clickAlert {{allEvents.length==0?'clickAlertNoEv':''}}">
-    <div  class="alert alert-info {{allEvents.length!=0?'alert-info':'alert-warning'}}   ">
+    <div class="alert alert-info {{allEvents.length!=0?'alert-info':'alert-warning'}}   ">
       {{allEvents.length!=0?'click an event':'there is no event to edit'}}
     </div>
-    </div>
+  </div>
   <div *ngIf="clicktodelete" class="clickAlert {{allEvents.length==0?'clickAlertNoEv':''}}">
-    <div  class="alert alert-info {{allEvents.length!=0?'alert-info':'alert-warning'}}   ">
+    <div class="alert alert-info {{allEvents.length!=0?'alert-info':'alert-warning'}}   ">
       {{allEvents.length!=0?'click an event':'there is no event to delete'}}
     </div>
   </div>
@@ -63,26 +63,26 @@
         </button>
       </div>
       <div class="modal-body overScroll">
-          <form >
-            <!-- <div *ngIf="dateIsSelected&&addnotEditEvent" class="d-flex justify-content-center">
+        <form>
+          <!-- <div *ngIf="dateIsSelected&&addnotEditEvent" class="d-flex justify-content-center">
               <div class="alert alert-primary alert-has-icon p-1 px-3">
                 <div class="alert-icon"><i class="far fa-lightbulb"></i></div>
                 <span class="mt-1">you can slect a date then click add event</span>
               </div>
             </div> -->
-            <div class="input-group mb-2">
-              <select  (click)="editoption()" *ngIf="!addnotEditEvent" class="custom-select"
-                [(ngModel)]="eventToEdit" #EditSelect="ngModel" name="EditSelect">
-                <option  value="-1">click select then click an event or choose from this list </option>
-                <option  *ngFor="let event of allEvents ,index as i" [ngValue]="event.id">"{{event.title}}"
-                  from:{{datepipe.transform(event.start,'dd-MM-yyyy HH:mm')}}
-                  to:{{datepipe.transform(event.end,'dd-MM-yyyy HH:mm')}}</option>
-              </select>
-              <div *ngIf="!addnotEditEvent" class="input-group-append">
-                <button (click)="selectEvent()" class="btn btn-primary" type="button">Select </button>
-              </div>
+          <div class="input-group mb-2">
+            <select (click)="editoption()" *ngIf="!addnotEditEvent" class="custom-select" [(ngModel)]="eventToEdit"
+              #EditSelect="ngModel" name="EditSelect">
+              <option value="-1">click select then click an event or choose from this list </option>
+              <option *ngFor="let event of allEvents ,index as i" [ngValue]="event.id">"{{event.title}}"
+                from:{{datepipe.transform(event.start,'dd-MM-yyyy HH:mm')}}
+                to:{{datepipe.transform(event.end,'dd-MM-yyyy HH:mm')}}</option>
+            </select>
+            <div *ngIf="!addnotEditEvent" class="input-group-append">
+              <button (click)="selectEvent()" class="btn btn-primary" type="button">Select </button>
             </div>
-            <div class="form-group mb-0 ">
+          </div>
+          <!-- <div class="form-group mb-0 ">
               <div class="selectgroup selectgroup-pills mb-0">
                     <label class="form-label mb-0">
                       <h6 class="mr-3">type</h6>
@@ -96,76 +96,91 @@
                         class="selectgroup-input">
                       <span class="selectgroup-button">Live Stream</span>
                     </label>
-                   <!-- <label class="selectgroup-item mb-0 ">
-                       <input (click)="updateType()" type="radio" name="type" [(ngModel)]="form.type" value="2"
-                        class="selectgroup-input">
-                      <span class="selectgroup-button">Moderator</span>
-                    </label>
-                    <label class="selectgroup-item mb-0 ">
-                      <input (click)="updateType()" type="radio" name="type" [(ngModel)]="form.type" value="3"
-                        class="selectgroup-input">
-                      <span class="selectgroup-button">Admin</span>
-                    </label> -->
+              </div>
+            </div> -->
+          <ng-container *ngIf="addnotEditEvent||(!addnotEditEvent &&eventToEdit != '-1') ">
+            <div class="form-group mb-2">
+              <label class="mb-1">Event : </label>
+              <input name="event" [(ngModel)]="form.event" type="text" class="form-control" placeholder="My Event"
+                [attr.disabled]="form.type=='1' ? '' : null">
+            </div>
+            <div class="form-group mb-2">
+              <label class="mb-1">From : </label>
+              <input [ngClass]="{'border-danger':form.startDate===''&&form.endDate===''}" name="startDate"
+                [(ngModel)]="form.startDate" type="date" class="form-control">
+              <input name="startTime" [(ngModel)]="form.startTime" type="time" class="form-control"
+                [ngClass]="{'border-danger':form.type=='1'&&form.startTime==''}">
+              <div class="invalid-feedback" *ngIf="form.type=='1'&&form.startTime==''">
+                live stream needs a start time
               </div>
             </div>
-          <div class="form-group mb-2">
-            <label class="mb-1">Event : </label>
-            <input name="event" [(ngModel)]="form.event" type="text" class="form-control" placeholder="My Event" [attr.disabled]="form.type=='1' ? '' : null">
-          </div> 
-          <div class="form-group mb-2">
-            <label class="mb-1">From : </label>
-            <input  [ngClass]="{'border-danger':form.startDate===''&&form.endDate===''}" name="startDate" [(ngModel)]="form.startDate" type="date" class="form-control">
-            <input name="startTime" [(ngModel)]="form.startTime" type="time" class="form-control" 
-            [ngClass]="{'border-danger':form.type=='1'&&form.startTime==''}">
-            <div class="invalid-feedback" *ngIf="form.type=='1'&&form.startTime==''">
-              live stream needs a start time
+            <div class="form-group mb-3">
+              <label class="mb-1">To : </label>
+              <input [ngClass]="{'border-danger':form.startDate===''&&form.endDate===''}" name="endDate"
+                [(ngModel)]="form.type==='1' ?form.startDate:form.endDate" type="date" class="form-control"
+                [attr.disabled]="form.type=='1' ? '' : null">
+              <input name="endTime" [(ngModel)]="form.endTime" type="time" class="form-control"
+                [ngClass]="{'border-danger':form.type=='1'&&form.startTime==''}">
+              <div class="invalid-feedback" *ngIf="form.type=='1'&&form.endTime==''&&(addnotEditEvent||(!addnotEditEvent &&eventToEdit != '-1'))">
+                live stream needs a end time
+              </div>
             </div>
-          </div>
-          <div class="form-group mb-3">
-            <label class="mb-1">To : </label>
-            <input  [ngClass]="{'border-danger':form.startDate===''&&form.endDate===''}" name="endDate" [(ngModel)]="form.type==='1' ?form.startDate:form.endDate" type="date" class="form-control" [attr.disabled]="form.type=='1' ? '' : null">
-            <input name="endTime" [(ngModel)]="form.endTime" type="time" class="form-control"
-            [ngClass]="{'border-danger':form.type=='1'&&form.startTime==''}">
-            <div class="invalid-feedback" *ngIf="form.type=='1'&&form.endTime==''">
-              live stream needs a end time
+            <div class="row gutters-xs d-flex justify-content-center ">
+              <div class="col-auto">
+                <label class="colorinput">
+                  <input [(ngModel)]="colorInput" name="color" type="radio" value="#007bff" class="colorinput-input"
+                    [attr.disabled]="form.type=='1' ? '' : null" />
+                  <span class="colorinput-color bg-primary"></span>
+                </label>
+              </div>
+              <div class="col-auto">
+                <label class="colorinput">
+                  <input [(ngModel)]="colorInput" name="color" type="radio" value="#dc3545" class="colorinput-input"
+                    [attr.disabled]="form.type=='1' ? '' : null" />
+                  <span class="colorinput-color bg-danger"></span>
+                </label>
+              </div>
+              <div class="col-auto">
+                <label class="colorinput">
+                  <input [(ngModel)]="colorInput" name="color" type="radio" value="#28a745" class="colorinput-input"
+                    [attr.disabled]="form.type=='1' ? '' : null" />
+                  <span class="colorinput-color bg-success"></span>
+                </label>
+              </div>
+              <div class="col-auto">
+                <label class="colorinput">
+                  <input [(ngModel)]="colorInput" name="color" type="radio" value="#ffc107" class="colorinput-input"
+                    [attr.disabled]="form.type=='1' ? '' : null" />
+                  <span class="colorinput-color bg-warning"></span>
+                </label>
+              </div>
             </div>
-          </div>
-          <div class="row gutters-xs d-flex justify-content-center ">
-            <div class="col-auto">
-              <label class="colorinput">
-                <input [(ngModel)]="colorInput" name="color" type="radio" value="#007bff" class="colorinput-input" [attr.disabled]="form.type=='1' ? '' : null" />
-                <span class="colorinput-color bg-primary"></span>
-              </label>
+          </ng-container>
+          <div *ngIf="addnotEditEvent" class="form-group">
+            <div class="custom-control custom-checkbox">
+              <input 
+                type="checkbox" 
+                name="senNotif" 
+                class="custom-control-input" 
+                id="senNotif"
+                [(ngModel)]="form.sendNotif"
+                #senNotif="ngModel"
+              >
+              <label class="custom-control-label" for="senNotif">send a notification</label>
             </div>
-            <div class="col-auto">
-              <label class="colorinput">
-                <input [(ngModel)]="colorInput" name="color" type="radio" value="#dc3545" class="colorinput-input" [attr.disabled]="form.type=='1' ? '' : null" />
-                <span class="colorinput-color bg-danger"></span>
-              </label>
-            </div>
-            <div class="col-auto">
-              <label class="colorinput">
-                <input [(ngModel)]="colorInput" name="color" type="radio" value="#28a745" class="colorinput-input" [attr.disabled]="form.type=='1' ? '' : null" />
-                <span class="colorinput-color bg-success"></span>
-              </label>
-            </div>
-            <div class="col-auto">
-							<label class="colorinput">
-								<input [(ngModel)]="colorInput" name="color" type="radio" value="#ffc107" class="colorinput-input" [attr.disabled]="form.type=='1' ? '' : null" />
-								<span class="colorinput-color bg-warning"></span>
-							</label>
-						</div>
           </div>
           <div class="d-flex align-items-center justify-content-center flex-column">
-            <button *ngIf="(form.type=='1'&&(form.startTime==''||form.endTime==''))||(form.startDate===''&&form.endDate==='')"  type="button"
-              class="btn btn-secondary m-t-15 waves-effect ">{{addnotEditEvent?'Add Event':'Edit Event'}}</button>
-              <button *ngIf="(form.type!='1'||(form.startTime!=''&&form.endTime!=''))&&(form.startDate!==''||form.endDate!=='')" (click)="submitModal()" type="button"
-              class="btn btn-primary m-t-15 waves-effect ">{{addnotEditEvent?'Add Event':'Edit Event'}}</button>
-              <div class="invalid-feedback text-center mt-2 " *ngIf="(form.startDate===''&&form.endDate==='')">
-                please provid start or end Date
-              </div>
+            <button *ngIf="(form.type=='1'&&(form.startTime==''||form.endTime==''))||(form.startDate===''&&form.endDate==='')" 
+            type="button" class="btn btn-secondary m-t-15 waves-effect ">
+              {{addnotEditEvent?'Add Event':'Edit Event'}}</button>
+            <button
+              *ngIf="(form.type!='1'||(form.startTime!=''&&form.endTime!=''))&&(form.startDate!==''||form.endDate!=='')"
+              (click)="submitModal()" type="button" class="btn btn-primary m-t-15 waves-effect ">{{addnotEditEvent?'Add Event':'Edit Event'}}</button>
+            <div class="invalid-feedback text-center mt-2 " *ngIf="(form.startDate===''&&form.endDate==='')&&(addnotEditEvent||(!addnotEditEvent &&eventToEdit != '-1'))">
+              please provid start or end Date
             </div>
-          
+          </div>
+
         </form>
       </div>
     </div>

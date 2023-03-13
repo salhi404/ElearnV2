@@ -24,7 +24,7 @@ export function parsesubject(subject:number):string{
 }
 export function parsesubjectIcon(subject:number):string{
   switch (subject) {
-      case 1: return 'fa-drafting-compass';
+      case 1: return 'fa-square-root-variable';
       case 2: return 'fa-atom';
       case 3: return 'fa-chalkboard-teacher';
   }

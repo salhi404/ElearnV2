@@ -146,6 +146,7 @@
           </div>
         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
           <div [ngClass]="{'active-mod-page':activeroute==3}" (click)="activateroute(3)" class="card pointer grow transparent-border">
+            <div *ngIf="chosenClass&&chosenClass.newNotifCount " class="badge badge-danger custombadge " > {{chosenClass.newNotifCount}}</div>
             <div class="card-statistic-4">
               <div class="align-items-center justify-content-between">
                 <div class="row ">
@@ -153,7 +154,8 @@
                     <div class="card-content">
                       <h3  class="font-18 ">Notifications</h3>
                       <!-- <h5 class="mt-3 font-15"></h5> -->
-                      <p class="mb-0"><span class="col-green"></span>(soon)</p>
+                      <h5 class="mt-3 font-15">Count: {{chosenClass?chosenClass.notifCount:''}}</h5>
+                      <p class="mb-0">in queue: {{chosenClass?chosenClass.notifinqueue:''}}</p>
                     </div>
                   </div>
                   <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0 d-flex align-items-center justify-content-between">

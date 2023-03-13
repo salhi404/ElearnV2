@@ -39,7 +39,7 @@ export class TeacherEventsComponent implements OnInit, AfterViewInit {
     /*{ title: 'event 1', date: '2023-01-01', },
     { title: 'event 2', start: new Date() , end:'2023-01-30',color:'red'}*/
   ]
-  form={event:'',startDate:'',startTime:'',endDate:'',endTime:'',Recurring :false,type:'0'}
+  form={event:'',startDate:'',startTime:'',endDate:'',endTime:'',Recurring :false,type:'0',sendNotif:false}
   tempId:string='';
   tests:EventImpl=null as any;
   allEvents:any[]=[];
@@ -270,10 +270,10 @@ loadevents(){
     const args=this.datSelectionArg;
     this.dateIsSelected=!args;
     if(!args){
-      console.log("select a date range");
-      this.form.startDate=this.datepipe.transform(new Date(),'yyyy-MM-dd')||'';
-      this.form.endDate=this.datepipe.transform(new Date(),'yyyy-MM-dd')||'';
+      this.form={event:'',startDate:this.datepipe.transform(new Date(),'yyyy-MM-dd')||'',startTime:'',
+      endDate:this.datepipe.transform(new Date(),'yyyy-MM-dd')||'',endTime:'',Recurring :false,type:'0',sendNotif:true}
     }else{
+      this.form={event:'',startDate:'',startTime:'',endDate:'',endTime:'',Recurring :false,type:'0',sendNotif:true}
       this.form.startDate=this.datepipe.transform(args.start,'yyyy-MM-dd')||'';
       this.form.endDate=this.datepipe.transform(args.end,'yyyy-MM-dd')||'';
       if(!args.allDay){
@@ -320,7 +320,7 @@ loadevents(){
   }
   closeModel(){
     this.fadeModel=false;
-    this.form={event:'',startDate:'',startTime:'',endDate:'',endTime:'',Recurring :false,type:'0'}
+    this.form={event:'',startDate:'',startTime:'',endDate:'',endTime:'',Recurring :false,type:'0',sendNotif:false}
     setTimeout(() => {
       this.modelShowen=false;
     }, 150);
@@ -376,10 +376,24 @@ loadevents(){
     }
     this.colorInput=eventt.backgroundColor;
    }else{
-    this.form={event:'',startDate:'',startTime:'',endDate:'',endTime:'',Recurring :false,type:'0'}
+    this.form={event:'',startDate:'',startTime:'',endDate:'',endTime:'',Recurring :false,type:'0',sendNotif:false}
    }
    
     
+  }
+  addEventNotification(send:boolean,ev:string){
+    let notifTosend: any = { type:1, send:1, time:new Date(), notification: ev, status:send?3:1};
+    this.teacherservice.addclassnotif(this.chosenClass.uuid, notifTosend).subscribe({
+        next: data => {
+          console.log("add event notif : ", data);
+          this.events.changeTaskState({ task: this.events.TASKUPDATECLASSNOTIF, data: { tasktype: 4, classid: this.chosenClass.uuid, notif: data.notif } });
+          // this.chosenClass.data.notifications.push(data.notif);
+        },
+        error: err => {
+          console.log('err');
+          console.log(err);
+        }
+      });
   }
   submitModal(){
     if(this.form.event==='')this.form.event="My Event";
@@ -397,11 +411,17 @@ loadevents(){
       this.tempId=this.datepipe.transform(new Date(),'MM_dd_hh_mm_ss')||'temp123';
       const tempevent:EventInput={ title: this.form.event,start:start,end:end,allDay:(this.form.startTime==''&&this.form.endTime==''),color:this.colorInput,id:this.tempId }
       if(this.addnotEditEvent){
+        const sendNotif=this.form.sendNotif
         this.calendarApi.addEvent(this.parsEvent(tempevent));
         this.teacherservice.addclassevent(this.chosenClass.uuid,event).subscribe({
           next:data=>{
+            console.log("addclassevent : ",data);
+            
             this.calendarApi.getEventById(this.tempId)?.setProp('id',data.event.id);
             this.events.changeTaskState({task:this.events.TASKUPDATECLASSEVENT,data:{tasktype:1,classid:this.chosenClass.uuid,classind:this.chosenIndex,event:data.event}});
+            let  tempNotifTitle :string ="new event '" + data.event.title + "' on " + this.datepipe.transform(start,'dd/MM/yy') ;
+            if(!data.event.allDay)tempNotifTitle+=' at '+this.datepipe.transform(start,'HH:mm');
+            this.addEventNotification(sendNotif,tempNotifTitle );
           },
           error:err=>{
             console.log('err');

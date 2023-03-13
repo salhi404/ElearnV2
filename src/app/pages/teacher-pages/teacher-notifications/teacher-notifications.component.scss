@@ -72,3 +72,10 @@
     position:absolute;
     right: 20px;
   }
+
+  .highlightNotif{
+    background-color: #c91f1f8f!important;
+  }
+  .highlightNotifTransition{
+    transition: background-color 2s;
+  }

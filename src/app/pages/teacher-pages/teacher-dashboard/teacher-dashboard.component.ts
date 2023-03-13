@@ -143,7 +143,7 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
         }
         if (state.task == this.events.TASKCHOOSECLASSES) {
           this.chosenIndex = state.data.chosenIndex;
-          this.chosenClass = state.data.chosenClass;
+          this.putClass(state.data.chosenClass);
         }
         if (state.task == this.events.TASKREFRESHCONNECTED) {
           this.getconnectedchaters(state.data.uuid);
@@ -186,6 +186,19 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
               notifToDelete = notifToDelete.filter((ntf:any)=>ntf.id!=state.data.notifId);
             }
           }
+          if(state.data.tasktype==4){
+            const findClass = this.classes.find(cll=>cll.uuid==state.data.classid);
+            if(findClass){
+              findClass.data.notifications.push({...state.data.notif,new:true});
+              findClass.newNotifCount++;
+            }
+            if(this.chosenClass)this.putClass(this.classes.find(cll=>cll.uuid==this.chosenClass.uuid))
+          }
+          if(state.data.tasktype==5){
+            const findClass = this.classes.find(cll=>cll.uuid==state.data.classid);
+              findClass.newNotifCount=0;
+            if(this.chosenClass)this.putClass(this.classes.find(cll=>cll.uuid==this.chosenClass.uuid))
+          }
         }
       })
       this.getclasses(false); // TODO - implement reload (online + new enrollers ...) with socket or add a button 
@@ -193,6 +206,20 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
       this.navigationExtras = { state: { errorNbr: 403 } };
       this.router.navigate(['/error'], this.navigationExtras);
     }
+  }
+  putClass(classe:any){
+    console.log("put class");
+    this.chosenClass=classe;
+    if(this.chosenClass){
+      this.chosenClass.notifCount=this.chosenClass.data.notifications.length;
+      this.chosenClass.notifCount=this.chosenClass.data.notifications.length;
+      this.chosenClass.notifNotSentCount=this.chosenClass.data.notifications.filter((ntf:any)=>ntf.status==1).length;
+      this.chosenClass.notifinqueue=this.chosenClass.data.notifications.filter((ntf:any)=>ntf.status==2).length;
+      
+    }
+
+
+
   }
   activateroute(ind: number) {
     this.activeroute = ind;
@@ -216,6 +243,9 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
         if (data.classes) {
           this.classes = data.classes.sort(function (a:any, b:any) {
             return (new Date(a.created).getTime()) - (new Date(b.created).getTime());
+          });
+          this.classes.forEach(element => {
+            element.newNotifCount=0;
           });
           this.loadingClasses=false;
           this.getTodeyCalender();
