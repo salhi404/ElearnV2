@@ -42,6 +42,7 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
   attemptogetClasses: number = 0;
   modalEvent: Subject<number> = new Subject<number>();
   addnotEdit = true;
+  firstskiped = false;
   selectedEventCount: number[] = [];
   selectedEventCounttoday: number[] = [];
   // selectednextEvent: Date[] = [];
@@ -92,25 +93,28 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
       this.user = this.storageService.getUser();
       this.subscription = this.events.userdataEvent.subscribe(
         state => {
-          if (state.state == this.events.UPDATEUSER) {
-            this.user = state.userdata;
-            this.roles = parseroles(this.user.roles);
-            this.mainRole = getmainrole(this.roles);
-            this.mainRolecode = getmainrolecode(this.user.roles);
-            this.classesCount = this.user.info.classesCount;
-            // console.log("this.classesCount = ",this.classesCount);
-            // if(!this.roles.includes('Teacher')){
-            //   this.navigationExtras={ state: {errorNbr:403} };
-            //   this.router.navigate(['/error'],this.navigationExtras);
-            //   console.log("not autherised");
-            // }
-          }
-          if (state.state == this.events.DALETEUSER) {
-            this.user = null as any;
-            this.roles = [];
-            this.mainRole = '';
-            this.mainRolecode = -1;
-          }
+          
+            if (state.state == this.events.UPDATEUSER) {
+              this.user = state.userdata;
+              this.roles = parseroles(this.user.roles);
+              this.mainRole = getmainrole(this.roles);
+              this.mainRolecode = getmainrolecode(this.user.roles);
+              this.classesCount = this.user.info.classesCount;
+              // console.log("this.classesCount = ",this.classesCount);
+              // if(!this.roles.includes('Teacher')){
+              //   this.navigationExtras={ state: {errorNbr:403} };
+              //   this.router.navigate(['/error'],this.navigationExtras);
+              //   console.log("not autherised");
+              // }
+            }
+            if (state.state == this.events.DALETEUSER) {
+              this.user = null as any;
+              this.roles = [];
+              this.mainRole = '';
+              this.mainRolecode = -1;
+            }
+          
+          
         }
       )
       this.subscription4 = this.socketService.recieveTask.subscribe(data => {
@@ -135,6 +139,8 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
       })*/
 
       this.subscription3 = this.events.taskEvent.subscribe(state => {
+        if(this.firstskiped){
+        
         if (state.task == this.events.TASKOPENMODAL) {
           this.openModel(true)
         }
@@ -160,9 +166,38 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
             const findclass=this.classes.find(cll=>cll.uuid==state.data.classid);
             if(findclass){
               const index = findclass.data.events.findIndex((evv:any)=>evv.id==state.data.event.id);
-              findclass.data.events[index] = state.data.event
+              if(index!=-1) findclass.data.events[index] = state.data.event
             }
             this.updateventcount(new Date(state.data.event.start),state.data.classind,false);
+          }
+          if(state.data.tasktype==3){
+            const findclass=this.classes.find(cll=>cll.uuid==state.data.classid);
+            if(findclass){
+              const index = findclass.data.events.findIndex((evv:any)=>evv.id==state.data.event.id);
+              const notifIdtemp = findclass.data.notifications.find((ntf:any)=>ntf.for==state.data.event.id)?.id||-1;
+              if(index!=-1){
+                console.log("notifIdtemp",notifIdtemp);
+                if(notifIdtemp!=-1)this.removeNotif(notifIdtemp);
+                findclass.data.events.splice(index,1);
+              } 
+              const todayDate = new Date();
+              let nextDate: Date = null as any;
+              let date: Date;
+              let todeyCount = 0;
+              findclass.data.events.forEach((event: any) => {
+                date = new Date(event.start);
+                if (
+                  date.getDate() === todayDate.getDate() &&
+                  date.getMonth() === todayDate.getMonth() &&
+                  date.getFullYear() === todayDate.getFullYear()
+                ) todeyCount++;
+                if (date.getTime() > todayDate.getTime()) {
+                  if (!nextDate || date.getTime() < nextDate.getTime()) nextDate = date;
+                }
+              })
+              this.selectedEventCount[state.data.classind]=findclass.data.events.length;
+              this.selectedEventCounttoday[state.data.classind]=todeyCount;
+            }
           }
         }
         // if (state.task == this.events.TASKDELETECLASSNOTIFSCHEDULE) {
@@ -172,34 +207,62 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
         if (state.task == this.events.TASKUPDATECLASSNOTIF) {
           if(state.data.tasktype==1){
             this.classes.find(cll=>cll.uuid==state.data.classid)?.data.notifications.push(state.data.notif);
+            setTimeout(() => {
+              this.calculateStats();
+            }, 0);
           }
           if(state.data.tasktype==2){
             const findclassnotif=this.classes.find(cll=>cll.uuid==state.data.classid);
             if(findclassnotif){
               const index = findclassnotif.data.notifications.findIndex((notiff:any)=>notiff.id==state.data.notif.id);
               findclassnotif.data.notifications[index] = state.data.notif
+              setTimeout(() => {
+                this.calculateStats();
+              }, 0);
             }
           }
           if(state.data.tasktype==3){
-            let notifToDelete =  this.classes.find(cll=>cll.uuid==state.data.classid)?.data.notifications;
-            if(notifToDelete){
-              notifToDelete = notifToDelete.filter((ntf:any)=>ntf.id!=state.data.notifId);
+            let classFound =  this.classes.find(cll=>cll.uuid==state.data.classid);
+            if(classFound){
+              setTimeout(() => {
+                const  notifToDelete = classFound.data.notifications.findIndex((ntf:any)=>ntf.id==state.data.notifId);
+              if(notifToDelete!=-1){
+                
+                if(classFound.data.notifications[notifToDelete].new){
+                  classFound.newNotifCount--
+                }
+                  
+                classFound.data.notifications.splice(notifToDelete,1);
+
+              }
+                this.calculateStats();
+              }, 0);
+              
             }
           }
           if(state.data.tasktype==4){
+            console.log(".tasktype==4    dash");
             const findClass = this.classes.find(cll=>cll.uuid==state.data.classid);
             if(findClass){
               findClass.data.notifications.push({...state.data.notif,new:true});
-              findClass.newNotifCount++;
+              console.log("findClass 1 ",findClass);
+              findClass.newNotifCount++
+              console.log("findClass 2 ",findClass);
+
             }
             if(this.chosenClass)this.putClass(this.classes.find(cll=>cll.uuid==this.chosenClass.uuid))
           }
           if(state.data.tasktype==5){
             const findClass = this.classes.find(cll=>cll.uuid==state.data.classid);
+            setTimeout(() => {
               findClass.newNotifCount=0;
-            if(this.chosenClass)this.putClass(this.classes.find(cll=>cll.uuid==this.chosenClass.uuid))
+              findClass.data.notifications.forEach((element:any) => {
+                if(element.new) delete element.new
+              });
+            }, 0);
           }
         }
+      }else this.firstskiped = true
       })
       this.getclasses(false); // TODO - implement reload (online + new enrollers ...) with socket or add a button 
     } else {
@@ -208,18 +271,16 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
     }
   }
   putClass(classe:any){
-    console.log("put class");
+    console.log("put class",classe);
     this.chosenClass=classe;
+    this.calculateStats();
+  }
+  calculateStats(){
     if(this.chosenClass){
-      this.chosenClass.notifCount=this.chosenClass.data.notifications.length;
       this.chosenClass.notifCount=this.chosenClass.data.notifications.length;
       this.chosenClass.notifNotSentCount=this.chosenClass.data.notifications.filter((ntf:any)=>ntf.status==1).length;
       this.chosenClass.notifinqueue=this.chosenClass.data.notifications.filter((ntf:any)=>ntf.status==2).length;
-      
     }
-
-
-
   }
   activateroute(ind: number) {
     this.activeroute = ind;
@@ -239,14 +300,18 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
   getclasses(refresh: boolean) {
     this.subscription1 = this.teacherservice.getClasses().subscribe({
       next: data => {
-        console.log("getClasses",data);
+        
         if (data.classes) {
+          console.log("getClasses 1",data);
+          data.classes.forEach((element:any) => {
+            element.newNotifCount=0;
+          });
+          console.log("getClasses 2",data);
           this.classes = data.classes.sort(function (a:any, b:any) {
             return (new Date(a.created).getTime()) - (new Date(b.created).getTime());
           });
-          this.classes.forEach(element => {
-            element.newNotifCount=0;
-          });
+          console.log("this.classes ",this.classes );
+          
           this.loadingClasses=false;
           this.getTodeyCalender();
           // this.checkscheduleedNotif();
@@ -365,6 +430,21 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
         console.log(err);
       }
     })
+  }
+  removeNotif(notifToDelete:number) {
+    console.log("removeNotif",notifToDelete);
+    
+    // TODO add confirmation dialog 
+    this.teacherservice.removeclassnotif(this.chosenClass.uuid, notifToDelete).subscribe({
+      next: data => {
+        console.log("removeclassnotif : ", data);
+        this.events.changeTaskState({ task: this.events.TASKUPDATECLASSNOTIF, data: { tasktype: 3, classid: this.chosenClass.uuid, notifId: notifToDelete } });
+      },
+      error: err => {
+        console.log('err');
+        console.log(err);
+      }
+    });
   }
   chooseClass(id: number) {
     if (this.chosenIndex != id) {

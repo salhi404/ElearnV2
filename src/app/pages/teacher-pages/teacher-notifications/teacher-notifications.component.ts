@@ -29,6 +29,8 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
   showDD: boolean[] = [];
   blockcloseDD: boolean = false;
   openedDD: number = -1;
+  firstskiped = false;
+
   form = {
     type: '',
     send: '',
@@ -44,6 +46,8 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
   }
   ngOnInit(): void {
     this.subscription = this.events.taskEvent.subscribe(state => {
+      if(this.firstskiped){
+      
       if (state.task == this.events.TASKCHOOSECLASSES) {
         console.log("reciever class TASKCHOOSECLASSES 1", state.data.chosenClass);
 
@@ -56,11 +60,19 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
           this.putClass(state.data.chosenClass)
         }
       }
+      if (state.task == this.events.TASKUPDATECLASSNOTIF) {
+        if(state.data.tasktype==4){
+          console.log(".tasktype==4    notif");
+          
+          this.events.changeTaskState({ task: this.events.TASKGETCHOSENCLASS, data: null });
+        }
+      }
       // if (state.task == this.events.TASKDELETECLASSNOTIFSCHEDULE) {
       //   if(this.chosenClass&&this.chosenClass.uuid===state.data.classuuid){
       //     this.chosenClass.data.notifschedule=this.chosenClass.data.notifschedule.filter((ntf:any)=>ntf!=state.data.id);
       //   }
       // }
+    }else this.firstskiped = true
     })
     this.events.changeTaskState({ task: this.events.TASKGETCHOSENCLASS, data: null });
   }
@@ -69,22 +81,24 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
     if (classe) {
       this.showDD = Array(classe.data.notifications.length).fill(false);
       console.log("newNotifCount",this.chosenClass.newNotifCount);
-      if(this.chosenClass.newNotifCount){
+      this.hightightnewNotif();
+    }
+  }
+  hightightnewNotif(){
+    if(this.chosenClass.newNotifCount){
+      if(this.chosenClass){
         this.highlightnew=true;
         this.highlightfade=true;
         this.events.changeTaskState({ task: this.events.TASKUPDATECLASSNOTIF, data: { tasktype: 5, classid: this.chosenClass.uuid} });
       }
-      
       setTimeout(() => {
         this.highlightnew=false;
         setTimeout(() => {
           this.highlightfade=false;
         }, 1000);
       }, 2000);
-      
     }
-    
-    
+
   }
   addNotif() {
     this.form = { type: '3', send: '1', time: '', notification: '', status: '' }
@@ -204,7 +218,7 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
       }
     }
     if (this.form.notification === '') this.form.notification = "new Notification";
-    let notifTosend: any = { type: +this.form.type, send: +this.form.send, time:new Date(this.form.time), notification: this.form.notification, status: +this.form.status };
+    let notifTosend: any = { type: +this.form.type, send: +this.form.send, time:new Date(this.form.time), notification: this.form.notification, status: +this.form.status,for:-1 };
     if (notifTosend.send == 1) {
       notifTosend.time = new Date();
     }

@@ -342,13 +342,17 @@ loadevents(){
       this.calendarApi.getEventById(id)?.remove();
       this.teacherservice.deleteclassevent(this.chosenClass.uuid,id).subscribe({
         next:data=>{
+          console.log("delete data",data);
+          this.events.changeTaskState({task:this.events.TASKUPDATECLASSEVENT,data:{tasktype:3,classid:this.chosenClass.uuid,classind:this.chosenIndex,event:data.event}});
         },
         error:err=>{
           console.log('err delete');
           console.log(err);
         }
       });
-      this.closeModelDelete();
+      this.allEvents=this.calendarApi.getEvents();
+      this.eventToDelete='-1'
+      // this.closeModelDelete();
     }
   }
   selectEvent(){
@@ -381,8 +385,8 @@ loadevents(){
    
     
   }
-  addEventNotification(send:boolean,ev:string){
-    let notifTosend: any = { type:1, send:1, time:new Date(), notification: ev, status:send?3:1};
+  addEventNotification(send:boolean,ev:string,id:number){
+    let notifTosend: any = { type:1, send:1, time:new Date(), notification: ev, status:send?3:1,for:id};
     this.teacherservice.addclassnotif(this.chosenClass.uuid, notifTosend).subscribe({
         next: data => {
           console.log("add event notif : ", data);
@@ -416,12 +420,11 @@ loadevents(){
         this.teacherservice.addclassevent(this.chosenClass.uuid,event).subscribe({
           next:data=>{
             console.log("addclassevent : ",data);
-            
             this.calendarApi.getEventById(this.tempId)?.setProp('id',data.event.id);
             this.events.changeTaskState({task:this.events.TASKUPDATECLASSEVENT,data:{tasktype:1,classid:this.chosenClass.uuid,classind:this.chosenIndex,event:data.event}});
             let  tempNotifTitle :string ="new event '" + data.event.title + "' on " + this.datepipe.transform(start,'dd/MM/yy') ;
             if(!data.event.allDay)tempNotifTitle+=' at '+this.datepipe.transform(start,'HH:mm');
-            this.addEventNotification(sendNotif,tempNotifTitle );
+            this.addEventNotification(sendNotif,tempNotifTitle,data.event.id );
           },
           error:err=>{
             console.log('err');

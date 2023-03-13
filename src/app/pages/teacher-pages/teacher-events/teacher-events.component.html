@@ -204,7 +204,10 @@
                 <option value="-1">click select then click an event or choose from this list </option>
                 <option *ngFor="let event of allEvents" [ngValue]="event.id">"{{event.title}}"
                   from:{{datepipe.transform(event.start,'dd-MM-yyyy HH:mm')}}
-                  to:{{datepipe.transform(event.end,'dd-MM-yyyy HH:mm')}}</option>
+                  {{event.end?'':'to :' + datepipe.transform(event.end,'dd-MM-yyyy HH:mm')}}
+                  id : {{event.id}}
+                
+                </option>
               </select>
               <div class="input-group-append">
                 <button (click)="DeleteEvent(eventToDelete==='-1')"
