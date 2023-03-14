@@ -205,8 +205,7 @@
                 <option *ngFor="let event of allEvents" [ngValue]="event.id">"{{event.title}}"
                   from:{{datepipe.transform(event.start,'dd-MM-yyyy HH:mm')}}
                   {{event.end?'':'to :' + datepipe.transform(event.end,'dd-MM-yyyy HH:mm')}}
-                  id : {{event.id}}
-                
+                  <!-- id : {{event.id}} -->
                 </option>
               </select>
               <div class="input-group-append">

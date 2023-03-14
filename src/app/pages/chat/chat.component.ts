@@ -59,7 +59,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.isLoggedIn = this.storageService.isLoggedIn();
     if (this.isLoggedIn) {
-      //this.user = this.storageService.getUser();
+      this.user = this.storageService.getUser();
       this.subscription1=this.events.userdataEvent.subscribe(
         state=>{
           if(state.state==this.events.UPDATEUSER){
@@ -113,6 +113,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
     this.chatters = this.storageService.getChatters();
     if (this.isLoggedIn) {
+      console.log("chaterrs ",this.chatters);
+      console.log("user ",this.user);
       this.chatters = this.chatters.filter(chatter => chatter.email != this.user.email);
       this.chatters.unshift({ username: this.user.username + '(you)', email: this.user.email, OnlineStat: -1, profileImage: this.user.profileImage });
     }

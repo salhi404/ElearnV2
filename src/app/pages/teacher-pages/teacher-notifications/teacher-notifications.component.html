@@ -47,7 +47,7 @@
                       class="text-muted">Notification</span> </div>
                 </td>
                 <td>{{notification.send==1&&notification.status==1?'now':notification.send==2||notification.status==3?datepipe.transform(notification.time,'dd-MM-yyyy HH:mm'):''}}</td>
-                <td> {{notification.notification}} ::::  {{notification.for|| -2}}</td>
+                <td> {{notification.notification}} </td>
                 <td>
                   <span *ngIf="notification.status==1" class="text-danger">not sent</span>
                   <span *ngIf="notification.status==2" class="text-info">in queue</span>
