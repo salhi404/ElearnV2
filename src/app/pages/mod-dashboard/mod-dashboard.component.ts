@@ -1,8 +1,8 @@
 import { Component, OnInit,OnDestroy,AfterViewInit,Renderer2   } from '@angular/core';
 import { User } from 'app/Interfaces/user';
-import { Subject, Subscription } from 'rxjs';
+import { filter, Subject, Subscription } from 'rxjs';
 import { StorageService } from 'app/_services/storage.service';
-import { Router, NavigationExtras } from '@angular/router';
+import { Router, NavigationExtras, NavigationEnd } from '@angular/router';
 import { AuthService } from '../../_services/auth.service';
 import { EventsService } from 'app/services/events.service';
 import { parsegrade,parseroles,getmainrole, getmainrolecode } from 'app/functions/parsers';
@@ -23,8 +23,16 @@ export class ModDashboardComponent implements OnInit,OnDestroy ,AfterViewInit {
   navigationExtras: NavigationExtras = { state: null as any };
   usersCount:number=-1;
   connectedCount:number=-1;
+  routes:string[]=["/mod-dashboard/users","/mod-dashboard/settings"];
   constructor(private storageService: StorageService,private authService: AuthService,private events:EventsService,private router: Router,private renderer: Renderer2 ,) { }
   ngOnInit(): void {
+    this.swithroutes(this.router.url);
+    this.router.events.pipe(
+      filter((event: any) => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      console.log("router event change");
+      this.swithroutes(this.router.url);
+    });
     this.isLoggedIn = this.storageService.isLoggedIn();
     if (this.isLoggedIn) {
     this.user=this.storageService.getUser();
@@ -66,14 +74,15 @@ export class ModDashboardComponent implements OnInit,OnDestroy ,AfterViewInit {
     }
 
   }
+  swithroutes(url:string){
+    this.activeroute=this.routes.findIndex(route=>route===url)
+    console.log("swithroutes",this.activeroute);
+    
+  }
   activateroute(ind:number){
-    this.activeroute=ind;
-    if (ind==1) {
-      this.router.navigate(['/mod-dashboard/users']);
-    }
-    if (ind==2) {
-      this.router.navigate(['/mod-dashboard/users']);
-    }
+
+    if(ind>=0)this.router.navigate([this.routes[ind]]);
+
 
   }
   ngOnDestroy(): void {

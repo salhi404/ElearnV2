@@ -42,6 +42,7 @@ import { TeacherLiveStreamComponent } from './pages/teacher-pages/teacher-live-s
 import { TeacherEnrollersComponent } from './pages/teacher-pages/teacher-enrollers/teacher-enrollers.component';
 import { TeacherClassesComponent } from './pages/teacher-pages/teacher-classes/teacher-classes.component';
 import { ClassesComponent } from './pages/classes/classes.component';
+import { SettingsModComponent } from './pages/mod-pages/settings-mod/settings-mod.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -78,6 +79,7 @@ import { ClassesComponent } from './pages/classes/classes.component';
     TeacherEnrollersComponent,
     TeacherClassesComponent,
     ClassesComponent,
+    SettingsModComponent,
   ],
   imports: [
     FullCalendarModule,

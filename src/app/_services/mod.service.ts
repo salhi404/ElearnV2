@@ -26,4 +26,8 @@ export class ModService {
     const token = this.storageService.getTokent();
     return this.http.post(MOD_API + 'changeroles', {token,user,roles}, httpOptions);
   }
+  initiate(switchind:number): Observable<any> {
+    const token = this.storageService.getTokent();
+    return this.http.post(MOD_API + 'initiate', {token,switchind}, httpOptions);
+  }
 }

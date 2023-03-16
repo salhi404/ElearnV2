@@ -13,6 +13,7 @@ import { NotificationsComponent } from './pages/notifications/notifications.comp
 import { ProfileComponent } from './pages/profile/profile.component';
 import { ModDashboardComponent } from './pages/mod-dashboard/mod-dashboard.component';
 import { UsersModComponent } from './pages/mod-pages/users-mod/users-mod.component';
+import { SettingsModComponent } from './pages/mod-pages/settings-mod/settings-mod.component';
 import { TeacherDashboardComponent } from './pages/teacher-pages/teacher-dashboard/teacher-dashboard.component';
 import { TeacherEnrollersComponent } from './pages/teacher-pages/teacher-enrollers/teacher-enrollers.component';
 import { TeacherEventsComponent } from './pages/teacher-pages/teacher-events/teacher-events.component';
@@ -62,10 +63,16 @@ const routes: Routes = [
       children: [
         {
           path: '', redirectTo: '/mod-dashboard/users', pathMatch: 'full'
-        },{
+        },
+        {
           path: 'users',
           component:UsersModComponent
-        },{
+        },
+        {
+          path: 'settings',
+          component:SettingsModComponent
+        },
+        {
           path: '**', redirectTo: '/home', pathMatch: 'full'
           // component:UsersModComponent
         },
