@@ -1,7 +1,25 @@
 <div class="main-content">
-    <section class="section">
-        <div class="section-body">
-            Notifications (soon)
+  <section class="section">    
+    <div class="section-body">   
+      <div class="divider"><span></span><span>Notifications</span><span></span></div>   
+      <div class="toast__container">        
+        <div class="row">   <!-- toast__cell -->
+        
+          <div *ngFor="let notif of notifications ;index as i" class="toast2 col-12 {{notif.type==1?'toast--info':notif.type==2?'toast--danger':notif.type==3?'toast--success':''}}  add-margin"><!-- toast--green -->
+            <div class="toast__icon">
+              <!-- <i class="fa-solid fa-check"></i> -->
+              <i class="material-icons ">{{notif.type==1?'event':notif.type==2?'voice_chat':notif.type==3?'notifications':''}}</i>
+            </div>
+            <div class="toast__content">
+              <p class="toast__type"> {{notif.class}} ({{datepipe.transform(notif.time,'HH:mm dd-MM-yy')}})</p>
+              <p class="toast__message">{{notif.notification}}</p>
+            </div>
+            <div class="toast__close">
+              <i class="material-icons ">close</i>
+            </div>
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </section>
 </div>

@@ -1,0 +1,134 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i');
+
+.main-content{
+  // font-family: 'Raleway', sans-serif;
+  display: table;
+  text-align: center;
+}
+
+.toast__container {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.toast__cell{
+  display:inline-block;
+}
+
+.add-margin{
+  margin-bottom:10px;
+}
+
+.toast__svg{
+  fill:#fff;
+}
+
+.toast2 {
+  text-align:left;
+    padding: 12px 0;
+    background-color:#fff;
+    border-radius:8px;
+    top: 0px;
+    position:relative;
+    box-shadow: 2px 7px 14px -5px rgba(0,0,0,0.2);
+}
+
+
+.toast2:before {
+    content: '';
+    position: absolute;
+    top: 10%;
+    left: 8px;
+    width: 4px;
+    height: 80%;
+    border-radius:10px;
+
+}
+
+.toast__icon{
+  position:absolute;
+  top:50%;
+  left:30px;
+  transform:translateY(-50%);
+  width:14px;
+  height:14px;
+  padding: 15px;
+  border-radius:50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.toast__icon>i {
+    color: white;
+    font-size: 15px;
+    position: relative;
+}
+.toast__type {
+    // border: 2px solid blue;
+  color: #3e3e3e;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 0px;
+}
+
+.toast__message {
+    // border: 2px solid red;
+    font-size: 14px;
+    margin-top: 0;
+  margin-bottom: 0;
+    color: #878787;
+}
+
+.toast__content{
+  padding-left:80px;
+  padding-right:60px;
+}
+
+.toast__close {
+    position: absolute;
+    right: 22px;
+    top: 50%;
+    width: 14px;
+    cursor:pointer;
+    height: 14px;
+    fill:#878787;
+    transform: translateY(-50%);
+}
+.toast--danger .toast__icon,.toast--danger:before {
+  background-color: #dc3545 !important
+}
+.toast--info .toast__icon,.toast--info:before
+{
+  background-color: #117a8b !important
+}
+.toast--success .toast__icon,.toast--success:before
+{
+  background-color: #28a745 !important
+}
+.toast--warning .toast__icon,.toast--warning:before
+{
+  background-color: #d39e00 !important
+}
+// .toast--green .toast__icon{
+//   background-color:#2BDE3F;
+// }
+
+// .toast--green:before{
+//   background-color:#2BDE3F;
+// }
+
+// .toast--blue .toast__icon{
+//   background-color:#1D72F3;
+// }
+
+// .toast--blue:before{
+//   background-color:#1D72F3;
+// }
+
+// .toast--yellow .toast__icon{
+//   background-color:#FFC007;
+// }
+
+// .toast--yellow:before{
+//   background-color:#FFC007;
+// }

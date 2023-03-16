@@ -9,7 +9,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { Mail } from 'app/Interfaces/Mail';
 import { SocketioService } from 'app/services/socketio.service';
 import { getmainrolecode } from 'app/functions/parsers'
-
+import { UserService } from '../../_services/user.service';
 @Component({
   selector: 'app-root',
   templateUrl: './root.component.html',
@@ -26,6 +26,7 @@ export class RootComponent implements OnInit, OnDestroy {
     private storageService: StorageService,
     private authService: AuthService,
     private socketService: SocketioService,
+    private UserService:UserService
   ) {
     const navigation = this.router.getCurrentNavigation();
     this.state = { user: this.user, islogged: false, remember: true };
@@ -76,6 +77,11 @@ export class RootComponent implements OnInit, OnDestroy {
         case "classes":
           this.currentRoute = 8;
           break;
+        case "notifications":
+          this.currentRoute = 9;
+          break;
+
+          
         default:
           if (this.storageService.isLoggedIn()) this.router.navigate(["/home"]);
           this.currentRoute = 0;
@@ -108,7 +114,7 @@ export class RootComponent implements OnInit, OnDestroy {
   userSent: boolean = false;
   roles: string[] = [];
   mainrole: number = -1;
-
+  notifications: any[] = [];
   ngOnInit(): void {
     this.onWindowResize();
     this.isLoggedIn = this.storageService.isLoggedIn();
@@ -167,6 +173,7 @@ export class RootComponent implements OnInit, OnDestroy {
           this.showMiniSideBar = pref.miniSideBar;
         }
       )
+      this.getnotifications();
       this.getnoppenedMail();
       this.getnoppenedchat();
       this.updateContacts();
@@ -245,6 +252,28 @@ export class RootComponent implements OnInit, OnDestroy {
       }
     })
   }*/
+  getnotifications() {
+    this.UserService.getNotifications().subscribe({
+      next: data => {
+        console.log("getnotifications : ",data);
+        this.notifications=[];
+        data.notifications.forEach((clntf:any) => {
+          clntf.data.forEach((notif:any) => {
+            this.notifications.push({...notif,class:clntf.class.name});
+          });
+        });
+        this.notifications.sort(function (a:any, b:any) {
+          return (new Date(b.time).getTime()) - (new Date(a.time).getTime());
+        });
+        this.events.changenotificationsState({state:this.events.NOTIFUPDATE,data:{notifications:this.notifications}})
+      },
+      error: err => {
+
+      }
+    })
+  }
+
+
   updateschedule () {
     this.authService.updateschedule().subscribe({
       next: data => {

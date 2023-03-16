@@ -37,8 +37,8 @@
             <tbody>
               <tr *ngFor="let notification of chosenClass?.data.notifications.reverse() ,index as i" [ngClass]="{'highlightNotif':notification.new &&highlightnew ,'highlightNotifTransition':highlightfade}">
                 <td>
-                  <div *ngIf="notification.type==1" class="d-flex justify-content-start align-items-center flex-row"><i
-                      class="material-icons text-muted mr-1">event</i> <span class="text-muted">Event</span> </div>
+                  <div *ngIf="notification.type==1" class="d-flex justify-content-start align-items-center flex-row">
+                    <i class="material-icons text-muted mr-1">event</i> <span class="text-muted">Event</span> </div>
                   <div *ngIf="notification.type==2" class="d-flex justify-content-start align-items-center flex-row"><i
                       class="material-icons text-danger mr-1">voice_chat</i> <span class="text-danger">Live
                       Stream</span> </div>

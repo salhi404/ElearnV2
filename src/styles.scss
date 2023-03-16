@@ -111,11 +111,12 @@
 //devider
 
 .divider {                /* minor cosmetics */
+    // border:2px solid red;
     display: table; 
     font-size: 24px; 
     text-align: center;            /* divider width */
-    margin: 20px auto;  
-    margin-top: 40px;     /* spacing above/below */
+    margin-bottom: 20px ;
+    margin-top: 5px;  
 }
 .divider span { display: table-cell; position: relative; }
 .divider span:first-child, .divider span:last-child {
@@ -19015,7 +19016,7 @@ body.layout-3 .main-footer {
 .main-content {
     padding-left: 225px;
     padding-right: 30px;
-    padding-top: 130px;
+    padding-top: 100px;
     width: 100%;
     position: relative
 }

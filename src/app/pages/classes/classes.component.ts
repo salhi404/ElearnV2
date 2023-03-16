@@ -110,6 +110,7 @@ export class ClassesComponent implements OnInit, OnDestroy {
           let tempp=this.user.info;
           tempp.classesenrollCount=this.classesenrollCount;
           this.storageService.alterUser({info:tempp});
+          // TODO mabe update users
           this.getClasses();
           this.loading=false;
         },

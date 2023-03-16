@@ -4,24 +4,30 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class EventsService {
+  public UPDATEUSER=1;
+  public DALETEUSER=2;
+
   public SIDEBARTAB=2;
   public SIDEBARMINI=3;
+
   public DARKTHEMELIGHT=4;
   public DARKTHEMEDARK=5;
 
   public TASKOPENMAIL=1;
   public TASKOPENMODAL=2;
   public TASKGETCLASSES=3; 
-  public TASKCHOOSECLASSES=4; 
-  //public TASKUPDATECHOOSENCLASSES=5;  
+  public TASKCHOOSECLASSES=4;   
   public TASKREFRESHCONNECTED=5;  
   public TASKCONNECTEDRECIEVED=6;  
   public TASKGETCHOSENCLASS=7;  
   public TASKUPDATECLASSEVENT=8;
   public TASKUPDATECLASSNOTIF=9;
   public TASKDELETECLASSNOTIFSCHEDULE=10;
-  public UPDATEUSER=1;
-  public DALETEUSER=2;
+
+  public NOTIFUPDATE=1;
+  public NOTIFDELETE=2;
+
+
   public layoutEvent = new BehaviorSubject(-1);
   currentLayoutEvent = this.layoutEvent.asObservable();
   public chatEvent = new BehaviorSubject(-1);
@@ -40,6 +46,8 @@ export class EventsService {
   updatestatusEvent = this.updateEvent.asObservable();
   public userdataEvent = new BehaviorSubject<{state:number,userdata:any}>({state:-1,userdata:null});
   userdatastatusEvent = this.userdataEvent.asObservable();
+  public notificationsEvent = new BehaviorSubject<{state:number,data:any}>({state:-1,data:null});
+  notificationsstatusEvent = this.notificationsEvent.asObservable();
   constructor() { }
   chngLayoutEvent(state: number) {
     this.layoutEvent.next(state)
@@ -67,5 +75,8 @@ export class EventsService {
   }
   changeclassInfoState(state: any) {
     this.classinfoEvent.next(state);
+  }
+  changenotificationsState(state: any) {
+    this.notificationsEvent.next(state);
   }
 }

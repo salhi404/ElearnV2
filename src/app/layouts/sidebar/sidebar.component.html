@@ -16,6 +16,11 @@
             <i-feather class="fsideIcons" name="Home"></i-feather>
             <span>Home</span></a>
         </li>
+        <li [ngClass]="{'active2':router.url==='/notifications' }" >
+          <a  (click)="toggleSideBarShow(false)" routerLink="/notifications"  [title]="showMiniSideBar?'':''" class="nav-link pointer">
+            <i-feather class="fsideIcons" name="bell"></i-feather>
+            <span>Notifications</span></a>
+        </li>
         <li *ngIf="roles.includes('ROLE_ADMIN')" [ngClass]="{'active2':router.url==='/mod-dashboard' }" >
           <a  (click)="toggleSideBarShow(false)" routerLink="/mod-dashboard" [title]="showMiniSideBar?'':''" class="nav-link pointer exclusive1">
             <i-feather class="fsideIcons" name="monitor"></i-feather>

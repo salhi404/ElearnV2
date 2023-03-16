@@ -64,6 +64,8 @@ export class ChatComponent implements OnInit, OnDestroy {
         state=>{
           if(state.state==this.events.UPDATEUSER){
             this.user=state.userdata;
+            console.log("user in chat ",state.userdata);
+            
           }
           if(state.state==this.events.DALETEUSER){
             this.user=null as any;
