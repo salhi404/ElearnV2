@@ -26,7 +26,7 @@ export class EventsService {
 
   public NOTIFUPDATE=1;
   public NOTIFDELETE=2;
-
+  public NOTIFREQUPDATE=3;
 
   public layoutEvent = new BehaviorSubject(-1);
   currentLayoutEvent = this.layoutEvent.asObservable();

@@ -19,4 +19,9 @@ export class UserService {
     const token = this.storageService.getTokent();
     return this.http.post(USER_API + 'getnotifications', {token}, httpOptions);
   }
+  cancelnotification(uuid:string,notifId:string): Observable<any> {
+    const token = this.storageService.getTokent();
+    return this.http.post(USER_API + 'cancelnotification', {token,uuid,notifId}, httpOptions);
+  }
+
 }

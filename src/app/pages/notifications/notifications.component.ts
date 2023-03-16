@@ -5,6 +5,8 @@ import { User } from 'app/Interfaces/user';
 import { EventsService } from 'app/services/events.service';
 import { StudentService } from "app/_services/student.service";
 import { DatePipe } from '@angular/common';
+import { UserService } from '../../_services/user.service';
+ 
 @Component({
   selector: 'app-notifications',
   templateUrl: './notifications.component.html',
@@ -18,7 +20,11 @@ export class NotificationsComponent  implements OnInit, OnDestroy {
   datepipe: DatePipe = new DatePipe('en-US');
   loadingClasses: boolean=true;
   notifications: any[]=[] ;
-  constructor(private events: EventsService,private StudentService:StudentService,private storageService: StorageService) { }
+  constructor(
+    private events: EventsService,
+    private StudentService:StudentService,
+    private storageService: StorageService,
+    private UserService:UserService) { }
   ngOnDestroy(): void {
     this.subscription1.unsubscribe();
     this.subscription2.unsubscribe();
@@ -43,6 +49,23 @@ export class NotificationsComponent  implements OnInit, OnDestroy {
         }
       }
     );
+    this.events.changenotificationsState({state:this.events.NOTIFREQUPDATE,data:null})
   }
-
+  cancelNotif(ind:number){
+    const uuid = this.notifications[ind].uuid;
+    const notifId = this.notifications[ind].id;
+    this.notifications.splice(ind,1);
+    // FIXME spamming creates a conflict in the server  
+    this.UserService.cancelnotification(uuid,notifId).subscribe({
+      next:data=>{
+        console.log("cancelnotification res : ",data);
+        
+        this.events.changenotificationsState({state:this.events.NOTIFUPDATE,data:{notifications:this.notifications}})
+        
+      },
+      error:err=>{
+        console.log("cancelnotification err : ",err);
+      }
+    })
+  }
 }

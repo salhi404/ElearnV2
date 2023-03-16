@@ -104,6 +104,7 @@ export class RootComponent implements OnInit, OnDestroy {
   subscription5: Subscription = new Subscription;
   subscription6: Subscription = new Subscription;
   subscription7: Subscription = new Subscription;
+  subscription8: Subscription = new Subscription;
   showMiniSideBar: boolean = false;
   isTabletMode: boolean = false;
   DarkTheme: boolean = false;
@@ -227,6 +228,20 @@ export class RootComponent implements OnInit, OnDestroy {
           this.DarkTheme = true;
           break;
       }
+      this.subscription8 = this.events.notificationsEvent.subscribe(
+        state => {
+          console.log("notificationsEvent ",state);
+          if(state.state==this.events.NOTIFUPDATE){
+            this.notifications=state.data.notifications;
+          }
+          if(state.state==this.events.NOTIFDELETE){
+            this.notifications=state.data.notifications;
+          }
+          if(state.state==this.events.NOTIFREQUPDATE){
+            this.getnotifications();
+          }
+        }
+      );
       this.storageService.setPrefrences({ darkTheme: this.DarkTheme, miniSideBar: this.showMiniSideBar })
     })
 
@@ -256,16 +271,22 @@ export class RootComponent implements OnInit, OnDestroy {
     this.UserService.getNotifications().subscribe({
       next: data => {
         console.log("getnotifications : ",data);
-        this.notifications=[];
+        let tempNotifs :any[]=[];
         data.notifications.forEach((clntf:any) => {
+          console.log("data.canceledNotifs",data.canceledNotifs);
+          console.log("clntf.class.uuid",clntf.class.uuid);
+          
+          const canceledNotifs =data.canceledNotifs.find((elm:any)=>elm.uuid==clntf.class.uuid)
+          console.log("canceledNotifs",canceledNotifs );
+          
           clntf.data.forEach((notif:any) => {
-            this.notifications.push({...notif,class:clntf.class.name});
+            if(!canceledNotifs.notifs.includes(notif.id))  tempNotifs.push({...notif,class:clntf.class.name,uuid:clntf.class.uuid});
           });
         });
-        this.notifications.sort(function (a:any, b:any) {
+        tempNotifs.sort(function (a:any, b:any) {
           return (new Date(b.time).getTime()) - (new Date(a.time).getTime());
         });
-        this.events.changenotificationsState({state:this.events.NOTIFUPDATE,data:{notifications:this.notifications}})
+        this.events.changenotificationsState({state:this.events.NOTIFUPDATE,data:{notifications:tempNotifs}})
       },
       error: err => {
 
@@ -420,6 +441,7 @@ export class RootComponent implements OnInit, OnDestroy {
     this.subscription5.unsubscribe();
     this.subscription6.unsubscribe();
     this.subscription7.unsubscribe();
+    this.subscription8.unsubscribe();
     clearInterval(this.interval1);
     if (!this.state.remember && this.isLoggedIn) this.logout();
     this.socketService.disconnect();
