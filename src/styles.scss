@@ -17219,13 +17219,14 @@ h6 .badge {
     background-size: cover
 }
 
-.navbar .dropdown-list-toggle .message-toggle .headerBadge1 {
+.headerBadge1 {
+    
     position: absolute;
     top: 4px;
     right: 0px;
     font-weight: 300;
     padding: 3px 6px;
-    background: #6677ef;
+    background: #dc3545;
     border-radius: 10px
 }
 
@@ -17661,7 +17662,7 @@ a.dropdown-item.active {
     line-height: 20px
 }
 .dropdown-list .dropdown-list-message {
-    height: unset;
+    // height: unset;
     min-height: 40px;
 }
 .dropdown-list .dropdown-list-message .dropdown-item {

@@ -11,12 +11,14 @@ export class SocketioService {
   recieveMsg = this.recievedMsgEvent.asObservable();
   public recievedTaskEvent = new BehaviorSubject({code:-1,data:null as any});
   recieveTask = this.recievedTaskEvent.asObservable();
+  public recievedNotifEvent = new BehaviorSubject({code:-1,data:null as any});
+  recieveNotif = this.recievedNotifEvent.asObservable();
   constructor() { }
   changerecievedMsg(state: number,chat:any) {
     this.recievedMsgEvent.next({code:state,data:chat})
   }
   setupSocketConnection(token:string) {
-    this.socket = io(environment.SOCKET_ENDPOINT2, {
+    this.socket = io(environment.SOCKET_ENDPOINTLOCAL, {
       auth: {
         token
       }
@@ -50,7 +52,7 @@ getNotifications(){
   if (this.socket){
     this.socket.on('AcceptedIn_Class_Notif', (notif:any) => {
       console.log("AcceptedIn_Class notification recieved : ",notif);
-      
+      this.recievedNotifEvent.next({code:1,data:notif});
     });
   }
 }

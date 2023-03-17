@@ -1,4 +1,4 @@
-import { Component, OnInit,ElementRef, HostListener, Input } from '@angular/core';
+import { Component, OnInit,ElementRef, HostListener, Input, ViewChild } from '@angular/core';
 import { Mail } from 'app/Interfaces/Mail';
 import { DatePipe } from '@angular/common';
 import {  Router, NavigationExtras } from '@angular/router';
@@ -15,20 +15,23 @@ export class MsgDDComponent implements OnInit {
   navigationExtras: NavigationExtras = { state: null as any };
   showMsgDD:boolean=false;
   datepipe: DatePipe = new DatePipe('en-US');
+  @ViewChild("MSGDD") MSGDD!: ElementRef;
   @HostListener('document:click', ['$event'])
   clickout(event:any) {
-    if(this.eRef.nativeElement.contains(event.target)) {
+    if(this.MSGDD.nativeElement.contains(event.target)) {
       //console.log("clicked inside");
     } else {
       this.showMsgDD=false;
       
     }
   }
-  constructor(private eRef: ElementRef,private router: Router,private events:EventsService,) { }
+  constructor(private router: Router,private events:EventsService,) { }
 
   ngOnInit(): void {
   }
   open(ind:number){
+    console.log("open email msg-dd : ",ind);
+    
     this.showMsgDD=false;
     if(this.router.url=="/email"){
       this.events.changeTaskState({task:this.events.TASKOPENMAIL,data:{mail:this.mails[ind]}})

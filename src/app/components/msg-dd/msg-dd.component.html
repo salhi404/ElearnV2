@@ -1,4 +1,4 @@
-<li class="dropdown dropdown-list-toggle navLi">
+<li class="dropdown dropdown-list-toggle navLi" #MSGDD>
   <a (click)="showMsgDD=!showMsgDD" class="nav-link  message-toggle pointer">
     <i-feather class="fnavIcon" name="mail"></i-feather>
     <span *ngIf="mailCount>0" class="badge headerBadge1"> {{mailCount}}</span>
@@ -10,8 +10,8 @@
           <a href="#">Mark All As Read</a>
         </div>-->
     </div>
-    <div class="dropdown-list-content dropdown-list-message">
-      <a (click)="open(i)" *ngFor="let mail of mails;index as i" class="dropdown-item">
+    <div  class="dropdown-list-content dropdown-list-message">
+      <a (click)="open(i)" *ngFor="let mail of mails;index as i" class="dropdown-item pointer">
         <span class="dropdown-item-avatar text-white">
           <img alt="image" src="assets/img/users/user-{{(i%5)+1}}.png" class="rounded-circle">
         </span>

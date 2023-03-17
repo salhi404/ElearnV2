@@ -1,13 +1,14 @@
 <li class="dropdown dropdown-list-toggle navLi">
   <a (click)="showNntDD=!showNntDD" class="nav-link notification-toggle pointer">
-    <i-feather class="fnavIcon bell" name="bell"></i-feather>
+    <i-feather [ngClass]="{'bell':activatebell}" class="fnavIcon " name="bell"></i-feather>
+    <span *ngIf="newNotifsCount>0" class="badge headerBadge1"> {{newNotifsCount}}</span>
   </a>
   <div [ngClass]="{'show22':showNntDD}" class="dropdown-menu dropdown-list dropdown-menu-right pullDown">
     <div class="dropdown-header">
       Notifications
-      <!-- <div class="float-right">
-          <a href="#">Mark All As Read</a>
-        </div> -->
+      <div class="float-right">
+          <a class="pointer col-blue " (click)="markAsread()">Mark All As Read</a>
+        </div>
     </div>
     <div class="dropdown-list-content dropdown-list-icons">
       <a *ngFor="let notif of notifications;index as i" (click)="openNotif(i)" class="dropdown-item dropdown-item-unread pointer"> 

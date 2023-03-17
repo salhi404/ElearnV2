@@ -45,6 +45,7 @@ export class ProfileComponent implements OnInit,OnDestroy {
     //this.reader.onload = e => this.imageSrc = this.reader.result;
     this.isLoggedIn = this.storageService.isLoggedIn();
     if (this.isLoggedIn) {
+      this.user = this.storageService.getUser();
    /* this.uploader.onAfterAddingFile = (file) => {
       file.withCredentials = false;
     };

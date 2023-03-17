@@ -11,7 +11,7 @@
               <i class="material-icons ">{{notif.type==1?'event':notif.type==2?'voice_chat':notif.type==3?'notifications':''}}</i>
             </div>
             <div class="toast__content">
-              <p class="toast__type"> {{notif.class}} :: {{notif.uuid}} :: {{notif.id}} :: ({{datepipe.transform(notif.time,'HH:mm dd-MM-yy')}})</p>
+              <p class="toast__type"> {{notif.class}} ({{datepipe.transform(notif.time,'HH:mm dd-MM-yy')}})</p>
               <p class="toast__message">{{notif.notification}}</p>
             </div>
             <div (click)="cancelNotif(i)" class="toast__close">

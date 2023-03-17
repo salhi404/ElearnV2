@@ -105,6 +105,8 @@ export class RootComponent implements OnInit, OnDestroy {
   subscription6: Subscription = new Subscription;
   subscription7: Subscription = new Subscription;
   subscription8: Subscription = new Subscription;
+  subscription9: Subscription = new Subscription;
+  subscription9firstrigger:boolean=true;
   showMiniSideBar: boolean = false;
   isTabletMode: boolean = false;
   DarkTheme: boolean = false;
@@ -116,6 +118,9 @@ export class RootComponent implements OnInit, OnDestroy {
   roles: string[] = [];
   mainrole: number = -1;
   notifications: any[] = [];
+  notifClasses: any[] = [];
+  newLastSeen:any[]=[];
+
   ngOnInit(): void {
     this.onWindowResize();
     this.isLoggedIn = this.storageService.isLoggedIn();
@@ -148,7 +153,7 @@ export class RootComponent implements OnInit, OnDestroy {
     }
     if (this.isLoggedIn) {
       //this.prepsubscription();
-      this.socketService.setupSocketConnection(this.storageService.getTokent());
+      // this.socketService.setupSocketConnection(this.storageService.getTokent());
       this.socketService.getMsg();
       this.socketService.getNotifications();
       this.socketService.getclassTask();
@@ -233,6 +238,7 @@ export class RootComponent implements OnInit, OnDestroy {
           console.log("notificationsEvent ",state);
           if(state.state==this.events.NOTIFUPDATE){
             this.notifications=state.data.notifications;
+            this.newLastSeen=state.data.newLastSeen;
           }
           if(state.state==this.events.NOTIFDELETE){
             this.notifications=state.data.notifications;
@@ -240,8 +246,34 @@ export class RootComponent implements OnInit, OnDestroy {
           if(state.state==this.events.NOTIFREQUPDATE){
             this.getnotifications();
           }
+          if(state.state==this.events.NOTIFNEW){
+            this.notifications=state.data.newNotifsent.concat(this.notifications);
+            this.newLastSeen=state.data.newLastSeen;
+          }
+          
+
         }
       );
+      this.subscription9 = this.socketService.recieveNotif.subscribe(data => {
+        if(!this.subscription9firstrigger){
+          console.log("subscription4",data);
+          if (data.code == 1) {
+            if(this.notifClasses.length){
+              let newNotifsent :any[]=[]
+              data.data.forEach((element:any) => {
+                const newlastseenNotifs =this.newLastSeen.find((elm:any)=>elm.uuid==element.uuid)
+                if(newlastseenNotifs && element.id>newlastseenNotifs.notifs) newlastseenNotifs.notifs=element.id
+                const findclass=this.notifClasses.find((ntf:any)=>ntf.uuid==element.uuid);
+                if(findclass)newNotifsent.push({...element,class:findclass.name});
+              });
+              this.events.changenotificationsState({state:this.events.NOTIFNEW,data:{newNotifsent,newLastSeen:this.newLastSeen}})
+            }
+          }
+        }else{
+          this.subscription9firstrigger=false;
+        }
+        
+      });
       this.storageService.setPrefrences({ darkTheme: this.DarkTheme, miniSideBar: this.showMiniSideBar })
     })
 
@@ -272,21 +304,32 @@ export class RootComponent implements OnInit, OnDestroy {
       next: data => {
         console.log("getnotifications : ",data);
         let tempNotifs :any[]=[];
+        let newNotifs :any[]=[];
+        let newLastSeen:any[]=[...data.lastseen];
+        this.notifClasses=data.notifications.map((ntf:any)=>ntf.class);
         data.notifications.forEach((clntf:any) => {
           console.log("data.canceledNotifs",data.canceledNotifs);
           console.log("clntf.class.uuid",clntf.class.uuid);
           
           const canceledNotifs =data.canceledNotifs.find((elm:any)=>elm.uuid==clntf.class.uuid)
+          const lastseenNotifs =data.lastseen.find((elm:any)=>elm.uuid==clntf.class.uuid)
+          const newlastseenNotifs =newLastSeen.find((elm:any)=>elm.uuid==clntf.class.uuid)
           console.log("canceledNotifs",canceledNotifs );
           
           clntf.data.forEach((notif:any) => {
-            if(!canceledNotifs.notifs.includes(notif.id))  tempNotifs.push({...notif,class:clntf.class.name,uuid:clntf.class.uuid});
+            if(!canceledNotifs.notifs.includes(notif.id))  {
+              tempNotifs.push({...notif,class:clntf.class.name,uuid:clntf.class.uuid});
+              if(notif.id>lastseenNotifs.notifs) {
+                newNotifs.push({...notif,class:clntf.class.name,uuid:clntf.class.uuid});
+                if(notif.id>newlastseenNotifs.notifs) newlastseenNotifs.notifs=notif.id
+              }
+            }
           });
         });
         tempNotifs.sort(function (a:any, b:any) {
           return (new Date(b.time).getTime()) - (new Date(a.time).getTime());
         });
-        this.events.changenotificationsState({state:this.events.NOTIFUPDATE,data:{notifications:tempNotifs}})
+        this.events.changenotificationsState({state:this.events.NOTIFUPDATE,data:{notifications:tempNotifs,newNotifs,newLastSeen}})
       },
       error: err => {
 
@@ -442,6 +485,7 @@ export class RootComponent implements OnInit, OnDestroy {
     this.subscription6.unsubscribe();
     this.subscription7.unsubscribe();
     this.subscription8.unsubscribe();
+    this.subscription9.unsubscribe();
     clearInterval(this.interval1);
     if (!this.state.remember && this.isLoggedIn) this.logout();
     this.socketService.disconnect();

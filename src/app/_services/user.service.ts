@@ -23,5 +23,9 @@ export class UserService {
     const token = this.storageService.getTokent();
     return this.http.post(USER_API + 'cancelnotification', {token,uuid,notifId}, httpOptions);
   }
+  updatlastseen(newLastSeen:any[]): Observable<any> {
+    const token = this.storageService.getTokent();
+    return this.http.post(USER_API + 'updatlastseen', {token,newLastSeen}, httpOptions);
+  }
 
 }
