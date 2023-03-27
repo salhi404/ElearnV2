@@ -65,7 +65,7 @@ export class LiveStreamComponent implements OnInit, AfterViewInit {
 
   }
   getToken(){
-    window.location.href=' https://zoom.us/oauth/token?response_type=code&client_id=Qe0zJgNzQDqU3u5tJk1sdQ&redirect_uri=http://localhost:4200/liveStreams';
+    window.location.href='https://zoom.us/oauth/authorize?response_type=code&client_id=Qe0zJgNzQDqU3u5tJk1sdQ&redirect_uri=https://elearnappsite.vercel.app/liveStreams' //' https://zoom.us/oauth/token?response_type=code&client_id=Qe0zJgNzQDqU3u5tJk1sdQ&redirect_uri=http://localhost:4200/liveStreams';
   }
   CreateMeeting(){
     this.UserService.CreateMeeting().subscribe({
