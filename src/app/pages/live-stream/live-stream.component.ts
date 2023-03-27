@@ -13,7 +13,9 @@ import ZoomMtgEmbedded from '@zoomus/websdk/embedded';
 @Component({
   selector: 'app-live-stream',
   templateUrl: './live-stream.component.html',
-  styleUrls: ['./live-stream.component.scss','./css/bootstrap.css','./css/react-select.css']
+  styleUrls: ['./live-stream.component.scss',
+  // './css/bootstrap.css','./css/react-select.css'
+]
 })
 export class LiveStreamComponent implements OnInit, AfterViewInit {
   @ViewChild("meetingSDKElement") meetingSDKElement!: ElementRef;
