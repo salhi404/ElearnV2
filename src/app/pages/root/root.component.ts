@@ -46,7 +46,7 @@ export class RootComponent implements OnInit, OnDestroy {
         this.router.navigate(["/"]);
       }
       this.interfaceLayout = false;
-      switch (event.url.split('/')[1]) {
+      switch (event.url.split('/')[1].split('?')[0]) {
         case "":
           if (this.storageService.isLoggedIn()) this.router.navigate(["home"]);
           this.currentRoute = 0;
@@ -154,7 +154,7 @@ export class RootComponent implements OnInit, OnDestroy {
     }
     if (this.isLoggedIn) {
       //this.prepsubscription();
-      this.socketService.setupSocketConnection(this.storageService.getTokent());
+      // this.socketService.setupSocketConnection(this.storageService.getTokent());
       this.socketService.getMsg();
       this.socketService.getNotifications();
       this.socketService.getclassTask();
