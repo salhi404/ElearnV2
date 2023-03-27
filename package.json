@@ -24,6 +24,7 @@
     "@fullcalendar/interaction": "^6.0.3",
     "@fullcalendar/list": "^6.1.4",
     "@fullcalendar/timegrid": "^6.0.3",
+    "@zoomus/websdk": "^2.10.1",
     "angular-datatables": "^15.0.0",
     "angular-feather": "^6.5.0",
     "datatables.net": "^1.11.3",

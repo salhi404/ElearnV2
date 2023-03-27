@@ -63,7 +63,6 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
       if (state.task == this.events.TASKUPDATECLASSNOTIF) {
         if(state.data.tasktype==4){
           console.log(".tasktype==4    notif");
-          
           this.events.changeTaskState({ task: this.events.TASKGETCHOSENCLASS, data: null });
         }
       }

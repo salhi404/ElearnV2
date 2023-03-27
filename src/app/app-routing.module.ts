@@ -21,6 +21,7 @@ import { TeacherNotificationsComponent } from './pages/teacher-pages/teacher-not
 import { TeacherLiveStreamComponent } from './pages/teacher-pages/teacher-live-stream/teacher-live-stream.component';
 import { TeacherClassesComponent } from './pages/teacher-pages/teacher-classes/teacher-classes.component';
 import { ClassesComponent } from './pages/classes/classes.component';
+import { LiveStreamComponent } from './pages/live-stream/live-stream.component';
 const routes: Routes = [
   {
     path: '', component: RootComponent,
@@ -57,6 +58,11 @@ const routes: Routes = [
       path: 'profile',
       component: ProfileComponent
     },
+    {
+      path: 'liveStreams',
+      component:LiveStreamComponent
+    }
+    ,
     {
       path: 'mod-dashboard',
       component: ModDashboardComponent,

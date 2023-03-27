@@ -80,8 +80,9 @@ export class RootComponent implements OnInit, OnDestroy {
         case "notifications":
           this.currentRoute = 9;
           break;
-
-          
+        case "liveStreams":
+          this.currentRoute = 10;
+          break;  
         default:
           if (this.storageService.isLoggedIn()) this.router.navigate(["/home"]);
           this.currentRoute = 0;
@@ -153,7 +154,7 @@ export class RootComponent implements OnInit, OnDestroy {
     }
     if (this.isLoggedIn) {
       //this.prepsubscription();
-      // this.socketService.setupSocketConnection(this.storageService.getTokent());
+      this.socketService.setupSocketConnection(this.storageService.getTokent());
       this.socketService.getMsg();
       this.socketService.getNotifications();
       this.socketService.getclassTask();
