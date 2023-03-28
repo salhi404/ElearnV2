@@ -47,7 +47,6 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscription = this.events.taskEvent.subscribe(state => {
       if(this.firstskiped){
-      
       if (state.task == this.events.TASKCHOOSECLASSES) {
         console.log("reciever class TASKCHOOSECLASSES 1", state.data.chosenClass);
 

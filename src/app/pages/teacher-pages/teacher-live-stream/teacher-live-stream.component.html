@@ -1,1 +1,112 @@
-<p>teacher-live-stream works!</p>
+<div class="row">
+    <div *ngIf="!chosenClass" class="d-flex justify-content-center w-100"> <span class="alert alert-info">choose a class
+        !! </span></div>
+    <div class="col-12">
+      <div class="card StreamCard" [ngClass]="{'classhidden':!chosenClass}" *ngIf="chosenClass">
+        <div class="card-header d-flex justify-content-center align-items-center">
+          <!-- TODO implement select multiple checkbox -->
+          <div [ngClass]="{'invisible2':!editing}" (click)="backToList()" class="iconBtn BtnToLeft">
+            <div class="iconBtnBack ">
+              <a data-toggle="tooltip">
+                <i class="material-icons">arrow_back</i>
+              </a>
+            </div>
+          </div>
+          <h4 class="text-center my-2">
+            <span> {{editing?addnotEdit?'New LiveStream':'Edit LiveStream':'LiveStreams'}} </span>
+          </h4>
+          <div *ngIf="!editing&&addnotEdit" (click)="addStream()" class="iconBtn BtnToRight">
+            <div class="iconBtnBack ">
+              <a data-toggle="tooltip">
+                <i class="material-icons">add</i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div *ngIf="!editing" class="table-responsive tablestream">
+            <table class="  table table-striped">
+              <thead> <!--class="centerColumn"-->
+                <th>Type</th>
+                <th>Time</th>
+                <th>Notification</th>
+                <th>Status<!--<i (click)="checkschedule()" class="material-icons loop-icon">loop</i>--></th>
+                <th>Action</th>
+                <th>Edit</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let livestream of chosenClass?.data.livestreams.reverse() ,index as i" >
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr *ngIf="chosenClass?.data.livestreams.length==0">
+                  <td></td>
+                  <td></td>
+                  <td><span class="d-flex justify-content-center align-items-center">click the plus button to add a
+                      livestream</span></td>
+                  <td></td>
+                  <td></td>
+                  <td> </td>
+                </tr>
+                <tr class="invisible2">
+                  <!-- <td>this is an example as a place holder </td> -->
+                </tr>
+                <div class="spacerinTable "></div>
+              </tbody>
+            </table>
+          </div>
+          <div *ngIf="editing">
+            <div> {{zoomtoken}}</div>
+            <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
+              <fieldset *ngIf="form.status!=='3'" class="form-group">
+                <div class="row">
+                  <div class="col-form-label col-sm-2 pt-0">Date to send</div>
+                  <div class="col-sm-9">
+                    <div class="custom-control custom-radio">
+                      <input type="radio" id="now" class="custom-control-input" name="send" value="1"
+                        [(ngModel)]="form.send" #now>
+                      <label class="custom-control-label" for="now">now</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                      <div class="row">
+                        <div class="col-sm-2 mt-2">
+                          <input type="radio" id="later" class="custom-control-input" name="send" value="2"
+                            [(ngModel)]="form.send" #later>
+                          <label class="custom-control-label" for="later">Later at :</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+              <div class="form-group row ">
+                <div class="col-form-label col-sm-2 pt-2">Notification</div>
+                <div class="col-sm-9">
+                  <input id="notification" type="text" class="form-control" name="notification"
+                    [(ngModel)]="form.notification" maxlength="200" #notification="ngModel"
+                    placeholder="new Notification " type="text">
+                </div>
+                <div class="invalid-feedback" *ngIf="notification.errors ">
+                  <div *ngIf="notification.errors['required']">Last Name is required</div>
+                  <div *ngIf="notification.errors['maxlength']">
+                    the Notification text must be at most 200 characters
+                  </div>
+                </div>
+              </div>
+              <button class=" registerBtn btn btn-primary ml-auto">
+                <span>{{addnotEdit?'Add':'Edit'}}</span>
+                <span *ngIf="loading" class="mx-2"></span>
+                <app-spinner *ngIf="loading" [type]="1"></app-spinner>
+              </button>
+              <!-- <div class="invalid-feedback" *ngIf="formInvalid>-1">
+                    {{formInvalidmsg}}
+                  </div> -->
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

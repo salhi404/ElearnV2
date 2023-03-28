@@ -1,0 +1,40 @@
+.StreamCard {
+    transition: all .2s ease-out;
+    min-height: 450px;
+  }
+  
+  .classhidden {
+    transform: scale(1, 0);
+  }
+  
+  .invisible2 {
+    visibility: hidden;
+  }
+  .centerColumn>* {
+    text-align: center;
+  }
+  
+  .showDD {
+    display: block;
+  }
+  .tablestream {
+    // border: 2px solid red;
+    // overflow: hidden;
+    padding-bottom: 50px;
+  }
+  
+  .spacerinTable {
+    height: 10px;
+  }
+
+  .BtnToLeft {
+    position: absolute;
+    left: 20px;
+  }
+  
+  .BtnToRight {
+    position: absolute;
+    right: 20px;
+  }
+  
+  

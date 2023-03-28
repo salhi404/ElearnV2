@@ -22,6 +22,7 @@ import { TeacherLiveStreamComponent } from './pages/teacher-pages/teacher-live-s
 import { TeacherClassesComponent } from './pages/teacher-pages/teacher-classes/teacher-classes.component';
 import { ClassesComponent } from './pages/classes/classes.component';
 import { LiveStreamComponent } from './pages/live-stream/live-stream.component';
+import { RerouteComponent } from './pages/reroute/reroute.component';
 const routes: Routes = [
   {
     path: '', component: RootComponent,
@@ -123,6 +124,7 @@ const routes: Routes = [
 },
 {path: 'login', component: LoginComponent},
 {path: 'signup', component: RegisterComponent},
+{path: 'reroute', component: RerouteComponent},
 {
   path: 'error', component: ErrorsComponent
 },

@@ -1,5 +1,4 @@
 import { Component, OnInit, AfterViewInit, Inject, ViewChild, ElementRef } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
 import { UserService } from '../../_services/user.service';
 import ZoomMtgEmbedded from '@zoomus/websdk/embedded';
 import { ActivatedRoute } from '@angular/router';
@@ -30,7 +29,6 @@ export class LiveStreamComponent implements OnInit, AfterViewInit {
   client = ZoomMtgEmbedded.createClient();
   code:string=''; 
   constructor(private UserService:UserService,private route: ActivatedRoute) {
-
   }
   ngAfterViewInit() {
     let meetingSDKElement = this.meetingSDKElement.nativeElement as HTMLElement;
@@ -73,19 +71,6 @@ export class LiveStreamComponent implements OnInit, AfterViewInit {
     }
   );
   }
-  getToken(){
-    window.location.href='https://zoom.us/oauth/authorize?response_type=code&client_id=Qe0zJgNzQDqU3u5tJk1sdQ&redirect_uri=https://salhisite.web.app/liveStreams' //' https://zoom.us/oauth/token?response_type=code&client_id=Qe0zJgNzQDqU3u5tJk1sdQ&redirect_uri=http://localhost:4200/liveStreams';
-  }
-  CreateMeeting(){
-    this.UserService.CreateMeeting().subscribe({
-      next: data => {
-        console.log("CreateMeeting data ",data);
-      },
-      error: err => {
-        console.log('error in CreateMeeting ',err)
-      }
-    })
-  }
   getSignature() {
     this.UserService.getsignature(this.meetingNumber,this.role).subscribe({
       next: data => {
@@ -105,7 +90,6 @@ export class LiveStreamComponent implements OnInit, AfterViewInit {
   }
 
   startMeeting(signature: any) {
-
     this.client.join({
       signature: signature,
     	sdkKey: this.sdkKey,

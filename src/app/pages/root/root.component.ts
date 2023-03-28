@@ -83,6 +83,9 @@ export class RootComponent implements OnInit, OnDestroy {
         case "liveStreams":
           this.currentRoute = 10;
           break;  
+          case "reroute":
+          this.currentRoute = 11;
+          break; 
         default:
           if (this.storageService.isLoggedIn()) this.router.navigate(["/home"]);
           this.currentRoute = 0;

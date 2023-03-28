@@ -44,6 +44,7 @@ import { TeacherClassesComponent } from './pages/teacher-pages/teacher-classes/t
 import { ClassesComponent } from './pages/classes/classes.component';
 import { SettingsModComponent } from './pages/mod-pages/settings-mod/settings-mod.component';
 import { LiveStreamComponent } from './pages/live-stream/live-stream.component';
+import { RerouteComponent } from './pages/reroute/reroute.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -82,6 +83,7 @@ import { LiveStreamComponent } from './pages/live-stream/live-stream.component';
     ClassesComponent,
     SettingsModComponent,
     LiveStreamComponent,
+    RerouteComponent,
   ],
   imports: [
     FullCalendarModule,
