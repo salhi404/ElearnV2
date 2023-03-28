@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit, Inject, ViewChild, ElementRef } from 
 import { DOCUMENT } from '@angular/common';
 import { UserService } from '../../_services/user.service';
 import ZoomMtgEmbedded from '@zoomus/websdk/embedded';
-
+import { ActivatedRoute } from '@angular/router';
   // ZoomMtg.setZoomJSLib('https://source.zoom.us/2.10.1/lib', '/av');
 
   // ZoomMtg.preLoadWasm();
@@ -19,23 +19,17 @@ import ZoomMtgEmbedded from '@zoomus/websdk/embedded';
 })
 export class LiveStreamComponent implements OnInit, AfterViewInit {
   @ViewChild("meetingSDKElement") meetingSDKElement!: ElementRef;
-  // setup your Meeting SDK auth endpoint here: https://github.com/zoom/meetingsdk-sample-signature-node.js
-  // This sample app has been updated to use Meeting SDK credentials https://marketplace.zoom.us/docs/guides/build/sdk-app
   sdkKey = 'Qe0zJgNzQDqU3u5tJk1sdQ'
   meetingNumber = '123456789'
   passWord = ''
   role = 0
   userName = 'Angular'
   userEmail = ''
-  // pass in the registrant's token if your meeting or webinar requires registration. More info here:
-  // Meetings: https://marketplace.zoom.us/docs/sdk/native-sdks/web/component-view/meetings#join-registered
-  // Webinars: https://marketplace.zoom.us/docs/sdk/native-sdks/web/component-view/webinars#join-registered
   registrantToken = ''
   zakToken = ''
-
   client = ZoomMtgEmbedded.createClient();
-
-  constructor(private UserService:UserService) {
+  code:string=''; 
+  constructor(private UserService:UserService,private route: ActivatedRoute) {
 
   }
   ngAfterViewInit() {
@@ -62,10 +56,25 @@ export class LiveStreamComponent implements OnInit, AfterViewInit {
     });
   }
   ngOnInit() {
-
+    this.route.queryParams
+    .subscribe((params:any) => {
+      console.log(params); // { code: "price" }
+      this.code = params.code||'';
+      if(this.code){
+        this.UserService.getaccestoken(this.code).subscribe({
+          next: data => {
+            console.log("getaccestoken data ",data);
+          },
+          error: err => {
+            console.log('error in getaccestoken ',err)
+          }
+        })
+      }
+    }
+  );
   }
   getToken(){
-    window.location.href='https://zoom.us/oauth/authorize?response_type=code&client_id=Qe0zJgNzQDqU3u5tJk1sdQ&redirect_uri=https://elearnappsite.vercel.app/liveStreams' //' https://zoom.us/oauth/token?response_type=code&client_id=Qe0zJgNzQDqU3u5tJk1sdQ&redirect_uri=http://localhost:4200/liveStreams';
+    window.location.href='https://zoom.us/oauth/authorize?response_type=code&client_id=Qe0zJgNzQDqU3u5tJk1sdQ&redirect_uri=https://salhisite.web.app/liveStreams' //' https://zoom.us/oauth/token?response_type=code&client_id=Qe0zJgNzQDqU3u5tJk1sdQ&redirect_uri=http://localhost:4200/liveStreams';
   }
   CreateMeeting(){
     this.UserService.CreateMeeting().subscribe({

@@ -27,6 +27,10 @@ export class UserService {
     const token = this.storageService.getTokent();
     return this.http.post(USER_API + 'updatlastseen', {token,newLastSeen}, httpOptions);
   }
+  getaccestoken(code:string,): Observable<any> {
+    const token = this.storageService.getTokent();
+    return this.http.post(USER_API + 'getaccestoken', {token,code}, httpOptions);
+  }
   getsignature(meetingNumber:string,role:number): Observable<any> {
     const token = this.storageService.getTokent();
     return this.http.post(USER_API + 'getsignature', {token,meetingNumber,role}, httpOptions);
