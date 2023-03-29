@@ -23,6 +23,8 @@ import { TeacherClassesComponent } from './pages/teacher-pages/teacher-classes/t
 import { ClassesComponent } from './pages/classes/classes.component';
 import { LiveStreamComponent } from './pages/live-stream/live-stream.component';
 import { RerouteComponent } from './pages/reroute/reroute.component';
+import { MeetingComponent } from './pages/teacher-pages/meeting/meeting.component';
+import { UserMeetingComponent } from './pages/user-meeting/user-meeting.component';
 const routes: Routes = [
   {
     path: '', component: RootComponent,
@@ -125,6 +127,8 @@ const routes: Routes = [
 {path: 'login', component: LoginComponent},
 {path: 'signup', component: RegisterComponent},
 {path: 'reroute', component: RerouteComponent},
+{path: 'teacher/meeting', component: MeetingComponent},
+{path: 'user/meeting', component: UserMeetingComponent},
 {
   path: 'error', component: ErrorsComponent
 },

@@ -68,4 +68,10 @@ export class TeacherService {
     const token = this.storageService.getTokent();
     return this.http.post(TEACHER_API + 'updateclassnotifschedule', {token,uuid,notif,task}, httpOptions);
   }
+
+    //------------- Meetings -------------//
+  CreateMeeting(uuid:string,data:any): Observable<any> {
+    const token = this.storageService.getTokent();
+    return this.http.post(TEACHER_API + 'createmeeting', {token,uuid,data}, httpOptions);
+  }
 }

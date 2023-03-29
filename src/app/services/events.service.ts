@@ -23,12 +23,14 @@ export class EventsService {
   public TASKUPDATECLASSEVENT=8;
   public TASKUPDATECLASSNOTIF=9;
   public TASKDELETECLASSNOTIFSCHEDULE=10;
-
+  public TASKUPDATECLASSSTREAM=11;
   public NOTIFUPDATE=1;
   public NOTIFDELETE=2;
   public NOTIFREQUPDATE=3;
   public NOTIFNEW=4;
 
+
+  
   public layoutEvent = new BehaviorSubject(-1);
   currentLayoutEvent = this.layoutEvent.asObservable();
   public chatEvent = new BehaviorSubject(-1);

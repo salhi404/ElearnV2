@@ -22,12 +22,16 @@ export class TeacherLiveStreamComponent implements OnInit {
   datepipe: DatePipe = new DatePipe('en-US');
   addnotEdit: boolean = true;
   firstskiped = false;
+  formerrors:any={
+    duration:{valid:true,msg:'',oldvalue:''},
+    start_time:{valid:true,msg:'',oldvalue:''}
+  };
   form = {
-    type: '',
-    send: '',
-    time: '',
-    notification: '',
-    status: '',
+    topic : '',
+    agenda : '',
+    start_time : '',
+    duration : '',
+
   }
   haszoomtoken: boolean = false;
   constructor(
@@ -69,7 +73,7 @@ export class TeacherLiveStreamComponent implements OnInit {
     // }
   }
   addStream() {
-    this.form = { type: '3', send: '1', time: '', notification: '', status: '' }
+    this.form = {topic : '',agenda : '',start_time : '',duration : '60'}
     // this.formInvalid = -1;
     // this.formInvalidmsg = '';
     if (this.haszoomtoken) {
@@ -93,23 +97,57 @@ export class TeacherLiveStreamComponent implements OnInit {
     console.log("backToList");
   }
   onSubmit() {
+    let valid =true;
     console.log("submit add");
-    this.CreateMeeting()
-
+    if(!this.form.agenda)this.form.agenda='new agenda';
+    if(!this.form.topic)this.form.agenda='new topic';
+    if(!this.form.start_time){
+      console.log("no time privided");
+      valid=false;
+    }else{
+      console.log("temp 111 ");
+      
+      if(new Date().getTime()>new Date(this.form.start_time).getTime()){
+        console.log("temp 222");
+        this.formerrors.start_time={valid:false,msg:' time given already passed ',oldvalue:this.form.start_time};
+      }
+    }
+    // if(+this.form.duration<10||+this.form.duration>180){
+    //   console.log('ration must be between 5 min and 180 min not ',+this.form.duration);
+    //   this.formerrors.duration = {valid:false,msg:' duration must be between 5 min and 180 min',oldvalue:this.form.duration};
+    //   valid=false;
+    // }
+    if(valid){
+      console.log("CreateMeeting fired"); 
+      this.CreateMeeting({...this.form});
+    }   
+  }
+  clear(){
+    this.formerrors={
+      duration:{valid:true,msg:'',oldvalue:''},
+      start_time:{valid:true,msg:'',oldvalue:''}
+    };
   }
   getToken() {
     // window.location.href=
     const url = 'https://zoom.us/oauth/authorize?response_type=code&client_id=zWgF4lQeTQuXC5E4Mrd5A&redirect_uri=https://salhisite.web.app/reroute';
     window.open(url, "_blank");
   }
-  CreateMeeting() {
-    this.UserService.CreateMeeting().subscribe({
+  CreateMeeting(data:any) {
+    this.teacherservice.CreateMeeting(this.chosenClass.uuid,data).subscribe({
       next: data => {
         console.log("CreateMeeting data ", data);
+        this.events.changeTaskState({task:this.events.TASKUPDATECLASSSTREAM,data:{tasktype:1,classid:this.chosenClass.uuid,liveStream:data.meeting}});
+        this.editing=false;
+        this.clear();
       },
       error: err => {
         console.log('error in CreateMeeting ', err)
       }
     })
   }
+startMeeting(meeting:any){
+
+}
+
 }

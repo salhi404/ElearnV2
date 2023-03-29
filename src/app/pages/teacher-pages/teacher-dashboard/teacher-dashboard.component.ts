@@ -262,6 +262,11 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
             }, 0);
           }
         }
+        if (state.task == this.events.TASKUPDATECLASSSTREAM) {
+          if(state.data.tasktype==1){
+            this.classes.find(cll=>cll.uuid==state.data.classid)?.data.livestreams.push(state.data.liveStream);
+          }
+        }
       }else this.firstskiped = true
       })
       this.getclasses(false); // TODO - implement reload (online + new enrollers ...) with socket or add a button 

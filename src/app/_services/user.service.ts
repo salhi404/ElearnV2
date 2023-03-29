@@ -35,8 +35,4 @@ export class UserService {
     const token = this.storageService.getTokent();
     return this.http.post(USER_API + 'getsignature', {token,meetingNumber,role}, httpOptions);
   }
-  CreateMeeting(): Observable<any> {
-    const token = this.storageService.getTokent();
-    return this.http.post(USER_API + 'createmeeting', {token}, httpOptions);
-  }
 }

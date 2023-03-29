@@ -45,6 +45,8 @@ import { ClassesComponent } from './pages/classes/classes.component';
 import { SettingsModComponent } from './pages/mod-pages/settings-mod/settings-mod.component';
 import { LiveStreamComponent } from './pages/live-stream/live-stream.component';
 import { RerouteComponent } from './pages/reroute/reroute.component';
+import { MeetingComponent } from './pages/teacher-pages/meeting/meeting.component';
+import { UserMeetingComponent } from './pages/user-meeting/user-meeting.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -84,6 +86,8 @@ import { RerouteComponent } from './pages/reroute/reroute.component';
     SettingsModComponent,
     LiveStreamComponent,
     RerouteComponent,
+    MeetingComponent,
+    UserMeetingComponent,
   ],
   imports: [
     FullCalendarModule,

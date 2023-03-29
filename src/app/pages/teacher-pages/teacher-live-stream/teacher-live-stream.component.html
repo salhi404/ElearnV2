@@ -27,20 +27,23 @@
           <div *ngIf="!editing" class="table-responsive tablestream">
             <table class="  table table-striped">
               <thead> <!--class="centerColumn"-->
-                <th>Type</th>
-                <th>Time</th>
-                <th>Notification</th>
-                <th>Status<!--<i (click)="checkschedule()" class="material-icons loop-icon">loop</i>--></th>
-                <th>Action</th>
+                <th>topic</th>
+                <th>agenda</th>
+                <th>start_time</th>
+                <th>duration<!--<i (click)="checkschedule()" class="material-icons loop-icon">loop</i>--></th>
+                <th>host_email</th>
+                <th>status</th>
                 <th>Edit</th>
               </thead>
               <tbody>
                 <tr *ngFor="let livestream of chosenClass?.data.livestreams.reverse() ,index as i" >
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
+                  <td>{{livestream.topic}}</td>
+                  <td>{{livestream.agenda}}</td>
+                  <td>{{datepipe.transform(livestream.start_time,'dd-MM-yyyy HH:mm')}}</td>
+                  <td>{{livestream.duration}} min</td>
+                  <td>{{livestream.host_email}}</td>
+                  <td>{{livestream.status}}</td>
+                  <td><div  (click)="startMeeting(livestream)" class="btn btn-success pointer">start</div></td>
                 </tr>
                 <tr *ngIf="chosenClass?.data.livestreams.length==0">
                   <td></td>
@@ -81,21 +84,59 @@
                     </div>
                   </div>
                 </div>
-              </fieldset>
-              <div class="form-group row ">
-                <div class="col-form-label col-sm-2 pt-2">Notification</div>
-                <div class="col-sm-9">
-                  <input id="notification" type="text" class="form-control" name="notification"
-                    [(ngModel)]="form.notification" maxlength="200" #notification="ngModel"
-                    placeholder="new Notification " type="text">
+              </fieldset>-->
+              <div class="row">
+                <div class="form-group col-6">
+                  <label for="topic"> topic </label>
+                  <input id="topic" type="text" class="form-control" name="topic"
+                    [(ngModel)]="form.topic" maxlength="200" #topic="ngModel"
+                    placeholder="new topic" >
+                    <!-- <div class="invalid-feedback" *ngIf="topic.errors ">
+                      <div *ngIf="topic.errors['required']">Last Name is required</div>
+                      <div *ngIf="topic.errors['maxlength']">
+                        the topic must be at most 200 characters
+                      </div>
+                    </div> -->
+                </div> 
+                <div class="form-group col-6">
+                  <label for="agenda"> agenda </label>
+                  <input id="agenda" type="text" class="form-control" name="agenda"
+                    [(ngModel)]="form.agenda" maxlength="200" #agenda="ngModel"
+                    placeholder="new agenda">
+                    <!-- <div class="invalid-feedback" *ngIf="agenda.errors ">
+                      <div *ngIf="agenda.errors['maxlength']">
+                        the agenda must be at most 200 characters
+                      </div>
+                    </div> -->
                 </div>
-                <div class="invalid-feedback" *ngIf="notification.errors ">
-                  <div *ngIf="notification.errors['required']">Last Name is required</div>
-                  <div *ngIf="notification.errors['maxlength']">
-                    the Notification text must be at most 200 characters
-                  </div>
+              </div>
+              <div class="row">
+                <div class="form-group col-6">
+                  <label for="start_time"> starting time </label>
+                  <input id="start_time" type="datetime-local" class="form-control" name="start_time"
+                    [(ngModel)]="form.start_time" #start_time="ngModel" required>
+                    <!-- form.start_time :{{form.start_time}} -->
+                    <div class="invalid-feedback" *ngIf="start_time.errors ">
+                      <div *ngIf="start_time.errors['required']"> starting time is required</div>
+                    </div>
+                    <div class="invalid-feedback" *ngIf="!formerrors.start_time.valid&&form.start_time===formerrors.start_time.oldvalue">
+                      {{formerrors.start_time.msg}}
+                    </div>
+                </div> 
+                <div class="form-group col-6">
+                  <label for="duration"> duration (min) </label>
+                  <input id="duration" type="number" class="form-control" name="duration"
+                    [(ngModel)]="form.duration" max="180" min="10" #duration="ngModel"
+                    placeholder="60" >
+                    <div class="invalid-feedback" *ngIf="duration.errors ">
+                      <div *ngIf="duration.errors['max']">duration must be at most 180 min</div>
+                      <div *ngIf="duration.errors['min']">duration must be at least 10 min</div>
+                    </div>
+                    <!-- <div class="invalid-feedback" *ngIf="formerrors.duration.valid&&form.duration===formerrors.duration.oldvalue">
+                        {{formerrors.duration.msg}}
+                    </div> -->
                 </div>
-              </div> -->
+              </div> 
               <button class=" registerBtn btn btn-primary ml-auto">
                 <span>{{addnotEdit?'Add':'Edit'}}</span>
                 <span *ngIf="loading" class="mx-2"></span>

@@ -83,9 +83,9 @@ export class RootComponent implements OnInit, OnDestroy {
         case "liveStreams":
           this.currentRoute = 10;
           break;  
-          case "reroute":
-          this.currentRoute = 11;
-          break; 
+          // case "reroute":
+          // this.currentRoute = 11;
+          // break; 
         default:
           if (this.storageService.isLoggedIn()) this.router.navigate(["/home"]);
           this.currentRoute = 0;
@@ -126,6 +126,8 @@ export class RootComponent implements OnInit, OnDestroy {
   newLastSeen:any[]=[];
 
   ngOnInit(): void {
+    console.log("rooot");
+    
     this.onWindowResize();
     this.isLoggedIn = this.storageService.isLoggedIn();
     if (this.isLoggedIn) {
