@@ -74,4 +74,8 @@ export class TeacherService {
     const token = this.storageService.getTokent();
     return this.http.post(TEACHER_API + 'createmeeting', {token,uuid,data}, httpOptions);
   }
+  getsignature (uuid:string,indd:number): Observable<any> {
+    const token = this.storageService.getTokent();
+    return this.http.post(TEACHER_API + 'getsignature', {token,uuid,indd}, httpOptions);
+  }
 }

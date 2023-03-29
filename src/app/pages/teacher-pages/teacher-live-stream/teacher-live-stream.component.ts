@@ -147,7 +147,8 @@ export class TeacherLiveStreamComponent implements OnInit {
     })
   }
 startMeeting(meeting:any){
-
+  const url = window.location.origin+'/teacher/meeting?uuid='+this.chosenClass.uuid+'&indd='+meeting.indd;
+    window.open(url, "_blank");
 }
 
 }
