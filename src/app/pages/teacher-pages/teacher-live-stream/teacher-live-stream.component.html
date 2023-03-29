@@ -59,9 +59,9 @@
             </table>
           </div>
           <div *ngIf="editing">
-            <div> {{zoomtoken}}</div>
+            <div></div>
             <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
-              <fieldset *ngIf="form.status!=='3'" class="form-group">
+              <!-- <fieldset *ngIf="form.status!=='3'" class="form-group">
                 <div class="row">
                   <div class="col-form-label col-sm-2 pt-0">Date to send</div>
                   <div class="col-sm-9">
@@ -95,7 +95,7 @@
                     the Notification text must be at most 200 characters
                   </div>
                 </div>
-              </div>
+              </div> -->
               <button class=" registerBtn btn btn-primary ml-auto">
                 <span>{{addnotEdit?'Add':'Edit'}}</span>
                 <span *ngIf="loading" class="mx-2"></span>

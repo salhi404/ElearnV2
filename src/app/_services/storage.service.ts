@@ -151,7 +151,7 @@ export class StorageService {
   parseUser(json: any): User {//alterauthuserdata   
     var user: User = {
       username: "null", email: "null", roles: [], verified: false, pref: { darkTheme: false, miniSideBar: false },
-      profileImage: '??', USERDETAILS: {}, contacts: [], fName: '', lName: '', birthDate: new Date(0), grade: -1, info: { classesCount: 0, classesenrollCount: 0 }
+      profileImage: '??', USERDETAILS: {}, contacts: [],data:{}, fName: '', lName: '', birthDate: new Date(0), grade: -1, info: { classesCount: 0, classesenrollCount: 0 }
     }//adduserinfo
     user.username = json.username ? json.username : user.username;
     user.email = json.email ? json.email : user.email;
@@ -166,6 +166,7 @@ export class StorageService {
     user.profileImage = json.profileImage ? json.profileImage : user.profileImage;
     user.USERDETAILS = json.USERDETAILS ? json.USERDETAILS : user.USERDETAILS;
     user.info = json.info ? json.info : user.info;
+    user.data = json.data ? json.data : user.data;
     return user;
   }
   public saveModMail(mod: any[]) {

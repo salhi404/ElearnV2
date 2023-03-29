@@ -22,7 +22,9 @@ export class RerouteComponent implements OnInit {
       if(code){
         this.UserService.getaccestoken(code).subscribe({
           next: data => {
-            this.storageService.setzoomtoken("zoomtoken",{ zoom_refresh_token:data.data.refresh_token , zoomtoken:data.data.access_token,zoomtoken_expire:(new Date().getTime() + (data.data.expires_in-5)*1000)})
+            // this.storageService.setzoomtoken("zoomtoken",
+            // { zoom_refresh_token:data.data.refresh_token , zoomtoken:data.data.access_token,zoomtoken_expire:data.data.expires_in})
+            this.storageService.alterUser({data:data.userData})
             console.log("getaccestoken data ",data);
           },
           error: err => {

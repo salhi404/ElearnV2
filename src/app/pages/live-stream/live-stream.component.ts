@@ -19,13 +19,13 @@ import { ActivatedRoute } from '@angular/router';
 export class LiveStreamComponent implements OnInit, AfterViewInit {
   @ViewChild("meetingSDKElement") meetingSDKElement!: ElementRef;
   sdkKey = 'Qe0zJgNzQDqU3u5tJk1sdQ'
-  meetingNumber = '123456789'
-  passWord = ''
-  role = 0
+  meetingNumber = '74647496286'
+  passWord = '123456'
+  role = 1
   userName = 'Angular'
   userEmail = ''
   registrantToken = ''
-  zakToken = ''
+  zakToken = 'dFDlsRDoSTOUQyRmWq8IPA'
   client = ZoomMtgEmbedded.createClient();
   code:string=''; 
   constructor(private UserService:UserService,private route: ActivatedRoute) {

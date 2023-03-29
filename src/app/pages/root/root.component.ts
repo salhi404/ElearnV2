@@ -136,9 +136,11 @@ export class RootComponent implements OnInit, OnDestroy {
             this.logout();
           } else {
             if (data.user) {
+              console.log("data.user",data.user);
+              
               this.storageService.alterUser(data.user);
               this.user = this.storageService.getUser();
-              // console.log("user updated ",this.user);
+              console.log("user updated ",this.user);
               this.events.changeuserdataState({ state: 1, userdata: this.user });
             }
           }

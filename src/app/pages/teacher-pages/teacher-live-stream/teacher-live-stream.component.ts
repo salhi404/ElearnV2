@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UserService } from 'app/_services/user.service';
 import { Subscription } from 'rxjs';
 import { EventsService } from 'app/services/events.service';
@@ -13,54 +13,54 @@ import ZoomMtgEmbedded from '@zoomus/websdk/embedded';
   templateUrl: './teacher-live-stream.component.html',
   styleUrls: ['./teacher-live-stream.component.scss']
 })
-export class TeacherLiveStreamComponent implements OnInit{
+export class TeacherLiveStreamComponent implements OnInit {
   subscription: Subscription = new Subscription();
-subscription1: Subscription = new Subscription();
-editing: boolean = false;
-loading: boolean = false;
-chosenClass: any = null;
-datepipe: DatePipe = new DatePipe('en-US');
-addnotEdit: boolean = true;
-firstskiped = false;
-form = {
+  subscription1: Subscription = new Subscription();
+  editing: boolean = false;
+  loading: boolean = false;
+  chosenClass: any = null;
+  datepipe: DatePipe = new DatePipe('en-US');
+  addnotEdit: boolean = true;
+  firstskiped = false;
+  form = {
     type: '',
     send: '',
     time: '',
     notification: '',
     status: '',
   }
-  zoomtoken: string="";
-constructor(
-  private events: EventsService, 
-  private teacherservice: TeacherService,
-  private UserService:UserService,
-  private storageService: StorageService,
+  haszoomtoken: boolean = false;
+  constructor(
+    private events: EventsService,
+    private teacherservice: TeacherService,
+    private UserService: UserService,
+    private storageService: StorageService,
   ) { }
-ngOnDestroy(): void {
-  this.subscription.unsubscribe();
-  this.subscription1.unsubscribe();
-}
-ngOnInit() {
-  this.subscription = this.events.taskEvent.subscribe(state => {
-    if(this.firstskiped){
-    if (state.task == this.events.TASKCHOOSECLASSES) {
-      console.log("reciever class TASKCHOOSECLASSES 1", state.data.chosenClass);
-      this.putClass(state.data.chosenClass);
-    }
-    if (state.task == this.events.TASKUPDATECLASSNOTIF) {
-      if(state.data.tasktype==4){
-        console.log(".tasktype==4 notif");
-        this.events.changeTaskState({ task: this.events.TASKGETCHOSENCLASS, data: null });
-      }
-    }
-  }else this.firstskiped = true
-  })
-  this.events.changeTaskState({ task: this.events.TASKGETCHOSENCLASS, data: null });
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+    this.subscription1.unsubscribe();
+  }
+  ngOnInit() {
+    this.subscription = this.events.taskEvent.subscribe(state => {
+      if (this.firstskiped) {
+        if (state.task == this.events.TASKCHOOSECLASSES) {
+          console.log("reciever class TASKCHOOSECLASSES 1", state.data.chosenClass);
+          this.putClass(state.data.chosenClass);
+        }
+        if (state.task == this.events.TASKUPDATECLASSNOTIF) {
+          if (state.data.tasktype == 4) {
+            console.log(".tasktype==4 notif");
+            this.events.changeTaskState({ task: this.events.TASKGETCHOSENCLASS, data: null });
+          }
+        }
+      } else this.firstskiped = true
+    })
+    this.events.changeTaskState({ task: this.events.TASKGETCHOSENCLASS, data: null });
   }
   putClass(classe: any) {
     this.chosenClass = classe;
-    if(classe){
-      console.log('chosenClass data',this.chosenClass.data);
+    if (classe) {
+      console.log('chosenClass data', this.chosenClass.data);
     }
     // if (classe) {
     //   this.showDD = Array(classe.data.notifications.length).fill(false);
@@ -72,19 +72,17 @@ ngOnInit() {
     this.form = { type: '3', send: '1', time: '', notification: '', status: '' }
     // this.formInvalid = -1;
     // this.formInvalidmsg = '';
-    if(this.zoomtoken){
+    if (this.haszoomtoken) {
       this.editing = true;
       this.addnotEdit = true;
-    }else{
-      const tokens = this.storageService.getzoomTokens("zoomtoken");
-      const now = new Date();
-      console.log("getzoomTokens",tokens);
-      if(tokens.zoomtoken&&now.getTime()<tokens.zoomtoken_expire){
-        this.zoomtoken=tokens.zoomtoken;
+    } else {
+      this.haszoomtoken = this.storageService.isLoggedIn() && (this.storageService.getUser().data.hasToken);
+      console.log("this.haszoomtoken", this.haszoomtoken);
+      if (this.haszoomtoken) {
         this.editing = true;
         this.addnotEdit = true;
-      }else{
-       this.getToken()
+      } else {
+        this.getToken()
       }
     }
   }
@@ -94,19 +92,23 @@ ngOnInit() {
     this.editing = false;
     console.log("backToList");
   }
-  onSubmit(){}
-  getToken(){
-    // window.location.href=
-    const url ='https://zoom.us/oauth/authorize?response_type=code&client_id=zWgF4lQeTQuXC5E4Mrd5A&redirect_uri=https://salhisite.web.app/reroute';
-    window.open(url,"_blank");
+  onSubmit() {
+    console.log("submit add");
+    this.CreateMeeting()
+
   }
-  CreateMeeting(){
+  getToken() {
+    // window.location.href=
+    const url = 'https://zoom.us/oauth/authorize?response_type=code&client_id=zWgF4lQeTQuXC5E4Mrd5A&redirect_uri=https://salhisite.web.app/reroute';
+    window.open(url, "_blank");
+  }
+  CreateMeeting() {
     this.UserService.CreateMeeting().subscribe({
       next: data => {
-        console.log("CreateMeeting data ",data);
+        console.log("CreateMeeting data ", data);
       },
       error: err => {
-        console.log('error in CreateMeeting ',err)
+        console.log('error in CreateMeeting ', err)
       }
     })
   }

@@ -13,6 +13,7 @@ export interface User{
     profileImage:string,
     USERDETAILS:any,
     info:any,
+    data:any,
     //fromTo:User
 }
 export interface UserPublic{
