@@ -90,7 +90,7 @@ export class MeetingComponent implements OnInit, AfterViewInit {
     	userName: info.userName,
       userEmail: info.host_email,
       tk: '',//info.registrantToken,
-      zak:'eyJ0eXAiOiJKV1QiLCJzdiI6IjAwMDAwMSIsInptX3NrbSI6InptX28ybSIsImFsZyI6IkhTMjU2In0.eyJhdWQiOiJjbGllbnRzbSIsInVpZCI6ImRGRGxzUkRvU1RPVVF5Um1XcThJUEEiLCJpc3MiOiJ3ZWIiLCJzayI6IjAiLCJzdHkiOjEsIndjZCI6InVzMDQiLCJjbHQiOjAsImV4cCI6MTY4MDEzOTM5NSwiaWF0IjoxNjgwMTMyMTk1LCJhaWQiOiIzVzJrX2FCR1ItQzNsdnJmUXdqTUVBIiwiY2lkIjoiIn0.2lVV46XWA-1bmb_fCKz-gXnDQ3n-o5CoNcf2lRyeQ5A' //info.zakToken
+      zak: info.zakToken
     })
   }
 }

@@ -100,7 +100,7 @@ export class TeacherLiveStreamComponent implements OnInit {
     let valid =true;
     console.log("submit add");
     if(!this.form.agenda)this.form.agenda='new agenda';
-    if(!this.form.topic)this.form.agenda='new topic';
+    if(!this.form.topic)this.form.topic='new topic';
     if(!this.form.start_time){
       console.log("no time privided");
       valid=false;

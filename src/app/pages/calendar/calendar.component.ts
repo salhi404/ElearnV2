@@ -10,6 +10,11 @@ import { DatePipe } from '@angular/common';
 import { AuthService } from '../../_services/auth.service';
 import { EventImpl } from '@fullcalendar/core/internal';
 import { parsegrade, parseroles, getmainrole, getmainrolecode, parsesubject, parsesubjectIcon } from 'app/functions/parsers';
+import { Subscription } from 'rxjs';
+import { User } from 'app/Interfaces/user';
+import { StorageService } from 'app/_services/storage.service';
+import { EventsService } from 'app/services/events.service';
+
 const views = ["dayGridMonth", "timeGridWeek", "timeGridDay", "listMonth", "listWeek", "listDay"];
 @Component({
   selector: 'app-calendar',
@@ -17,12 +22,17 @@ const views = ["dayGridMonth", "timeGridWeek", "timeGridDay", "listMonth", "list
   styleUrls: ['./calendar.component.scss']
 })
 export class CalendarComponent implements OnInit, AfterViewInit {
+  constructor(
+    private storageService: StorageService,
+    private events: EventsService,
+    private cdr: ChangeDetectorRef, private authService: AuthService
+  ) { }
   @ViewChild(FullCalendarComponent) calendarElement!: FullCalendarComponent;
   @ViewChild("modalDialog") modalDialog!: ElementRef;
   @ViewChild("modalDialogDelete") modalDialogDelete!: ElementRef;
   @ViewChild("moreDD") moreDD!: ElementRef;
   blockHostListener: boolean = false;
-  events: EventSourceInput = [
+  eventss: EventSourceInput = [
     /*{ title: 'event 1', date: '2023-01-01', },
     { title: 'event 2', start: new Date() , end:'2023-01-30',color:'red'}*/
   ]
@@ -33,6 +43,9 @@ export class CalendarComponent implements OnInit, AfterViewInit {
     endDate: '',
     endTime: '',
   }
+  user: User = null as any;
+  subscription: Subscription = new Subscription();
+  isLoggedIn: boolean = false;
   tempId: string = '';
   tests: EventImpl = null as any;
   allEvents: any[] = [];
@@ -60,13 +73,15 @@ export class CalendarComponent implements OnInit, AfterViewInit {
   calendarApi: Calendar = null as any;
   MyClasses: any[] = [];
   personalEvents: any = null;
+  classesAcceptedInCount:number=0;
   calendarOptions: CalendarOptions = {
+    
     eventDisplay: "block",
     initialView: 'dayGridMonth',
     eventClick: this.handleEventClick(), // MUST ensure `this` context is maintained
     eventMouseEnter: this.handleEventEnter(),
     eventMouseLeave: this.handleEventLeave(),
-    events: this.events,
+    events: this.eventss,
     locale: 'en-GB',
     eventTimeFormat: { // like '14:30:00'
       hour: '2-digit',
@@ -136,15 +151,28 @@ export class CalendarComponent implements OnInit, AfterViewInit {
 
     }
   }
-  constructor(private cdr: ChangeDetectorRef, private authService: AuthService) { }
+
   test() {
     console.log(this.calendarApi.view.title);
   }
   ngOnInit(): void {
-    //this.calendarApi=this.calendarComponent.getApi();
-    //console.log(this.calendarApi.view);
-    // this.nextView();
-
+    this.isLoggedIn = this.storageService.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.user = this.storageService.getUser();
+      this.subscription = this.events.userdataEvent.subscribe(
+        state => {
+          
+            if (state.state == this.events.UPDATEUSER) {
+              this.classesAcceptedInCount = this.user.info.classesAcceptedInCount;
+            }
+            if (state.state == this.events.DALETEUSER) {
+              this.user = null as any;
+            }
+          
+          
+        }
+      )
+      }
   }
   ngAfterViewInit() {
     this.calendarApi = this.calendarElement.getApi();

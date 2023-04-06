@@ -114,7 +114,7 @@
                 <div class="form-group col-6">
                   <label for="start_time"> starting time </label>
                   <input id="start_time" type="datetime-local" class="form-control" name="start_time"
-                    [(ngModel)]="form.start_time" #start_time="ngModel" required>
+                    [(ngModel)]="form.start_time" #start_time="ngModel" required >
                     <!-- form.start_time :{{form.start_time}} -->
                     <div class="invalid-feedback" *ngIf="start_time.errors ">
                       <div *ngIf="start_time.errors['required']"> starting time is required</div>

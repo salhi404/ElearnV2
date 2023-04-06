@@ -1,7 +1,8 @@
-import { Component, OnInit, AfterViewInit, Inject, ViewChild, ElementRef } from '@angular/core';
-import { UserService } from '../../_services/user.service';
-import ZoomMtgEmbedded from '@zoomus/websdk/embedded';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+// import { UserService } from '../../_services/user.service';
+import { DatePipe } from '@angular/common';
+import { StudentService } from "app/_services/student.service";
+
   // ZoomMtg.setZoomJSLib('https://source.zoom.us/2.10.1/lib', '/av');
 
   // ZoomMtg.preLoadWasm();
@@ -16,89 +17,91 @@ import { ActivatedRoute } from '@angular/router';
   // './css/bootstrap.css','./css/react-select.css'
 ]
 })
-export class LiveStreamComponent implements OnInit, AfterViewInit {
-  @ViewChild("meetingSDKElement") meetingSDKElement!: ElementRef;
-  sdkKey = 'Qe0zJgNzQDqU3u5tJk1sdQ'
-  meetingNumber = '74647496286'
-  passWord = '123456'
-  role = 1
-  userName = 'Angular'
-  userEmail = ''
-  registrantToken = ''
-  zakToken = 'dFDlsRDoSTOUQyRmWq8IPA'
-  client = ZoomMtgEmbedded.createClient();
-  code:string=''; 
-  constructor(private UserService:UserService,private route: ActivatedRoute) {
-  }
-  ngAfterViewInit() {
-    let meetingSDKElement = this.meetingSDKElement.nativeElement as HTMLElement;
+export class LiveStreamComponent implements OnInit {
 
-    this.client.init({
-      debug: true,
-      zoomAppRoot: meetingSDKElement!,
-      language: 'en-US',
-      customize: {
-        meetingInfo: ['topic', 'host', 'mn', 'pwd', 'telPwd', 'invite', 'participant', 'dc', 'enctype'],
-        toolbar: {
-          buttons: [
-            {
-              text: 'Custom Button',
-              className: 'CustomButton',
-              onClick: () => {
-                console.log('custom button');
-              }
-            }
-          ]
-        }
-      }
-    });
+  oppenedtab:number=1;
+  datepipe: DatePipe = new DatePipe('en-US');
+  allStreams:any[]=[];
+  activeStreams:any[]=[];
+  listedStreams:any[]=[];
+  constructor(
+    // private UserService:UserService,
+    private StudentService:StudentService,
+    ) {
   }
+
   ngOnInit() {
-    this.route.queryParams
-    .subscribe((params:any) => {
-      console.log(params); // { code: "price" }
-      this.code = params.code||'';
-      if(this.code){
-        this.UserService.getaccestoken(this.code).subscribe({
-          next: data => {
-            console.log("getaccestoken data ",data);
-          },
-          error: err => {
-            console.log('error in getaccestoken ',err)
-          }
-        })
-      }
-    }
-  );
+    this.getStreams();
   }
-  getSignature() {
-    this.UserService.getsignature(this.meetingNumber,this.role).subscribe({
-      next: data => {
-        console.log("getSignature data ",data);
-        
-        if(data.signature) {
-          console.log(data.signature)
-          this.startMeeting(data.signature)
-        } else {
-          console.log(data)
+  getStreams(){
+    this.StudentService.getStreams().subscribe({
+      next:data=>{
+        const now =new Date();
+        if(data.livestreamsdata){
+          this.allStreams=[];
+          data.livestreamsdata.forEach((classStreams:any) => {
+            classStreams.livestreams.forEach((stream:any) => {
+              
+              
+              const start_timeDate =new Date(stream.start_time);
+              console.log("ind : ",stream.indd);
+              console.log("now : ",now);
+              console.log("start_timeDate : ",start_timeDate);
+              if(now.getTime()>start_timeDate.getTime() +(stream.duration+5)*60000){
+                this.allStreams.push({...stream,classuuid:classStreams.classuuid,classname:classStreams.classname,timestatuscode:4,timestatus:'passed'})
+              } else if(now.getTime()>start_timeDate.getTime() ){
+                this.allStreams.push({...stream,classuuid:classStreams.classuuid,classname:classStreams.classname,timestatuscode:3,timestatus:'active'})
+                this.activeStreams.push({...stream,classuuid:classStreams.classuuid,classname:classStreams.classname,timestatuscode:3,timestatus:'active'})
+              }
+              else if(now.getTime()>start_timeDate.getTime()  - 1200000){
+                this.allStreams.push({...stream,classuuid:classStreams.classuuid,classname:classStreams.classname,timestatuscode:2,timestatus:'soon'})
+                this.activeStreams.push({...stream,classuuid:classStreams.classuuid,classname:classStreams.classname,timestatuscode:2,timestatus:'soon'})
+              }
+              else {
+                this.allStreams.push({...stream,classuuid:classStreams.classuuid,classname:classStreams.classname,timestatuscode:1,timestatus:this.getremainigTime(start_timeDate.getTime())})
+              }
+            });
+          });
         }
+        this.changeactive();
+        console.log("getStreams data",data);
+        
       },
-      error: err => {
-        console.log('error in getSignature ',err)
+      error:err=>{
+        console.log("getStreams err",err);
       }
     })
   }
+  getremainigTime(dateFuture:number):string{
+    var dateNow = new Date().getTime();
+    var seconds = Math.floor((dateFuture - (dateNow))/1000);
+    var minutes = Math.floor(seconds/60);
+    var hours = Math.floor(minutes/60);
+    var days = Math.floor(hours/24);
 
-  startMeeting(signature: any) {
-    this.client.join({
-      signature: signature,
-    	sdkKey: this.sdkKey,
-    	meetingNumber: this.meetingNumber,
-    	password: this.passWord,
-    	userName: this.userName,
-      userEmail: this.userEmail,
-      tk: this.registrantToken,
-      zak: this.zakToken
-    })
+    hours = hours-(days*24);
+    minutes = minutes-(days*24*60)-(hours*60);
+    seconds = seconds-(days*24*60*60)-(hours*60*60)-(minutes*60);
+    var str='';
+    if(days>0)str+=str?'and ':'in '+ days+' days ';
+    else{
+      if(hours>0)str+=str?'and ':'in '+ hours+' hours ';
+      if(minutes>0)str+=str?'and ':'in '+ minutes+' minutes ';
+    }
+    return str
+  }
+  oppenTab(ind:number){
+    this.oppenedtab=ind;
+    this.changeactive();
+  }
+  changeactive(){
+    if(this.oppenedtab==1)
+    this.listedStreams=this.allStreams;
+    if(this.oppenedtab==2)
+    this.listedStreams=this.activeStreams;
+  }
+  startMeeting(meeting:any){
+    const url = window.location.origin+'/user/meeting?uuid='+meeting.classuuid+'&indd='+meeting.indd;
+      window.open(url, "_blank");
   }
 }

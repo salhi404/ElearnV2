@@ -2,6 +2,20 @@
 	<section class="section">
 		<div class="section-body ">
 			<div class="row">
+				<div *ngIf="!personalEvents" class="col-lg-3 col-md-6 col-sm-6 col-12">
+					<div class="card card-statistic-1 grow2 classCard classCardPersonal " >
+						<div class="h-100 flex-containerr">
+							<div class="padding-20">
+								<div class="flex-containerr">
+									<h4 class="text-dark mb-2">personal</h4>
+									<span class="font-dark  text-dark">
+										<i class="ti-arrow-up text-dark">events : </i>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 				<div *ngIf="personalEvents" class="col-lg-3 col-md-6 col-sm-6 col-12">
 					<div (click)="toggleClass(-1)" class="card card-statistic-1 grow2 classCard classCardPersonal "
 						[ngClass]="{'active-class':personalEvents.class.chosen}">
@@ -39,6 +53,13 @@
 						</div>
 					</div>
 				</div>
+				<ng-container *ngIf="!MyClasses.length">
+					<div *ngFor="let i of [].constructor(classesAcceptedInCount)" class="col-lg-3 col-md-6 col-sm-6 col-12">
+					  <div class="card card-statistic-1 grow2 classCard">
+						<app-sceleton-load [type]="1" [height]="100" [width]="-1" [border]="10"></app-sceleton-load>
+					  </div> 
+					</div>
+				  </ng-container>
 			</div>
 			<div class=" calendarCard card card-primary">
 				<div *ngIf="clicktoEdit" class="clickAlert {{allEvents.length==0?'clickAlertNoEv':''}}">

@@ -2,9 +2,78 @@
 <div class="main-content">
     <section class="section">    
       <div class="section-body">
-        <div id="meetingSDKElement" #meetingSDKElement>
+        <div style="height: 800px;"  class="section-body  d-flex flex-column ">
+          <div style="height: 800px;" class="row">
+            <div style="height: 800px;" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+              <div style="height: 800px;" class="card ">
+                <div class="card-header d-flex justify-content-center align-items-center">
+                  <h4 class="text-center my-2"><span>LiveStreams</span></h4>
+                  </div>
+                <div  class="card-body ">
+                    <section  class="gray-bg padding-top-bottom">
+                      <!--==== Portfolio Filters ====-->
+                      <div class="categories">
+                        <ul>
+                          <li [ngClass]="{'active':oppenedtab==1}">
+                            <a class="pointer" (click)="oppenTab(1)" >All Streams</a>
+                          </li>
+                          <li [ngClass]="{'active':oppenedtab==2}">
+                            <a class="pointer" (click)="oppenTab(2)" >Active streams</a>
+                          </li>
+                          <!-- <li [ngClass]="{'active':oppenedtab==3}">
+                              <a class="pointer" (click)="oppenTab(3)" >Notifications</a>
+                            </li> -->
+                          <!-- <li>
+                            <a class="pointer"  data-filter=".apps">Apps</a>
+                          </li>
+                          <li>
+                            <a class="pointer"  data-filter=".psd">PSD</a>
+                          </li> -->
+                        </ul>
+                      </div>
+                    </section>
+                    <div  class="table-responsive tablestream">
+                      <table class="  table table-striped">
+                        <thead> <!--class="centerColumn"-->
+                          <th>indd</th>
+                          <th>class</th>
+                          <th>topic</th>
+                          <th>start_time</th>
+                          <th>duration<!--<i (click)="checkschedule()" class="material-icons loop-icon">loop</i>--></th>
+                          <th>status</th>
+                          <th>action</th>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let livestream of listedStreams.reverse() ,index as i" >
+                            <td>{{livestream.classname}}</td>
+                            <td>{{livestream.classname}}</td>
+                            <td>{{livestream.topic}}</td>
+                            <td>{{datepipe.transform(livestream.start_time,'dd-MM-yyyy HH:mm')}}</td>
+                            <td>{{livestream.duration}} min</td>
+                            <td>{{livestream.timestatus}}</td>
+                            <td><div  (click)="startMeeting(livestream)" class="btn btn-success pointer">start</div></td>
+                          </tr>
+                          
+                          <tr class="invisible2">
+                            <!-- <td>this is an example as a place holder </td> -->
+                          </tr>
+                          <div class="spacerinTable "></div>
+                        </tbody>
+                      </table>
+                      <div    *ngIf="listedStreams.length==0">
+                        <span class="d-flex justify-content-center align-items-center">
+                          there is no {{oppenedtab==1?'livestream Available':oppenedtab==2?'Active livestream for the moment':'livestream'}}
+                        </span>
+                      </div >
+                    </div>
+                    <div *ngIf="oppenedtab==1" >
+
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <button (click)="getSignature()">Join Meeting</button>
         </div>
     </section>
   </div>

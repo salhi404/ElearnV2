@@ -16,11 +16,6 @@
             <i-feather class="fsideIcons" name="Home"></i-feather>
             <span>Home</span></a>
         </li>
-        <li [ngClass]="{'active2':router.url==='/notifications' }" >
-          <a  (click)="toggleSideBarShow(false)" routerLink="/notifications"  [title]="showMiniSideBar?'':''" class="nav-link pointer">
-            <i-feather class="fsideIcons" name="bell"></i-feather>
-            <span>Notifications</span></a>
-        </li>
         <li *ngIf="roles.includes('ROLE_ADMIN')" [ngClass]="{'active2':router.url==='/mod-dashboard' }" >
           <a  (click)="toggleSideBarShow(false)" routerLink="/mod-dashboard" [title]="showMiniSideBar?'':''" class="nav-link pointer exclusive1">
             <i-feather class="fsideIcons" name="monitor"></i-feather>
@@ -30,6 +25,22 @@
           <a  (click)="toggleSideBarShow(false)" routerLink="/teacher-dashboard" [title]="showMiniSideBar?'':''" class="nav-link pointer exclusive3">
             <i-feather class="fsideIcons" name="monitor"></i-feather>
             <span>Dashboard</span></a>
+        </li>
+        <li [ngClass]="{'active2':router.url==='/notifications' }" >
+          <a  (click)="toggleSideBarShow(false)" routerLink="/notifications"  [title]="showMiniSideBar?'':''" class="nav-link pointer">
+            <i-feather class="fsideIcons" name="bell"></i-feather>
+            <span>Notifications</span></a>
+        </li>
+        <li [ngClass]="{'active2':router.url==='/calendar' }">
+          <a (click)="toggleSideBarShow(false)" routerLink="/calendar" [title]="showMiniSideBar?'':''" class="nav-link pointer">
+            <i-feather class="fsideIcons" name="calendar"></i-feather> 
+            <span>calendar</span>
+          </a>
+        </li>
+        <li [ngClass]="{'active2':router.url==='/liveStreams' }" >
+          <a  (click)="toggleSideBarShow(false)" routerLink="/liveStreams"  [title]="showMiniSideBar?'':''" class="nav-link pointer">
+            <i-feather class="fsideIcons" name="video"></i-feather>
+            <span>liveStreams</span></a>
         </li>
         <li [ngClass]="{'active2':router.url==='/email' }">
           <a (click)="toggleSideBarShow(false)" routerLink="/email" [title]="showMiniSideBar?'':''" class="nav-link pointer">
@@ -44,12 +55,7 @@
            
           </a>
         </li>
-        <li [ngClass]="{'active2':router.url==='/calendar' }">
-          <a (click)="toggleSideBarShow(false)" routerLink="/calendar" [title]="showMiniSideBar?'':''" class="nav-link pointer">
-            <i-feather class="fsideIcons" name="calendar"></i-feather> 
-            <span>calendar</span>
-          </a>
-        </li>
+
         
         <!-- <li class="menu-header">UI Elements</li>
         <li class="dropdown">
