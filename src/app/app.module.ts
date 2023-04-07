@@ -47,6 +47,7 @@ import { LiveStreamComponent } from './pages/live-stream/live-stream.component';
 import { RerouteComponent } from './pages/reroute/reroute.component';
 import { MeetingComponent } from './pages/teacher-pages/meeting/meeting.component';
 import { UserMeetingComponent } from './pages/user-meeting/user-meeting.component';
+import { TestComponent } from './pages/test/test.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -88,6 +89,7 @@ import { UserMeetingComponent } from './pages/user-meeting/user-meeting.componen
     RerouteComponent,
     MeetingComponent,
     UserMeetingComponent,
+    TestComponent,
   ],
   imports: [
     FullCalendarModule,

@@ -57,5 +57,8 @@ export class SidebarComponent implements OnInit {
   toggelDropDown(index:number){
     this.activeDropDown[index]=!this.activeDropDown[index]
   }
-
+  openTestPage(){
+    const url = window.location.origin+'/test';
+    window.location.href = url;
+    }
 }

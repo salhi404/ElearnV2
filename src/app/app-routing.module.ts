@@ -25,6 +25,7 @@ import { LiveStreamComponent } from './pages/live-stream/live-stream.component';
 import { RerouteComponent } from './pages/reroute/reroute.component';
 import { MeetingComponent } from './pages/teacher-pages/meeting/meeting.component';
 import { UserMeetingComponent } from './pages/user-meeting/user-meeting.component';
+import { TestComponent } from './pages/test/test.component';
 const routes: Routes = [
   {
     path: '', component: RootComponent,
@@ -129,6 +130,7 @@ const routes: Routes = [
 {path: 'reroute', component: RerouteComponent},
 {path: 'teacher/meeting', component: MeetingComponent},
 {path: 'user/meeting', component: UserMeetingComponent},
+{path: 'test', component: TestComponent},
 {
   path: 'error', component: ErrorsComponent
 },

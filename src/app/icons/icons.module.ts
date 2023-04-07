@@ -7,14 +7,14 @@ import { FeatherModule } from 'angular-feather';
 import {
   Home,AlignJustify, Maximize, Monitor,Briefcase,Command,Mail,Copy,ShoppingBag,File,Layout,Grid,
   PieChart,Feather,Image,Flag,Sliders,Map,MapPin,UserCheck,Anchor,ChevronsDown,AlertTriangle,Bell,
-  ArrowDownCircle, XCircle,MessageCircle,Calendar,Minimize,Video
+  ArrowDownCircle, XCircle,MessageCircle,Calendar,Minimize,Video,Activity
 } from 'angular-feather/icons';
 
 const icons = {
   Home,
   AlignJustify,Maximize,Monitor,Briefcase,Command,Mail,Copy,ShoppingBag,File,Layout,Grid,PieChart,Feather
   ,Image,Flag,Sliders,Map,MapPin,UserCheck,Anchor,ChevronsDown,AlertTriangle,Bell,ArrowDownCircle,XCircle,
-  MessageCircle,Calendar,Minimize,Video
+  MessageCircle,Calendar,Minimize,Video,Activity
 };
 @NgModule({
   declarations: [],
