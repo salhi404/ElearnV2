@@ -26,6 +26,7 @@ import { RerouteComponent } from './pages/reroute/reroute.component';
 import { MeetingComponent } from './pages/teacher-pages/meeting/meeting.component';
 import { UserMeetingComponent } from './pages/user-meeting/user-meeting.component';
 import { TestComponent } from './pages/test/test.component';
+import { WhiteboardComponent } from './pages/whiteboard/whiteboard.component';
 const routes: Routes = [
   {
     path: '', component: RootComponent,
@@ -131,6 +132,7 @@ const routes: Routes = [
 {path: 'teacher/meeting', component: MeetingComponent},
 {path: 'user/meeting', component: UserMeetingComponent},
 {path: 'test', component: TestComponent},
+{path: 'whiteboard', component: WhiteboardComponent},
 {
   path: 'error', component: ErrorsComponent
 },

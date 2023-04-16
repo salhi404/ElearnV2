@@ -8,7 +8,7 @@ import { Peer } from "peerjs";
 })
 export class TestComponent implements OnInit,OnDestroy {
   @ViewChild('myvideo') myVideo: any;
-  
+  conn:any;
   peer:any;
   anotherid:any;
   mypeerid:any;
@@ -47,7 +47,7 @@ export class TestComponent implements OnInit,OnDestroy {
     setTimeout(() => {
       this.mypeerid = this.peer.id;
       console.log('this.peer',this.peer);
-    },3000);
+    },0);
     
     this.peer.on('connection', (conn:any)=> {
   conn.on('data', (data:any)=>{
@@ -91,19 +91,17 @@ export class TestComponent implements OnInit,OnDestroy {
       // }
     })
   }
-  
+  send(){
+    if(this.conn) this.conn.send('send test ');
+  }
   connect(){
-    var conn = this.peer.connect(this.anotherid);
-conn.on('open', function(){
-  conn.send('Message from that id');
+    this.conn = this.peer.connect(this.anotherid);
+    this.conn.on('open', ()=>{
+    this.conn.send('Message from that id');
 });
   }
   
   videoconnect(){
-
-
-
-
     // let video = this.myVideo.nativeElement;
     var localvar = this.peer;
     var fname = this.anotherid;
@@ -114,7 +112,12 @@ conn.on('open', function(){
     
     // n.getUserMedia = ( n.getUserMedia || n.webkitGetUserMedia || n.mozGetUserMedia  || n.msGetUserMedia );
     if(isPlatformBrowser(this._platform) && 'mediaDevices' in navigator) {
-      navigator.mediaDevices.getUserMedia({video: true, audio: true}).then((ms: MediaStream) => {
+      // navigator.mediaDevices.getUserMedia({video: true, audio: true}).
+      navigator.mediaDevices.getDisplayMedia({
+        audio: true, 
+        video: true, //{ mediaSource: "screen"}
+    }).
+      then((ms: MediaStream) => {
         var call = localvar.call(fname, ms);
         // const _video = this.video.nativeElement;
         // _video.srcObject = ms;

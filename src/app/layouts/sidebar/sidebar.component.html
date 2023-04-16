@@ -56,12 +56,21 @@
           </a>
         </li>
         <li [ngClass]="{'active2':router.url==='/test' }">
-          <a (click)="toggleSideBarShow(false) ; openTestPage()"  [title]="showMiniSideBar?'':''" class="nav-link pointer">
+          <a (click)="toggleSideBarShow(false) ; openPage(0)"  [title]="showMiniSideBar?'':''" class="nav-link pointer">
             <i-feather class="fsideIcons" name="activity"></i-feather> 
             <span>Test</span>
            
           </a>
         </li>
+        <li [ngClass]="{'active2':router.url==='/whiteboard' }">
+          <a (click)="toggleSideBarShow(false) ; openPage(1)"  [title]="showMiniSideBar?'':''" class="nav-link pointer">
+            <!-- <i-feather class="fsideIcons" name="activity"></i-feather>  -->
+            <i class="fa-solid fa-chalkboard"></i>
+            <span>Whiteboard</span>
+           
+          </a>
+        </li>
+        
         
         <!-- <li class="menu-header">UI Elements</li>
         <li class="dropdown">

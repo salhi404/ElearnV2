@@ -48,6 +48,7 @@ import { RerouteComponent } from './pages/reroute/reroute.component';
 import { MeetingComponent } from './pages/teacher-pages/meeting/meeting.component';
 import { UserMeetingComponent } from './pages/user-meeting/user-meeting.component';
 import { TestComponent } from './pages/test/test.component';
+import { WhiteboardComponent } from './pages/whiteboard/whiteboard.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -90,6 +91,7 @@ import { TestComponent } from './pages/test/test.component';
     MeetingComponent,
     UserMeetingComponent,
     TestComponent,
+    WhiteboardComponent,
   ],
   imports: [
     FullCalendarModule,

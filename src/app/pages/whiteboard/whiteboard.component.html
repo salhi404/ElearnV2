@@ -1,0 +1,18 @@
+<input type="text" [(ngModel)]="textString"/><button (click)="addText()">Add</button>
+    
+<button (click)="addFigure('triangle')">Triangle</button>
+<button (click)="addFigure('circle')">Circle</button>
+<button (click)="addFigure('square')">Square</button>
+<button (click)="addFigure('rectangle')">Rectangle</button>
+<button (click)="ExportToContent('json')">Generate Json</button>
+<button (click)="ExportToContent('svg')">Generate SVG</button>
+<button (click)="copycanvas()">copy canvas</button>
+<button (click)="pastcanvas()">past canvas</button>
+<input type="text" [(ngModel)]="anotherid">
+<button (click)="connect()">Connect</button>
+<button (click)="send()">send</button>
+<p>My id - {{mypeerid}}</p>
+<br/>
+<code>{{OutputContent}}</code>
+<canvas id="canvas"></canvas>
+<div #dataContainer></div>
