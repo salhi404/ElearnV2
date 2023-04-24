@@ -75,6 +75,9 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
       case "/teacher-dashboard/liveStreams":
         this.activeroute = 4
         break;
+        case "/teacher-dashboard/whiteboard":
+        this.activeroute = 5
+        break;
       default:
         this.activeroute = -1
         break;
@@ -183,20 +186,20 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
               const todayDate = new Date();
               let nextDate: Date = null as any;
               let date: Date;
-              let todeyCount = 0;
+              let todayCount = 0;
               findclass.data.events.forEach((event: any) => {
                 date = new Date(event.start);
                 if (
                   date.getDate() === todayDate.getDate() &&
                   date.getMonth() === todayDate.getMonth() &&
                   date.getFullYear() === todayDate.getFullYear()
-                ) todeyCount++;
+                ) todayCount++;
                 if (date.getTime() > todayDate.getTime()) {
                   if (!nextDate || date.getTime() < nextDate.getTime()) nextDate = date;
                 }
               })
               this.selectedEventCount[state.data.classind]=findclass.data.events.length;
-              this.selectedEventCounttoday[state.data.classind]=todeyCount;
+              this.selectedEventCounttoday[state.data.classind]=todayCount;
             }
           }
         }
@@ -265,6 +268,7 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
         if (state.task == this.events.TASKUPDATECLASSSTREAM) {
           if(state.data.tasktype==1){
             this.classes.find(cll=>cll.uuid==state.data.classid)?.data.livestreams.push(state.data.liveStream);
+            this.calculateStats();
           }
         }
       }else this.firstskiped = true
@@ -281,10 +285,19 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
     this.calculateStats();
   }
   calculateStats(){
+    const now =new Date();
+    const today =this.datepipe.transform(now,"yyyy-MM-dd");
+    console.log("today",today);
+    
     if(this.chosenClass){
       this.chosenClass.notifCount=this.chosenClass.data.notifications.length;
       this.chosenClass.notifNotSentCount=this.chosenClass.data.notifications.filter((ntf:any)=>ntf.status==1).length;
       this.chosenClass.notifinqueue=this.chosenClass.data.notifications.filter((ntf:any)=>ntf.status==2).length;
+      this.chosenClass.streamCount=this.chosenClass.data.livestreams.length;
+      this.chosenClass.streamtodayCount=this.chosenClass.data.livestreams.filter((ntf:any)=>{
+        console.log("test ",ntf.start_time.substring(0,10));
+        
+        return ntf.start_time.substring(0,10)===today}).length;
     }
   }
   activateroute(ind: number) {
@@ -301,6 +314,10 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
     if (ind == 4) {
       this.router.navigate(['/teacher-dashboard/liveStreams']);
     }
+    if (ind == 5) {
+      this.router.navigate(['/teacher-dashboard/whiteboard']);
+    }
+    
   }
   getclasses(refresh: boolean) {
     this.subscription1 = this.teacherservice.getClasses().subscribe({
@@ -318,7 +335,7 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
           console.log("this.classes ",this.classes );
           
           this.loadingClasses=false;
-          this.getTodeyCalender();
+          this.gettodayCalender();
           // this.checkscheduleedNotif();
           if (refresh) {
             this.events.changeclassInfoState({ state: 2, classes: this.classes });
@@ -377,28 +394,28 @@ export class TeacherDashboardComponent implements OnInit, OnDestroy {
   //     }
   //   });
   // }
-  getTodeyCalender() {
+  gettodayCalender() {
     const todayDate = new Date();
     let nextDate: Date = null as any;
     let date: Date;
     this.classes.forEach((classe:any,indd)=>{
-      let todeyCount = 0;
+      let todayCount = 0;
       classe.data.events.forEach((event: any) => {
         date = new Date(event.start);
         if (
           date.getDate() === todayDate.getDate() &&
           date.getMonth() === todayDate.getMonth() &&
           date.getFullYear() === todayDate.getFullYear()
-        ) todeyCount++;
+        ) todayCount++;
         if (date.getTime() > todayDate.getTime()) {
           if (!nextDate || date.getTime() < nextDate.getTime()) nextDate = date;
         }
       })
       this.selectedEventCount[indd]=classe.data.events.length;
-      this.selectedEventCounttoday[indd]=todeyCount;
+      this.selectedEventCounttoday[indd]=todayCount;
       // this.selectednextEvent[indd]=nextDate;
     })
-    // console.log("todeyCount :   ",todeyCount);
+    // console.log("todayCount :   ",todayCount);
     
 
   }

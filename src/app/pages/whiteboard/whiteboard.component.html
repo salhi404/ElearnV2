@@ -1,9 +1,17 @@
 <input type="text" [(ngModel)]="textString"/><button (click)="addText()">Add</button>
-    
-<button (click)="addFigure('triangle')">Triangle</button>
-<button (click)="addFigure('circle')">Circle</button>
-<button (click)="addFigure('square')">Square</button>
-<button (click)="addFigure('rectangle')">Rectangle</button>
+<input [(ngModel)]="imageForm" #profileInput  hidden type="file"  name="profileInput"    accept="image/x-png,image/gif,image/jpeg" (change)="uploadImage($event)"  >
+<button (click)="clearCanvas()">clear</button>
+<button (click)="SelectMode()">Select</button>
+<button (click)="groupselected()">group</button>
+<button (click)="deleteselected()">Delete</button>
+<button (click)="erase()">Erase</button>
+<button (click)="draw()">Draw</button>
+<button (click)="createLine()">Line</button>
+<button (click)="createTriangle()">Triangle</button>
+<button (click)="createEllipse()">Ellipse</button>
+<!-- <button (click)="addFigure('square')">Square</button> -->
+<button (click)="createRect()">Rectangle</button>
+<button (click)="profileInput.click()"  type="button">upload image</button><!-- class="btn btn-primary m-t-15 waves-effect mr-2 " -->
 <button (click)="ExportToContent('json')">Generate Json</button>
 <button (click)="ExportToContent('svg')">Generate SVG</button>
 <button (click)="copycanvas()">copy canvas</button>

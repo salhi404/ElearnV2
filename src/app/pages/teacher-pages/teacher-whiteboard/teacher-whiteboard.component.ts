@@ -5,32 +5,23 @@ import { AuthService } from 'app/_services/auth.service';
 import { TeacherService } from 'app/_services/teacher.service';
 import { parsenotifstatus } from 'app/functions/parsers';
 import { DatePipe } from '@angular/common';
+
 @Component({
-  selector: 'app-teacher-notifications',
-  templateUrl: './teacher-notifications.component.html',
-  styleUrls: ['./teacher-notifications.component.scss']
+  selector: 'app-teacher-whiteboard',
+  templateUrl: './teacher-whiteboard.component.html',
+  styleUrls: ['./teacher-whiteboard.component.scss']
 })
-export class TeacherNotificationsComponent implements OnInit, OnDestroy {
-  @ViewChild("moreDD") moreDD!: ElementRef;
+export class TeacherWhiteboardComponent  implements OnInit, OnDestroy {
   subscription: Subscription = new Subscription();
   subscription1: Subscription = new Subscription();
-  subscription2: Subscription = new Subscription();
   chosenClass: any = null;
   editing: boolean = false;
   loading: boolean = false;
-  highlightnew:boolean=false;
-  highlightfade:boolean=false;
   datepipe: DatePipe = new DatePipe('en-US');
   selectedNotif: any = null;
   addnotEdit: boolean = true;
-  formInvalid: number = -1;
-  formInvalidmsg: string = '';
   notifIdToedit = -1;
-  showDD: boolean[] = [];
-  blockcloseDD: boolean = false;
-  openedDD: number = -1;
   firstskiped = false;
-
   form = {
     type: '',
     send: '',
@@ -42,7 +33,6 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
     this.subscription1.unsubscribe();
-    this.subscription2.unsubscribe();
   }
   ngOnInit(): void {
     this.subscription = this.events.taskEvent.subscribe(state => {
@@ -77,31 +67,14 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
   putClass(classe: any) {
     this.chosenClass = classe;
     if (classe) {
-      this.showDD = Array(classe.data.notifications.length).fill(false);
+      // this.showDD = Array(classe.data.notifications.length).fill(false);
       console.log("newNotifCount",this.chosenClass.newNotifCount);
-      this.hightightnewNotif();
     }
-  }
-  hightightnewNotif(){
-    if(this.chosenClass.newNotifCount){
-      if(this.chosenClass){
-        this.highlightnew=true;
-        this.highlightfade=true;
-        this.events.changeTaskState({ task: this.events.TASKUPDATECLASSNOTIF, data: { tasktype: 5, classid: this.chosenClass.uuid} });
-      }
-      setTimeout(() => {
-        this.highlightnew=false;
-        setTimeout(() => {
-          this.highlightfade=false;
-        }, 1000);
-      }, 2000);
-    }
-
   }
   addNotif() {
     this.form = { type: '3', send: '1', time: '', notification: '', status: '' }
-    this.formInvalid = -1;
-    this.formInvalidmsg = '';
+    // this.formInvalid = -1;
+    // this.formInvalidmsg = '';
     this.editing = true;
     this.addnotEdit = true;
   }
@@ -121,15 +94,11 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
     if(this.form.send=='1')this.form.time='';
     // console.log("this.chosenClass.data.notifications[ind]", this.chosenClass.data.notifications[Notlength-1-ind]);
     this.notifIdToedit = this.chosenClass.data.notifications[Notlength-1-ind].id;
-    this.formInvalid = -1;
-    this.formInvalidmsg = '';
+    // this.formInvalid = -1;
+    // this.formInvalidmsg = '';
     this.editing = true;
     this.addnotEdit = false;
-    this.toggleDD(this.openedDD);
-  }
-  deleteNotif(ind: number) {
-    const Notlength=this.chosenClass.data.notifications.length;
-    const notifToDelete = this.chosenClass.data.notifications[Notlength-1-ind].id;
+    // this.toggleDD(this.openedDD);
   }
   removeNotif(ind: number) {
     // TODO add confirmation dialog 
@@ -139,7 +108,7 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
       next: data => {
         console.log("removeclassnotif : ", data);
         this.events.changeTaskState({ task: this.events.TASKUPDATECLASSNOTIF, data: { tasktype: 3, classid: this.chosenClass.uuid, notifId: notifToDelete } });
-        this.toggleDD(this.openedDD);
+        // this.toggleDD(this.openedDD);
         this.chosenClass.data.notifications = this.chosenClass.data.notifications.filter((ntf: any) => ntf.id != notifToDelete);
       },
       error: err => {
@@ -147,54 +116,6 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
         console.log(err);
       }
     });
-  }
-  actionFunc(type: number, ind: number) {
-    const Notlength=this.chosenClass.data.notifications.length;
-    let notifToEdit = { ...this.chosenClass.data.notifications[Notlength-1-ind] };
-    if (type == 1) {
-      if (notifToEdit.send == 1) {
-        notifToEdit.time = new Date();
-        notifToEdit.status = 3;
-      } else {
-        if (notifToEdit.send == 2) {
-          const nowtemp = new Date();
-          const formTime = new Date(notifToEdit.time);
-          if (formTime.getTime() < nowtemp.getTime()) {
-            notifToEdit.status = 3;
-          } else {
-            notifToEdit.status = 2; //TODO scheduele notifications
-          }
-        }
-      }
-      this.editNotifSubmit(notifToEdit,0);
-    }
-    if (type == 2 || type == 3) {
-      notifToEdit.status = 1;
-      this.editNotifSubmit(notifToEdit,0);
-    }
-  }
-  // checkschedule(){
-  //   this.chosenClass.data.notifschedule.forEach((element:any,ind:number) => {
-  //     this.checkqueTime(element.status,ind);
-  //   });
-  // }
-  checkqueTime(type:number, ind: number) {
-    const Notlength=this.chosenClass.data.notifications.length;
-    let notifToEdit = { ...this.chosenClass.data.notifications[Notlength-1-ind] };
-    const nowtemp = new Date();
-    const formTime = new Date(notifToEdit.time);
-    if (formTime.getTime() < nowtemp.getTime()) {
-      if(type==1){
-        notifToEdit.send = 1;
-      }else{
-        if(type==2){
-          notifToEdit.status = 3;
-        }
-      }
-      this.editNotifSubmit(notifToEdit,1);
-    }
-  }
-  testt() {
   }
   edit(user: string) {
     console.log(user);
@@ -206,12 +127,12 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
       const nowtemp = new Date();
       const formTime = new Date(this.form.time);
       if (formTime.getTime() < nowtemp.getTime()) {
-        this.formInvalid = 1;
-        this.formInvalidmsg = 'you need to set time in the future';
+        // this.formInvalid = 1;
+        // this.formInvalidmsg = 'you need to set time in the future';
         return 1
       } else {
-        this.formInvalid = -1;
-        this.formInvalidmsg = '';
+        // this.formInvalid = -1;
+        // this.formInvalidmsg = '';
       }
     }
     if (this.form.notification === '') this.form.notification = "new Notification";
@@ -266,29 +187,5 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
     this.clean();
     this.editing = false;
     console.log("backToList");
-  }
-  parsenotifstatus(status: number): string {
-    return parsenotifstatus(status)
-  }
-  toggleDD(ind: number) {
-    if (this.openedDD != -1 && this.openedDD != ind) {
-      this.showDD[this.openedDD] = false;
-    }
-    this.showDD[ind] = !this.showDD[ind];
-    this.openedDD = ind;
-    this.blockcloseDD = true;
-    setTimeout(() => {
-      this.blockcloseDD = false;
-    }, 300);
-  }
-  @HostListener('document:click', ['$event'])
-  clickout(event: any) {
-    if (this.chosenClass && this.showDD.length > 0) {
-      if (!this.moreDD?.nativeElement.contains(event.target) && !this.blockcloseDD && this.openedDD > -1) {
-        this.showDD[this.openedDD] = false;
-        this.openedDD = -1;
-      }
-    }
-
   }
 }

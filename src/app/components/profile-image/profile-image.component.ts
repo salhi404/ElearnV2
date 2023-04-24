@@ -63,13 +63,13 @@ export class ProfileImageComponent implements OnInit {
     console.log("compress from ",this.formatBytes(byteCount) );
     if(byteCount>500000){
       this.imageCompress
-      .compressFile(this.croppedImage,25, 25) // 50% ratio, 50% quality
+      .compressFile(this.croppedImage,0,25, 25) // 50% ratio, 50% quality
       .then(
         (compressedImage) => {
           this.imgResult = compressedImage.slice();
           console.log("compress To ",this.formatBytes(this.imageCompress.byteCount(compressedImage)) );
           console.log(this.imgResult);
-          resolve()
+          resolve() 
         }
       );
     }else{

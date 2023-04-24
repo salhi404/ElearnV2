@@ -49,6 +49,7 @@ import { MeetingComponent } from './pages/teacher-pages/meeting/meeting.componen
 import { UserMeetingComponent } from './pages/user-meeting/user-meeting.component';
 import { TestComponent } from './pages/test/test.component';
 import { WhiteboardComponent } from './pages/whiteboard/whiteboard.component';
+import { TeacherWhiteboardComponent } from './pages/teacher-pages/teacher-whiteboard/teacher-whiteboard.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -92,6 +93,7 @@ import { WhiteboardComponent } from './pages/whiteboard/whiteboard.component';
     UserMeetingComponent,
     TestComponent,
     WhiteboardComponent,
+    TeacherWhiteboardComponent,
   ],
   imports: [
     FullCalendarModule,

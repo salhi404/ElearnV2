@@ -27,6 +27,7 @@ import { MeetingComponent } from './pages/teacher-pages/meeting/meeting.componen
 import { UserMeetingComponent } from './pages/user-meeting/user-meeting.component';
 import { TestComponent } from './pages/test/test.component';
 import { WhiteboardComponent } from './pages/whiteboard/whiteboard.component';
+import { TeacherWhiteboardComponent } from './pages/teacher-pages/teacher-whiteboard/teacher-whiteboard.component';
 const routes: Routes = [
   {
     path: '', component: RootComponent,
@@ -114,9 +115,14 @@ const routes: Routes = [
           component:TeacherLiveStreamComponent
         },
         {
+          path: 'whiteboard',
+          component:TeacherWhiteboardComponent
+        },
+        {
           path: '**', redirectTo: '/home', pathMatch: 'full'
           // component:UsersModComponent
         },
+        
         /*{
           path: 'home',
           component: HomeComponent
