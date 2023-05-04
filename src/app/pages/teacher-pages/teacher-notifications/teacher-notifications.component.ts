@@ -22,7 +22,7 @@ export class TeacherNotificationsComponent implements OnInit, OnDestroy {
   highlightfade:boolean=false;
   datepipe: DatePipe = new DatePipe('en-US');
   selectedNotif: any = null;
-  addnotEdit: boolean = true;
+  addnotEdit: boolean = false;
   formInvalid: number = -1;
   formInvalidmsg: string = '';
   notifIdToedit = -1;

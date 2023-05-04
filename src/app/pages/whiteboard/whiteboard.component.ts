@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ViewChild, ElementRef } from '@angular/core';
 import { fabric } from 'fabric';
-import { Peer } from "peerjs";
 @Component({
   selector: 'app-whiteboard',
   templateUrl: './whiteboard.component.html',
@@ -33,12 +32,44 @@ export class WhiteboardComponent implements OnInit {
     PENCIL: 'PENCIL',
     ERASER: 'ERASER',
   };
+
+  canvas: any;
+  oldcanvas: any;
+  textString: string = '';
+  size: any = {
+    width: 1200,
+    height: 1000
+  };
+  OutputContent: string = '';
+  constructor() { }
+  ngOnInit() {
+    console.log("whiteboard.component");
+    
+    this.canvas = new fabric.Canvas('canvas', {
+      hoverCursor: 'pointer',
+      selection: true,
+      selectionBorderColor: 'blue',
+      // perPixelTargetFind :true  
+    });
+    this.textString = '';
+    // this.canvas.setWidth(this.size.width);
+    // this.canvas.setHeight(this.size.height);
+    this.SelectMode();
+    fabric.Object.prototype.selectable = false;
+    this.OutputContent = '';
+  }
+  setSize(width:number){
+    this.canvas.setDimensions({ width: width, height:Math.round(width/1.77) });
+    this.canvas.setZoom(width/1500)
+    // this.canvas.setWidth(width);
+    // this.canvas.setHeight(height);
+  }
   startDrawing() {
     return () => {
       this.canvas.discardActiveObject().requestRenderAll();
       this.canvas.requestRenderAll();
       this.canvas.renderAll();
-      if (this.conn) this.conn.send(this.canvas.toSVG())
+      // if (this.conn) this.conn.send(this.canvas.toSVG())
       console.log("Drawing");
 
       // switch (this.options.currentMode) {
@@ -72,7 +103,7 @@ export class WhiteboardComponent implements OnInit {
     return () => {
       console.log("stopDrawing");
       this.mouseDown = false;
-      this.send();
+      // this.send();
       console.log("stopDrawing => this.mouseDown :", this.mouseDown);
     }
   }
@@ -190,7 +221,7 @@ export class WhiteboardComponent implements OnInit {
         }
       });
       this.canvas.renderAll();
-      this.send();
+      // this.send();
     }
   }
   deleteselected() {
@@ -298,7 +329,7 @@ tessst(){
         });
         this.drawInstance.setCoords();
         this.canvas.requestRenderAll();
-        if (this.conn) this.conn.send(this.canvas.toSVG())
+        // if (this.conn) this.conn.send(this.canvas.toSVG())
       }
     };
   }
@@ -367,7 +398,7 @@ tessst(){
         });
         this.drawInstance.setCoords();
         this.canvas.renderAll();
-        if (this.conn) this.conn.send(this.canvas.toSVG())
+        // if (this.conn) this.conn.send(this.canvas.toSVG())
       }
     };
   }
@@ -429,7 +460,7 @@ tessst(){
         });
         this.drawInstance.setCoords();
         this.canvas.renderAll();
-        if (this.conn) this.conn.send(this.canvas.toSVG())
+        // if (this.conn) this.conn.send(this.canvas.toSVG())
       }
     };
   }
@@ -489,92 +520,16 @@ tessst(){
 
         this.drawInstance.setCoords();
         this.canvas.renderAll();
-        if (this.conn) this.conn.send(this.canvas.toSVG())
+        // if (this.conn) this.conn.send(this.canvas.toSVG())
       }
     };
   }
 
-  conn: any;
-  peer: any;
-  anotherid: any;
-  mypeerid: any;
-  attempt: number = 0;
-  canvas: any;
-  oldcanvas: any;
-  textString: string = '';
-  size: any = {
-    width: 1200,
-    height: 1000
-  };
-  OutputContent: string = '';
-  constructor() { }
-  ngOnInit() {
-    this.canvas = new fabric.Canvas('canvas', {
-      hoverCursor: 'pointer',
-      selection: false,
-      selectionBorderColor: 'blue',
-      // perPixelTargetFind :true  
-    });
-    this.textString = '';
-    this.canvas.setWidth(this.size.width);
-    this.canvas.setHeight(this.size.height);
-    fabric.Object.prototype.selectable = false;
-    this.OutputContent = '';
-    this.peer = new Peer();
-    console.log('this.peer', this.peer);
-    this.getPeerId();
-    this.peer.on('connection', (conn: any) => {
-      conn.on('data', (data: any) => {
-        // Will print 'hi!'
-        // this.canvas.loadFromJSON(data, this.canvas.renderAll.bind(this.canvas), (o: any, object: any) => {
-        //     fabric.log(o, object);
-        //   });
-        if (this.dataContainer) this.dataContainer.nativeElement.innerHTML = data;
-        // console.log(data);
-      });
-    });
+  
 
-
-  }
-  getPeerId() {
-    setTimeout(() => {
-      if (this.peer.id || this.attempt > 25) {
-        this.mypeerid = this.peer.id;
-      } else {
-        this.attempt++;
-        this.getPeerId();
-      }
-      console.log('attempt : ' + this.attempt + '  this.peer  :', this.peer);
-    }, 500);
-  }
-  canvasModifiedCallback(): any {
-    console.log("connection", this.conn);
-    return () => {
-      // console.log('canvas modified!', connection);
-      // if (connection)connection.send(this.canvas.toJSON())
-      if (this.conn) this.conn.send(this.canvas.toSVG())
-    }
-
-    // if (connection)connection.send(this.canvas.toJSON());
-  };
-  send() {
-    console.log('canvas modified!', this.conn);
-    if (this.conn) this.conn.send(this.canvas.toSVG())
-  }
-  connect() {
-    this.conn = this.peer.connect(this.anotherid);
-    this.conn.on('open', () => {
-      // this.conn.send('Message from that id');
-    });
-    this.canvas.on('object:added', this.canvasModifiedCallback());
-    this.canvas.on('object:removed', this.canvasModifiedCallback());
-    this.canvas.on('object:modified', this.canvasModifiedCallback());
-    this.canvas.on('object:moving', this.canvasModifiedCallback());
-    this.canvas.on('object:scaling', this.canvasModifiedCallback());
-    this.canvas.on('object:rotating', this.canvasModifiedCallback());
-    this.canvas.on('object:skewing', this.canvasModifiedCallback());
-    this.canvas.on('object:resizing', this.canvasModifiedCallback());
-  }
+ 
+  
+ 
   addText() {
     let textString = this.textString;
     let text = new fabric.IText(textString, {

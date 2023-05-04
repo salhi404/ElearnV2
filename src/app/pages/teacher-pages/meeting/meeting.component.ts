@@ -3,7 +3,7 @@ import { UserService } from 'app/_services/user.service';
 import ZoomMtgEmbedded from '@zoomus/websdk/embedded';
 import { ActivatedRoute } from '@angular/router';
 import { TeacherService } from 'app/_services/teacher.service';
-
+import { Peer } from "peerjs";
 @Component({
   selector: 'app-meeting',
   templateUrl: './meeting.component.html',
@@ -22,11 +22,14 @@ export class MeetingComponent implements OnInit, AfterViewInit {
   client = ZoomMtgEmbedded.createClient();
   uuid='';
   indd:number=-1;
-  constructor(
-    private UserService:UserService,
-    private route: ActivatedRoute,
-    private teacherservice: TeacherService,
-    ) {
+  
+//  ------------------ peer ------------------  //
+  conn: any;
+  peer: any;
+  anotherid: any;
+  mypeerid: any;
+  attempt: number = 0;
+  constructor( private UserService:UserService, private route: ActivatedRoute, private teacherservice: TeacherService, ) {
   }
   ngAfterViewInit() {
     let meetingSDKElement = this.meetingSDKElement.nativeElement as HTMLElement;
@@ -61,7 +64,67 @@ export class MeetingComponent implements OnInit, AfterViewInit {
       }
     }
   );
+
+//  ------------------ peer ------------------  //
+  this.peer = new Peer();
+    console.log('this.peer', this.peer);
+    this.getPeerId();
+    this.peer.on('connection', (conn: any) => {
+      conn.on('data', (data: any) => {
+        // Will print 'hi!'
+        // this.canvas.loadFromJSON(data, this.canvas.renderAll.bind(this.canvas), (o: any, object: any) => {
+        //     fabric.log(o, object);
+        //   });
+        // if (this.dataContainer) this.dataContainer.nativeElement.innerHTML = data;
+        // console.log(data);
+      });
+    });
   }
+  getPeerId() {
+    setTimeout(() => {
+      if (this.peer.id || this.attempt > 25) {
+        this.mypeerid = this.peer.id;
+      } else {
+        this.attempt++;
+        this.getPeerId();
+      }
+      console.log('attempt : ' + this.attempt + '  this.peer  :', this.peer);
+    }, 500);
+  }
+  canvasModifiedCallback(): any {
+    console.log("connection", this.conn);
+    return () => {
+      // console.log('canvas modified!', connection);
+      // if (connection)connection.send(this.canvas.toJSON())
+      // if (this.conn) this.conn.send(this.canvas.toSVG())
+    }
+
+    // if (connection)connection.send(this.canvas.toJSON());
+  };
+  send() {
+    console.log('canvas modified!', this.conn);
+    // if (this.conn) this.conn.send(this.canvas.toSVG())
+  }
+  connect() {
+    this.conn = this.peer.connect(this.anotherid);
+    this.conn.on('open', () => {
+      // this.conn.send('Message from that id');
+    });
+    // this.canvas.on('object:added', this.canvasModifiedCallback());
+    // this.canvas.on('object:removed', this.canvasModifiedCallback());
+    // this.canvas.on('object:modified', this.canvasModifiedCallback());
+    // this.canvas.on('object:moving', this.canvasModifiedCallback());
+    // this.canvas.on('object:scaling', this.canvasModifiedCallback());
+    // this.canvas.on('object:rotating', this.canvasModifiedCallback());
+    // this.canvas.on('object:skewing', this.canvasModifiedCallback());
+    // this.canvas.on('object:resizing', this.canvasModifiedCallback());
+  }
+
+
+
+
+
+
   getSignature() {
     this.teacherservice.getsignature(this.uuid,this.indd).subscribe({
       next: data => {

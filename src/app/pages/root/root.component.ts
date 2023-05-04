@@ -241,6 +241,7 @@ export class RootComponent implements OnInit, OnDestroy {
           this.DarkTheme = true;
           break;
       }
+    })
       this.subscription8 = this.events.notificationsEvent.subscribe(
         state => {
           console.log("notificationsEvent ",state);
@@ -283,7 +284,7 @@ export class RootComponent implements OnInit, OnDestroy {
         
       });
       this.storageService.setPrefrences({ darkTheme: this.DarkTheme, miniSideBar: this.showMiniSideBar })
-    })
+    
 
   }
   /*getMailUpdate() {

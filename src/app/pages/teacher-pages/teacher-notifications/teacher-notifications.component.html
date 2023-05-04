@@ -15,7 +15,7 @@
         <h4 class="text-center my-2">
           <span> {{editing?addnotEdit?'New Notification':'Edit Notification':'Notifications'}} </span>
         </h4>
-        <div *ngIf="!editing&&addnotEdit" (click)="addNotif()" class="iconBtn BtnToRight">
+        <div *ngIf="!editing" (click)="addNotif()" class="iconBtn BtnToRight">
           <div class="iconBtnBack ">
             <a data-toggle="tooltip">
               <i class="material-icons">add</i>

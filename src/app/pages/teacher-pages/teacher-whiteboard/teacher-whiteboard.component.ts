@@ -3,8 +3,8 @@ import { Subscription } from 'rxjs';
 import { EventsService } from 'app/services/events.service';
 import { AuthService } from 'app/_services/auth.service';
 import { TeacherService } from 'app/_services/teacher.service';
-import { parsenotifstatus } from 'app/functions/parsers';
 import { DatePipe } from '@angular/common';
+import { WhiteboardComponent } from 'app/pages/whiteboard/whiteboard.component';
 
 @Component({
   selector: 'app-teacher-whiteboard',
@@ -12,22 +12,26 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./teacher-whiteboard.component.scss']
 })
 export class TeacherWhiteboardComponent  implements OnInit, OnDestroy {
+  @ViewChild("WboardnameinputBox") WboardnameinputBox!: ElementRef;
+  @ViewChild("Wboardnameinput") Wboardnameinput!: ElementRef;
+  @ViewChild("cardBody") cardBody!: ElementRef;
+  @ViewChild("whiteboardComp") whiteboardComp!: WhiteboardComponent;
+  
   subscription: Subscription = new Subscription();
   subscription1: Subscription = new Subscription();
   chosenClass: any = null;
   editing: boolean = false;
   loading: boolean = false;
   datepipe: DatePipe = new DatePipe('en-US');
-  selectedNotif: any = null;
+  selectedWboard: any = null;
   addnotEdit: boolean = true;
-  notifIdToedit = -1;
+  WboardIdToedit = -1;
+  Wboardnamediting = false ;
   firstskiped = false;
   form = {
-    type: '',
-    send: '',
-    time: '',
-    notification: '',
-    status: '',
+    name:'',
+    pages:{},
+    pagesCount:0,
   }
   constructor(private events: EventsService, private teacherservice: TeacherService, private authService: AuthService,) { }
   ngOnDestroy(): void {
@@ -35,6 +39,12 @@ export class TeacherWhiteboardComponent  implements OnInit, OnDestroy {
     this.subscription1.unsubscribe();
   }
   ngOnInit(): void {
+    this.subscription1 = this.events.currentLayoutEvent.subscribe(state => {
+      setTimeout(() => {
+        this.resizeCanvase(null);
+      }, 500);
+      
+    })
     this.subscription = this.events.taskEvent.subscribe(state => {
       if(this.firstskiped){
       if (state.task == this.events.TASKCHOOSECLASSES) {
@@ -43,21 +53,15 @@ export class TeacherWhiteboardComponent  implements OnInit, OnDestroy {
         this.putClass(state.data.chosenClass)
         // if (this.selectedUser) this.selectedUser = this.chosenClass.enrollers.find((userr: any) => userr.email == this.selectedUser.email);
       }
-      if (state.task == this.events.TASKCONNECTEDRECIEVED) {
-        console.log("reciever class TASKCONNECTEDRECIEVED 2", state.data.chosenClass);
-        if (this.chosenClass && this.chosenClass.uuid === state.data.connectedfor) {
-          this.putClass(state.data.chosenClass)
-        }
-      }
-      if (state.task == this.events.TASKUPDATECLASSNOTIF) {
-        if(state.data.tasktype==4){
-          console.log(".tasktype==4    notif");
-          this.events.changeTaskState({ task: this.events.TASKGETCHOSENCLASS, data: null });
-        }
-      }
-      // if (state.task == this.events.TASKDELETECLASSNOTIFSCHEDULE) {
+      // if (state.task == this.events.TASKUPDATECLASSWboard) {
+      //   if(state.data.tasktype==4){
+      //     console.log(".tasktype==4    Wboard");
+      //     this.events.changeTaskState({ task: this.events.TASKGETCHOSENCLASS, data: null });
+      //   }
+      // }
+      // if (state.task == this.events.TASKDELETECLASSWboardSCHEDULE) {
       //   if(this.chosenClass&&this.chosenClass.uuid===state.data.classuuid){
-      //     this.chosenClass.data.notifschedule=this.chosenClass.data.notifschedule.filter((ntf:any)=>ntf!=state.data.id);
+      //     this.chosenClass.data.Wboardschedule=this.chosenClass.data.Wboardschedule.filter((ntf:any)=>ntf!=state.data.id);
       //   }
       // }
     }else this.firstskiped = true
@@ -67,125 +71,133 @@ export class TeacherWhiteboardComponent  implements OnInit, OnDestroy {
   putClass(classe: any) {
     this.chosenClass = classe;
     if (classe) {
-      // this.showDD = Array(classe.data.notifications.length).fill(false);
-      console.log("newNotifCount",this.chosenClass.newNotifCount);
+      // this.showDD = Array(classe.data.Wboardications.length).fill(false);
+      console.log("newWboardCount",this.chosenClass.newWboardCount);
     }
   }
-  addNotif() {
-    this.form = { type: '3', send: '1', time: '', notification: '', status: '' }
+  addWboard() {
+    this.form = { name:'New Whiteboard', pages:{}, pagesCount:1}
     // this.formInvalid = -1;
     // this.formInvalidmsg = '';
-    this.editing = true;
-    this.addnotEdit = true;
+    this.openWhitboard(true);
   }
-  editNotif(ind: number) {
-    const Notlength=this.chosenClass.data.notifications.length;
-    console.log("notifications.length",this.chosenClass.data.notifications.length);
+  openWhitboard(editting:boolean){
+    this.editing = true;
+    this.addnotEdit = editting;
+    console.log("card width: ",this.cardBody.nativeElement.offsetWidth);
+    const width=this.cardBody.nativeElement.offsetWidth-50;
+    this.whiteboardComp.setSize(width);
+  }
+  editName(){
+    this.Wboardnamediting = true ;
+    setTimeout(()=>{ // this will make the execution after the above boolean has changed
+      this.Wboardnameinput.nativeElement.focus();
+    },0);  
+  }
+  editWboard(ind: number) {
+    const Notlength=this.chosenClass.data.Wboardications.length;
+    console.log("Wboardications.length",this.chosenClass.data.Wboardications.length);
     console.log("ind",ind);
     console.log("Notlength",Notlength);
     console.log("Notlength-1-ind",Notlength-1-ind);
     this.form = {
-      type: this.chosenClass.data.notifications[Notlength-1-ind].type + '',
-      send: this.chosenClass.data.notifications[Notlength-1-ind].send + '',//2023-03-22T00:31
-      time: this.datepipe.transform(this.chosenClass.data.notifications[Notlength-1-ind].time, 'yyyy-MM-ddTHH:mm') || '',
-      notification: this.chosenClass.data.notifications[Notlength-1-ind].notification,
-      status: this.chosenClass.data.notifications[Notlength-1-ind].status + ''
+      name: this.chosenClass.data.Wboardications[Notlength-1-ind].name ,
+      pages: this.chosenClass.data.Wboardications[Notlength-1-ind].pages ,//2023-03-22T00:31
+      pagesCount: this.chosenClass.data.Wboardications[Notlength-1-ind].pagesCount
     }
-    if(this.form.send=='1')this.form.time='';
-    // console.log("this.chosenClass.data.notifications[ind]", this.chosenClass.data.notifications[Notlength-1-ind]);
-    this.notifIdToedit = this.chosenClass.data.notifications[Notlength-1-ind].id;
+    // console.log("this.chosenClass.data.Wboardications[ind]", this.chosenClass.data.Wboardications[Notlength-1-ind]);
+    this.WboardIdToedit = this.chosenClass.data.Wboardications[Notlength-1-ind].id;
     // this.formInvalid = -1;
     // this.formInvalidmsg = '';
     this.editing = true;
     this.addnotEdit = false;
     // this.toggleDD(this.openedDD);
   }
-  removeNotif(ind: number) {
+  removeWboard(ind: number) {
     // TODO add confirmation dialog 
-    const Notlength=this.chosenClass.data.notifications.length;
-    const notifToDelete = this.chosenClass.data.notifications[Notlength-1-ind].id;
-    this.teacherservice.removeclassnotif(this.chosenClass.uuid, notifToDelete).subscribe({
-      next: data => {
-        console.log("removeclassnotif : ", data);
-        this.events.changeTaskState({ task: this.events.TASKUPDATECLASSNOTIF, data: { tasktype: 3, classid: this.chosenClass.uuid, notifId: notifToDelete } });
-        // this.toggleDD(this.openedDD);
-        this.chosenClass.data.notifications = this.chosenClass.data.notifications.filter((ntf: any) => ntf.id != notifToDelete);
-      },
-      error: err => {
-        console.log('err');
-        console.log(err);
-      }
-    });
-  }
-  edit(user: string) {
-    console.log(user);
-    this.editing = true;
-    // this.selectedNotif =
+    const Notlength=this.chosenClass.data.Wboardications.length;
+    const WboardToDelete = this.chosenClass.data.Wboardications[Notlength-1-ind].id;
+    // this.teacherservice.removeclassWboard(this.chosenClass.uuid, WboardToDelete).subscribe({
+    //   next: data => {
+    //     console.log("removeclassWboard : ", data);
+    //     this.events.changeTaskState({ task: this.events.TASKUPDATECLASSWboard, data: { tasktype: 3, classid: this.chosenClass.uuid, WboardId: WboardToDelete } });
+    //     // this.toggleDD(this.openedDD);
+    //     this.chosenClass.data.Wboardications = this.chosenClass.data.Wboardications.filter((ntf: any) => ntf.id != WboardToDelete);
+    //   },
+    //   error: err => {
+    //     console.log('err');
+    //     console.log(err);
+    //   }
+    // });
   }
   onSubmit(): number {
-    if (this.form.send === '2') {
-      const nowtemp = new Date();
-      const formTime = new Date(this.form.time);
-      if (formTime.getTime() < nowtemp.getTime()) {
-        // this.formInvalid = 1;
-        // this.formInvalidmsg = 'you need to set time in the future';
-        return 1
-      } else {
-        // this.formInvalid = -1;
-        // this.formInvalidmsg = '';
-      }
-    }
-    if (this.form.notification === '') this.form.notification = "new Notification";
-    let notifTosend: any = { type: +this.form.type, send: +this.form.send, time:new Date(this.form.time), notification: this.form.notification, status: +this.form.status,for:-1 };
-    if (notifTosend.send == 1) {
-      notifTosend.time = new Date();
-    }
+    let WboardTosend: any = {...this.form};
     if (this.addnotEdit) {
-      notifTosend.status = '1';
-      this.teacherservice.addclassnotif(this.chosenClass.uuid, notifTosend).subscribe({
-        next: data => {
-          console.log("addclassnotif : ", data);
-          this.events.changeTaskState({ task: this.events.TASKUPDATECLASSNOTIF, data: { tasktype: 1, classid: this.chosenClass.uuid, notif: data.notif } });
-          // this.chosenClass.data.notifications.push(data.notif);
-          this.backToList();
-        },
-        error: err => {
-          console.log('err');
-          console.log(err);
-        }
-      });
+      // this.teacherservice.addclassWboard(this.chosenClass.uuid, WboardTosend).subscribe({
+      //   next: data => {
+      //     console.log("addclassWboard : ", data);
+      //     this.events.changeTaskState({ task: this.events.TASKUPDATECLASSWboard, data: { tasktype: 1, classid: this.chosenClass.uuid, Wboard: data.Wboard } });
+      //     // this.chosenClass.data.Wboardications.push(data.Wboard);
+      //     this.backToList();
+      //   },
+      //   error: err => {
+      //     console.log('err');
+      //     console.log(err);
+      //   }
+      // });
     } else {
-      notifTosend.id = this.notifIdToedit;
-      this.editNotifSubmit(notifTosend,0);
+      WboardTosend.id = this.WboardIdToedit;
+      this.editWboardSubmit(WboardTosend,0);
     }
     return 0
   }
-  editNotifSubmit(notifTosend: any,task:number) {
-    console.log("this.notifIdToedit", this.notifIdToedit);
-    this.teacherservice.editclassnotif(this.chosenClass.uuid, notifTosend,task).subscribe({
-      next: data => {
-        console.log("editclassnotif : ", data);
-        // const index = this.chosenClass.data.notifications.findIndex((notiff:any)=>notiff.id==data.notif.id);
-        //   if(index){
-        //     this.chosenClass.data.notifications[index] = data.notif
-        //   }
-        this.events.changeTaskState({ task: this.events.TASKUPDATECLASSNOTIF, data: { tasktype: 2, classid: this.chosenClass.uuid, notif: data.notif } });
-        // if(data.notif.status==3)this.events.changeTaskState({ task: this.events.TASKDELETECLASSNOTIFSCHEDULE, data: { classuuid:this.chosenClass.uuid, id:data.notif.id} })
-        this.backToList();
-      },
-      error: err => {
-        console.log('err');
-        console.log(err);
-      }
-    });
+  editWboardSubmit(WboardTosend: any,task:number) {
+    console.log("this.WboardIdToedit", this.WboardIdToedit);
+    // this.teacherservice.editclassWboard(this.chosenClass.uuid, WboardTosend,task).subscribe({
+    //   next: data => {
+    //     console.log("editclassWboard : ", data);
+    //     // const index = this.chosenClass.data.Wboardications.findIndex((Wboardf:any)=>Wboardf.id==data.Wboard.id);
+    //     //   if(index){
+    //     //     this.chosenClass.data.Wboardications[index] = data.Wboard
+    //     //   }
+    //     this.events.changeTaskState({ task: this.events.TASKUPDATECLASSWboard, data: { tasktype: 2, classid: this.chosenClass.uuid, Wboard: data.Wboard } });
+    //     // if(data.Wboard.status==3)this.events.changeTaskState({ task: this.events.TASKDELETECLASSWboardSCHEDULE, data: { classuuid:this.chosenClass.uuid, id:data.Wboard.id} })
+    //     this.backToList();
+    //   },
+    //   error: err => {
+    //     console.log('err');
+    //     console.log(err);
+    //   }
+    // });
   }
   clean() {
-    this.form = { type: '', send: '', time: '', notification: '', status: '', };
+    this.form = { name:'', pages:{}, pagesCount:0};
   }
   backToList() {
     //this.form={user:false,teacher:false,moderator:false,admin:false}
     this.clean();
     this.editing = false;
     console.log("backToList");
+  }
+  @HostListener('document:click', ['$event'])
+  clickout(event: any) {
+    if (this.Wboardnamediting ) {
+      if (!this.WboardnameinputBox?.nativeElement.contains(event.target)) {
+        this.Wboardnamediting = false;
+      }
+    }
+
+  }
+  @HostListener('window:resize', ['$event'])
+  resizeCanvase(event: any) {
+    if (this.editing ) {
+      
+      // this.whiteboardComp.setSize(width,height);
+      setTimeout(() => {
+        const width=this.cardBody.nativeElement.offsetWidth-50;
+        this.whiteboardComp.setSize(width);
+      }, 500);
+      
+    }
   }
 }
