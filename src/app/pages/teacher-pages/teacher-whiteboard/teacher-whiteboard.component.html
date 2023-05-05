@@ -1,48 +1,48 @@
 <div class="row">
-    <div *ngIf="!chosenClass" class="d-flex justify-content-center w-100"> <span class="alert alert-info">choose a class
-        !! </span></div>
-    <div class="col-12">
-      <div class="card Wboardcard" > <!-- [ngClass]="{'classhidden':!chosenClass}" *ngIf="chosenClass" -->
-        <div class="card-header d-flex justify-content-center align-items-center">
-          <!-- TODO implement select multiple checkbox -->
-          <div [ngClass]="{'invisible2':!editing}" (click)="backToList()" class="iconBtn BtnToLeft">
-            <div class="iconBtnBack ">
-              <a data-toggle="tooltip">
-                <i class="material-icons">arrow_back</i>
-              </a>
-            </div>
-          </div>
-          <h4 class="text-center my-2">
-            <span *ngIf="!editing"> Whiteboards </span>
-            <span *ngIf="editing" #WboardnameinputBox> 
-              <span *ngIf="!Wboardnamediting"> {{form.name}}</span>
-              <span *ngIf="Wboardnamediting">
-                <input type="text" [(ngModel)]="form.name" class="Wboardnameinput" #Wboardnameinput />
-              </span>
-              <i (click)="editName()" class="fa-solid editicon fa-pen-to-square "></i>
-            </span>
-          </h4>
-          <div *ngIf="!editing" (click)="addWboard()" class="iconBtn BtnToRight">
-            <div class="iconBtnBack ">
-              <a data-toggle="tooltip">
-                <i class="material-icons">add</i>
-              </a>
-            </div>
+  <div *ngIf="!chosenClass" class="d-flex justify-content-center w-100"> <span class="alert alert-info">choose a class
+      !! </span></div>
+  <div class="col-12">
+    <div class="card Wboardcard"> <!-- [ngClass]="{'classhidden':!chosenClass}" *ngIf="chosenClass" -->
+      <div class="card-header d-flex justify-content-center align-items-center">
+        <!-- TODO implement select multiple checkbox -->
+        <div [ngClass]="{'invisible2':!editing}" (click)="backToList()" class="iconBtn BtnToLeft">
+          <div class="iconBtnBack ">
+            <a data-toggle="tooltip">
+              <i class="material-icons">arrow_back</i>
+            </a>
           </div>
         </div>
-        <div class="card-body" #cardBody>
-          <div *ngIf="!editing" class="table-responsive tablenotif">
-            <table class="  table table-striped">
-              <thead> <!--class="centerColumn"-->
-                <th>Type</th>
-                <th>Time</th>
-                <th>Notification</th>
-                <th>Status<!--<i (click)="checkschedule()" class="material-icons loop-icon">loop</i>--></th>
-                <th>Action</th>
-                <th>Edit</th>
-              </thead>
-              <tbody>
-                <!-- <tr *ngFor="let Whiteboard of chosenClass?.data.whiteboards.reverse() ,index as i" >
+        <h4 class="text-center my-2">
+          <span *ngIf="!editing"> Whiteboards </span>
+          <span *ngIf="editing" #WboardnameinputBox>
+            <span *ngIf="!Wboardnamediting"> {{form.name}}</span>
+            <span *ngIf="Wboardnamediting">
+              <input type="text" [(ngModel)]="form.name" class="Wboardnameinput" #Wboardnameinput />
+            </span>
+            <i (click)="editName()" class="fa-solid editicon fa-pen-to-square "></i>
+          </span>
+        </h4>
+        <div *ngIf="!editing" (click)="addWboard()" class="iconBtn BtnToRight">
+          <div class="iconBtnBack ">
+            <a data-toggle="tooltip">
+              <i class="material-icons">add</i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="card-body" #cardBody>
+        <div *ngIf="!editing" class="table-responsive tablenotif">
+          <table class="  table table-striped">
+            <thead> <!--class="centerColumn"-->
+              <th>Type</th>
+              <th>Time</th>
+              <th>Notification</th>
+              <th>Status<!--<i (click)="checkschedule()" class="material-icons loop-icon">loop</i>--></th>
+              <th>Action</th>
+              <th>Edit</th>
+            </thead>
+            <tbody>
+              <!-- <tr *ngFor="let Whiteboard of chosenClass?.data.whiteboards.reverse() ,index as i" >
        
                 </tr>
                 <tr *ngIf="chosenClass?.data.whiteboards.length==0">
@@ -54,41 +54,73 @@
                   <td></td>
                   <td> </td>
                 </tr> -->
-                <tr class="invisible2">
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div [ngClass]="{'invisible2':!editing}" class="whiteboardcanvas">
-            <app-whiteboard #whiteboardComp></app-whiteboard>
-            <div>
-              <section>
-    
-                <swiper-container
-                #swiperEl
-                slides-per-view="5"
-                slides-per-group="4"
-                space-between="15"
-                centered-slides="true"
-                class=" mySwiper ">
+              <tr class="invisible2">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div [ngClass]="{'invisible2':!editing}" class="whiteboardcanvas">
+          <app-whiteboard #whiteboardComp></app-whiteboard>
+          <div>
+
+            <section class="slide-section" >
+              <div class="slide-preview">
+                <swiper-container #swiperEl slides-per-view="5" slides-per-group="4" space-between="15"
+                  centered-slides="true" class=" mySwiper ">
                   <swiper-slide *ngFor="let silde of form.pages,index as i" class="swiperSlide">
                     <div [innerHTML]="silde.svg" class="slidee"></div>
                     <div class="slideeNumber">{{i}}</div>
                   </swiper-slide>
                 </swiper-container>
                 <div (click)="nextslide()" class="swiper-button-next"></div>
-                  <div (click)="prevtslide()" class="swiper-button-prev"></div>
-                  <div class="swiper-pagination"></div>
-              </section>
-            </div>
+                <div (click)="prevtslide()" class="swiper-button-prev"></div>
+                <div class="swiper-pagination"></div>
+              </div>
+              <div class="slide-controle">
+                <ul class="icon-list">
+                  <li class="icon-item icon-item2">
+                    <a class="icon-link "><i class="fa-solid fa-left-long"></i></a>
+                    <span> prev </span>
+                  </li>
+                  <li class="icon-item icon-item2">
+                    <a class="icon-link "><i class="fa-solid fa-right-long"></i></a>
+                    <span> next </span>
+                  </li>
+                  
+                  <li class="icon-item">
+                    <a class="icon-link"><i class="fa-solid fa-plus"></i></a>
+                    <span> add </span>
+                  </li>
+                  <li class="icon-item">
+                    <a class="icon-link"><i class="fa-regular fa-clipboard"></i></a>
+                    <span> copy </span>
+                  </li>
+                  <li class="icon-item">
+                    <a class="icon-link"><i class="fa-regular fa-paste"></i></a>
+                    <span> paste </span>
+                  </li>
+                  <li class="icon-item">
+                    <a class="icon-link"><i class="fa-solid fa-scissors"></i></a>
+                    <span> cut </span>
+                  </li>
+                  <li class="icon-item">
+                    <a class="icon-link"><i class="fa-regular fa-trash-can"></i></a>
+                    <span> Delete </span>
+                  </li>   
+                </ul>
+              </div>
+            </section>
+
+
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>

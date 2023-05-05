@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, HostListener } from '@angular/core';
-import { DomSanitizer} from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { EventsService } from 'app/services/events.service';
 import { AuthService } from 'app/_services/auth.service';
@@ -13,7 +13,7 @@ register();
   templateUrl: './teacher-whiteboard.component.html',
   styleUrls: ['./teacher-whiteboard.component.scss'],
 })
-export class TeacherWhiteboardComponent  implements OnInit, OnDestroy {
+export class TeacherWhiteboardComponent implements OnInit, OnDestroy {
   @ViewChild('dataContainer') dataContainer?: ElementRef;
   @ViewChild("WboardnameinputBox") WboardnameinputBox!: ElementRef;
   @ViewChild("Wboardnameinput") Wboardnameinput!: ElementRef;
@@ -23,20 +23,20 @@ export class TeacherWhiteboardComponent  implements OnInit, OnDestroy {
   subscription: Subscription = new Subscription();
   subscription1: Subscription = new Subscription();
   chosenClass: any = null;
-  editing: boolean = true; // TODO :should be false just for tests
+  editing: boolean = false;
   loading: boolean = false;
   datepipe: DatePipe = new DatePipe('en-US');
   selectedWboard: any = null;
   addnotEdit: boolean = true;
   WboardIdToedit = -1;
-  Wboardnamediting = false ;
+  Wboardnamediting = false;
   firstskiped = false;
-  form :any= {
-    name:'',
-    pages:[],
-    pagesCount:0,
+  form: any = {
+    name: '',
+    pages: [],
+    pagesCount: 0,
   }
-  constructor(private events: EventsService, private teacherservice: TeacherService, private authService: AuthService,private sanitizer: DomSanitizer) { }
+  constructor(private events: EventsService, private teacherservice: TeacherService, private authService: AuthService, private sanitizer: DomSanitizer) { }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
     this.subscription1.unsubscribe();
@@ -46,28 +46,28 @@ export class TeacherWhiteboardComponent  implements OnInit, OnDestroy {
       setTimeout(() => {
         this.resizeCanvase(null);
       }, 500);
-      
+
     })
     this.subscription = this.events.taskEvent.subscribe(state => {
-      if(this.firstskiped){
-      if (state.task == this.events.TASKCHOOSECLASSES) {
-        console.log("reciever class TASKCHOOSECLASSES 1", state.data.chosenClass);
+      if (this.firstskiped) {
+        if (state.task == this.events.TASKCHOOSECLASSES) {
+          console.log("reciever class TASKCHOOSECLASSES 1", state.data.chosenClass);
 
-        this.putClass(state.data.chosenClass)
-        // if (this.selectedUser) this.selectedUser = this.chosenClass.enrollers.find((userr: any) => userr.email == this.selectedUser.email);
-      }
-      // if (state.task == this.events.TASKUPDATECLASSWboard) {
-      //   if(state.data.tasktype==4){
-      //     console.log(".tasktype==4    Wboard");
-      //     this.events.changeTaskState({ task: this.events.TASKGETCHOSENCLASS, data: null });
-      //   }
-      // }
-      // if (state.task == this.events.TASKDELETECLASSWboardSCHEDULE) {
-      //   if(this.chosenClass&&this.chosenClass.uuid===state.data.classuuid){
-      //     this.chosenClass.data.Wboardschedule=this.chosenClass.data.Wboardschedule.filter((ntf:any)=>ntf!=state.data.id);
-      //   }
-      // }
-    }else this.firstskiped = true
+          this.putClass(state.data.chosenClass)
+          // if (this.selectedUser) this.selectedUser = this.chosenClass.enrollers.find((userr: any) => userr.email == this.selectedUser.email);
+        }
+        // if (state.task == this.events.TASKUPDATECLASSWboard) {
+        //   if(state.data.tasktype==4){
+        //     console.log(".tasktype==4    Wboard");
+        //     this.events.changeTaskState({ task: this.events.TASKGETCHOSENCLASS, data: null });
+        //   }
+        // }
+        // if (state.task == this.events.TASKDELETECLASSWboardSCHEDULE) {
+        //   if(this.chosenClass&&this.chosenClass.uuid===state.data.classuuid){
+        //     this.chosenClass.data.Wboardschedule=this.chosenClass.data.Wboardschedule.filter((ntf:any)=>ntf!=state.data.id);
+        //   }
+        // }
+      } else this.firstskiped = true
     })
     this.events.changeTaskState({ task: this.events.TASKGETCHOSENCLASS, data: null });
   }
@@ -75,45 +75,45 @@ export class TeacherWhiteboardComponent  implements OnInit, OnDestroy {
     this.chosenClass = classe;
     if (classe) {
       // this.showDD = Array(classe.data.Wboardications.length).fill(false);
-      console.log("newWboardCount",this.chosenClass.newWboardCount);
+      console.log("newWboardCount", this.chosenClass.newWboardCount);
     }
   }
   addWboard() {
-    this.form = { 
-      name:'New Whiteboard', 
-      pages:[{json:this.whiteboardComp.canvas.toJSON(),svg:this.sanitizer.bypassSecurityTrustHtml(this.whiteboardComp.canvas.toSVG())}], 
-      pagesCount:1
+    this.form = {
+      name: 'New Whiteboard',
+      pages: [{ json: this.whiteboardComp.canvas.toJSON(), svg: this.sanitizer.bypassSecurityTrustHtml(this.whiteboardComp.canvas.toSVG()) }],
+      pagesCount: 1
     }
     // this.formInvalid = -1;
     // this.formInvalidmsg = '';
     this.openWhitboard(true);
   }
-  openWhitboard(editting:boolean){
+  openWhitboard(editting: boolean) {
     this.editing = true;
     this.addnotEdit = editting;
-    console.log("card width: ",this.cardBody.nativeElement.offsetWidth);
-    const width=this.cardBody.nativeElement.offsetWidth-50;
+    console.log("card width: ", this.cardBody.nativeElement.offsetWidth);
+    const width = this.cardBody.nativeElement.offsetWidth - 50;
     this.whiteboardComp.setSize(width);
   }
-  editName(){
-    this.Wboardnamediting = true ;
-    setTimeout(()=>{ // this will make the execution after the above boolean has changed
+  editName() {
+    this.Wboardnamediting = true;
+    setTimeout(() => { // this will make the execution after the above boolean has changed
       this.Wboardnameinput.nativeElement.focus();
-    },0);  
+    }, 0);
   }
   editWboard(ind: number) {
-    const Notlength=this.chosenClass.data.Wboardications.length;
-    console.log("Wboardications.length",this.chosenClass.data.Wboardications.length);
-    console.log("ind",ind);
-    console.log("Notlength",Notlength);
-    console.log("Notlength-1-ind",Notlength-1-ind);
+    const Notlength = this.chosenClass.data.Wboardications.length;
+    console.log("Wboardications.length", this.chosenClass.data.Wboardications.length);
+    console.log("ind", ind);
+    console.log("Notlength", Notlength);
+    console.log("Notlength-1-ind", Notlength - 1 - ind);
     this.form = {
-      name: this.chosenClass.data.Wboardications[Notlength-1-ind].name ,
-      pages: this.chosenClass.data.Wboardications[Notlength-1-ind].pages ,//2023-03-22T00:31
-      pagesCount: this.chosenClass.data.Wboardications[Notlength-1-ind].pagesCount
+      name: this.chosenClass.data.Wboardications[Notlength - 1 - ind].name,
+      pages: this.chosenClass.data.Wboardications[Notlength - 1 - ind].pages,//2023-03-22T00:31
+      pagesCount: this.chosenClass.data.Wboardications[Notlength - 1 - ind].pagesCount
     }
     // console.log("this.chosenClass.data.Wboardications[ind]", this.chosenClass.data.Wboardications[Notlength-1-ind]);
-    this.WboardIdToedit = this.chosenClass.data.Wboardications[Notlength-1-ind].id;
+    this.WboardIdToedit = this.chosenClass.data.Wboardications[Notlength - 1 - ind].id;
     // this.formInvalid = -1;
     // this.formInvalidmsg = '';
     this.editing = true;
@@ -122,8 +122,8 @@ export class TeacherWhiteboardComponent  implements OnInit, OnDestroy {
   }
   removeWboard(ind: number) {
     // TODO add confirmation dialog 
-    const Notlength=this.chosenClass.data.Wboardications.length;
-    const WboardToDelete = this.chosenClass.data.Wboardications[Notlength-1-ind].id;
+    const Notlength = this.chosenClass.data.Wboardications.length;
+    const WboardToDelete = this.chosenClass.data.Wboardications[Notlength - 1 - ind].id;
     // this.teacherservice.removeclassWboard(this.chosenClass.uuid, WboardToDelete).subscribe({
     //   next: data => {
     //     console.log("removeclassWboard : ", data);
@@ -138,7 +138,7 @@ export class TeacherWhiteboardComponent  implements OnInit, OnDestroy {
     // });
   }
   onSubmit(): number {
-    let WboardTosend: any = {...this.form};
+    let WboardTosend: any = { ...this.form };
     if (this.addnotEdit) {
       // this.teacherservice.addclassWboard(this.chosenClass.uuid, WboardTosend).subscribe({
       //   next: data => {
@@ -154,11 +154,11 @@ export class TeacherWhiteboardComponent  implements OnInit, OnDestroy {
       // });
     } else {
       WboardTosend.id = this.WboardIdToedit;
-      this.editWboardSubmit(WboardTosend,0);
+      this.editWboardSubmit(WboardTosend, 0);
     }
     return 0
   }
-  editWboardSubmit(WboardTosend: any,task:number) {
+  editWboardSubmit(WboardTosend: any, task: number) {
     console.log("this.WboardIdToedit", this.WboardIdToedit);
     // this.teacherservice.editclassWboard(this.chosenClass.uuid, WboardTosend,task).subscribe({
     //   next: data => {
@@ -178,7 +178,7 @@ export class TeacherWhiteboardComponent  implements OnInit, OnDestroy {
     // });
   }
   clean() {
-    this.form = { name:'', pages:[], pagesCount:0};
+    this.form = { name: '', pages: [], pagesCount: 0 };
   }
   backToList() {
     //this.form={user:false,teacher:false,moderator:false,admin:false}
@@ -188,7 +188,7 @@ export class TeacherWhiteboardComponent  implements OnInit, OnDestroy {
   }
   @HostListener('document:click', ['$event'])
   clickout(event: any) {
-    if (this.Wboardnamediting ) {
+    if (this.Wboardnamediting) {
       if (!this.WboardnameinputBox?.nativeElement.contains(event.target)) {
         this.Wboardnamediting = false;
       }
@@ -197,22 +197,34 @@ export class TeacherWhiteboardComponent  implements OnInit, OnDestroy {
   }
   @HostListener('window:resize', ['$event'])
   resizeCanvase(event: any) {
-    if (this.editing ) {
-      
+    if (this.editing) {
+
       // this.whiteboardComp.setSize(width,height);
       setTimeout(() => {
-        const width=this.cardBody.nativeElement.offsetWidth-50;
+        const width = this.cardBody.nativeElement.offsetWidth - 50;
         this.whiteboardComp.setSize(width);
       }, 500);
-      
+
     }
   }
 
   // ----------------------------- slider ----------------------------- //
-nextslide(){
-  this.swiperEl.nativeElement.swiper.slideNext();
-}
-prevtslide(){
-  this.swiperEl.nativeElement.swiper.slidePrev();
-}
+  nextslide() {
+    this.swiperEl.nativeElement.swiper.slideNext();
+  }
+  prevtslide() {
+    this.swiperEl.nativeElement.swiper.slidePrev();
+  }
+  newSlide() {
+    console.log("newSlide");
+  }
+  copyPasteSlide() {
+    console.log("copySlide");
+  }
+  deleteSlide() {
+    console.log("deleteSlide");
+  }
+  cutSlide() {
+    console.log("cutSlide");
+  }
 }
