@@ -2,7 +2,7 @@
     <div *ngIf="!chosenClass" class="d-flex justify-content-center w-100"> <span class="alert alert-info">choose a class
         !! </span></div>
     <div class="col-12">
-      <div class="card WboardCard" [ngClass]="{'classhidden':!chosenClass}" *ngIf="chosenClass">
+      <div class="card Wboardcard" > <!-- [ngClass]="{'classhidden':!chosenClass}" *ngIf="chosenClass" -->
         <div class="card-header d-flex justify-content-center align-items-center">
           <!-- TODO implement select multiple checkbox -->
           <div [ngClass]="{'invisible2':!editing}" (click)="backToList()" class="iconBtn BtnToLeft">
@@ -42,7 +42,7 @@
                 <th>Edit</th>
               </thead>
               <tbody>
-                <tr *ngFor="let Whiteboard of chosenClass?.data.whiteboards.reverse() ,index as i" >
+                <!-- <tr *ngFor="let Whiteboard of chosenClass?.data.whiteboards.reverse() ,index as i" >
        
                 </tr>
                 <tr *ngIf="chosenClass?.data.whiteboards.length==0">
@@ -53,7 +53,7 @@
                   <td></td>
                   <td></td>
                   <td> </td>
-                </tr>
+                </tr> -->
                 <tr class="invisible2">
                   <td></td>
                   <td></td>
@@ -68,7 +68,24 @@
           <div [ngClass]="{'invisible2':!editing}" class="whiteboardcanvas">
             <app-whiteboard #whiteboardComp></app-whiteboard>
             <div>
-              
+              <section>
+    
+                <swiper-container
+                #swiperEl
+                slides-per-view="5"
+                slides-per-group="4"
+                space-between="15"
+                centered-slides="true"
+                class=" mySwiper ">
+                  <swiper-slide *ngFor="let silde of form.pages,index as i" class="swiperSlide">
+                    <div [innerHTML]="silde.svg" class="slidee"></div>
+                    <div class="slideeNumber">{{i}}</div>
+                  </swiper-slide>
+                </swiper-container>
+                <div (click)="nextslide()" class="swiper-button-next"></div>
+                  <div (click)="prevtslide()" class="swiper-button-prev"></div>
+                  <div class="swiper-pagination"></div>
+              </section>
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule,CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -50,6 +50,7 @@ import { UserMeetingComponent } from './pages/user-meeting/user-meeting.componen
 import { TestComponent } from './pages/test/test.component';
 import { WhiteboardComponent } from './pages/whiteboard/whiteboard.component';
 import { TeacherWhiteboardComponent } from './pages/teacher-pages/teacher-whiteboard/teacher-whiteboard.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -94,6 +95,7 @@ import { TeacherWhiteboardComponent } from './pages/teacher-pages/teacher-whiteb
     TestComponent,
     WhiteboardComponent,
     TeacherWhiteboardComponent,
+    
   ],
   imports: [
     FullCalendarModule,
@@ -105,9 +107,11 @@ import { TeacherWhiteboardComponent } from './pages/teacher-pages/teacher-whiteb
     AppRoutingModule,
     //FileUploadModule,
     ImageCropperModule,
-    DataTablesModule
+    DataTablesModule,
+    
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }

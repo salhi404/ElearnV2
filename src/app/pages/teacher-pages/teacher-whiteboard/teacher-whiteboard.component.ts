@@ -1,26 +1,29 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { DomSanitizer} from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { EventsService } from 'app/services/events.service';
 import { AuthService } from 'app/_services/auth.service';
 import { TeacherService } from 'app/_services/teacher.service';
 import { DatePipe } from '@angular/common';
 import { WhiteboardComponent } from 'app/pages/whiteboard/whiteboard.component';
-
+import { register } from 'swiper/element/bundle';
+register();
 @Component({
   selector: 'app-teacher-whiteboard',
   templateUrl: './teacher-whiteboard.component.html',
-  styleUrls: ['./teacher-whiteboard.component.scss']
+  styleUrls: ['./teacher-whiteboard.component.scss'],
 })
 export class TeacherWhiteboardComponent  implements OnInit, OnDestroy {
+  @ViewChild('dataContainer') dataContainer?: ElementRef;
   @ViewChild("WboardnameinputBox") WboardnameinputBox!: ElementRef;
   @ViewChild("Wboardnameinput") Wboardnameinput!: ElementRef;
   @ViewChild("cardBody") cardBody!: ElementRef;
   @ViewChild("whiteboardComp") whiteboardComp!: WhiteboardComponent;
-  
+  @ViewChild("swiperEl") swiperEl!: ElementRef;
   subscription: Subscription = new Subscription();
   subscription1: Subscription = new Subscription();
   chosenClass: any = null;
-  editing: boolean = false;
+  editing: boolean = true; // TODO :should be false just for tests
   loading: boolean = false;
   datepipe: DatePipe = new DatePipe('en-US');
   selectedWboard: any = null;
@@ -28,12 +31,12 @@ export class TeacherWhiteboardComponent  implements OnInit, OnDestroy {
   WboardIdToedit = -1;
   Wboardnamediting = false ;
   firstskiped = false;
-  form = {
+  form :any= {
     name:'',
-    pages:{},
+    pages:[],
     pagesCount:0,
   }
-  constructor(private events: EventsService, private teacherservice: TeacherService, private authService: AuthService,) { }
+  constructor(private events: EventsService, private teacherservice: TeacherService, private authService: AuthService,private sanitizer: DomSanitizer) { }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
     this.subscription1.unsubscribe();
@@ -76,7 +79,11 @@ export class TeacherWhiteboardComponent  implements OnInit, OnDestroy {
     }
   }
   addWboard() {
-    this.form = { name:'New Whiteboard', pages:{}, pagesCount:1}
+    this.form = { 
+      name:'New Whiteboard', 
+      pages:[{json:this.whiteboardComp.canvas.toJSON(),svg:this.sanitizer.bypassSecurityTrustHtml(this.whiteboardComp.canvas.toSVG())}], 
+      pagesCount:1
+    }
     // this.formInvalid = -1;
     // this.formInvalidmsg = '';
     this.openWhitboard(true);
@@ -171,7 +178,7 @@ export class TeacherWhiteboardComponent  implements OnInit, OnDestroy {
     // });
   }
   clean() {
-    this.form = { name:'', pages:{}, pagesCount:0};
+    this.form = { name:'', pages:[], pagesCount:0};
   }
   backToList() {
     //this.form={user:false,teacher:false,moderator:false,admin:false}
@@ -200,4 +207,12 @@ export class TeacherWhiteboardComponent  implements OnInit, OnDestroy {
       
     }
   }
+
+  // ----------------------------- slider ----------------------------- //
+nextslide(){
+  this.swiperEl.nativeElement.swiper.slideNext();
+}
+prevtslide(){
+  this.swiperEl.nativeElement.swiper.slidePrev();
+}
 }
