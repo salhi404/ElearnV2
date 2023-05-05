@@ -234,11 +234,12 @@ export class WhiteboardComponent implements OnInit {
     if (this.canvas.getActiveObject()._objects) {
       this.canvas.getActiveObject()._objects.forEach((element: any) => {
         {
-          if (element !== this.canvas.backgroundImage) {
+          // if (element !== this.canvas.backgroundImage) {
             this.canvas.remove(element);
-          }
+          // }
         }
       });
+      this.canvas.remove(this.canvas.getActiveObject());
     } else
       if (this.canvas.getActiveObject() !== this.canvas.backgroundImage) {
         this.canvas.remove(this.canvas.getActiveObject());
@@ -255,6 +256,7 @@ export class WhiteboardComponent implements OnInit {
     }
     this.canvas.getActiveObject().toGroup();
     this.canvas.requestRenderAll();
+    this.SelectMode()
   }
 tessst(){
   return (e: any) => {

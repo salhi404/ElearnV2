@@ -1,5 +1,5 @@
-<input type="text" [(ngModel)]="textString"/><button (click)="addText()">Add</button>
-<input [(ngModel)]="imageForm" #profileInput  hidden type="file"  name="profileInput"    accept="image/x-png,image/gif,image/jpeg" (change)="uploadImage($event)"  >
+<!-- <input type="text" [(ngModel)]="textString"/><button (click)="addText()">Add</button>
+
 <button (click)="clearCanvas()">clear</button>
 <button (click)="SelectMode()">Select</button>
 <button (click)="groupselected()">group</button>
@@ -9,13 +9,79 @@
 <button (click)="createLine()">Line</button>
 <button (click)="createTriangle()">Triangle</button>
 <button (click)="createEllipse()">Ellipse</button>
-<!-- <button (click)="addFigure('square')">Square</button> -->
 <button (click)="createRect()">Rectangle</button>
-<button (click)="profileInput.click()"  type="button">upload image</button><!-- class="btn btn-primary m-t-15 waves-effect mr-2 " -->
+<button (click)="profileInput.click()"  type="button">upload image</button>
 <button (click)="ExportToContent('json')">Generate Json</button>
 <button (click)="ExportToContent('svg')">Generate SVG</button>
 <button (click)="copycanvas()">copy canvas</button>
-<button (click)="pastcanvas()">past canvas</button>
+<button (click)="pastcanvas()">past canvas</button> -->
+<input [(ngModel)]="imageForm" #profileInput  hidden type="file"  name="profileInput"    accept="image/x-png,image/gif,image/jpeg" (change)="uploadImage($event)"  >
+<div class="Wboard-controle">
+    <ul class="icon-list">
+      <!-- <li class="icon-item icon-item2">
+        <a class="icon-link "><i class="fa-solid fa-left-long"></i></a>
+        <span> prev </span>
+      </li>
+      <li class="icon-item icon-item2">
+        <a class="icon-link "><i class="fa-solid fa-right-long"></i></a>
+        <span> next </span>
+      </li> -->
+
+      <li [ngClass]="{'activeMode':options.currentMode===modes.SELECT}" class="icon-item ">
+        <a (click)="SelectMode()" class="icon-link"><i class="fa-solid fa-vector-square"></i></a>
+        <span> select </span>
+      </li>
+      <li class="icon-item icon-item2">
+        <a (click)="groupselected()" class="icon-link"><i class="fa-regular fa-object-group"></i></a>
+        <span> group </span>
+      </li>
+      <li class="icon-item icon-item2">
+        <a (click)="clearCanvas()" class="icon-link"><i class="fa-solid fa-ban"></i></a>
+        <span> clear </span>
+      </li>
+      <li class="icon-item icon-item2">
+        <a (click)="deleteselected()" class="icon-link"><i class="fa-regular fa-trash-can"></i></a>
+        <span> Delete </span>
+      </li> 
+      <div class="separator"></div>
+      <li class="icon-item icon-item2">
+        <a (click)="addText()" class="icon-link"><i class="fa-solid fa-font"></i></a>
+        <span> text </span>    
+      </li>
+      <li [ngClass]="{'activeMode':options.currentMode===modes.Erase}" class="icon-item">
+        <a (click)="erase()" class="icon-link"><i class="fa-solid fa-eraser"></i></a>
+        <span> eraser </span>
+      </li>
+      <li [ngClass]="{'activeMode':options.currentMode===modes.PENCIL}"  class="icon-item">
+        <a (click)="draw()" class="icon-link"><i class="fa-solid fa-pencil"></i></a>
+        <span> draw </span>
+      </li>
+      <li [ngClass]="{'activeMode':options.currentMode===modes.LINE}" class="icon-item">
+        <a (click)="createLine()" class="icon-link"><i class="fa-solid fa-slash"></i></a>
+        <span> line </span>
+      </li>
+      <li [ngClass]="{'activeMode':options.currentMode===modes.RECTANGLE}" class="icon-item">
+        <a (click)="createRect()" class="icon-link"><i class="fa-regular fa-square"></i></a>
+        <span> Rect </span>
+      </li>
+      <li [ngClass]="{'activeMode':options.currentMode===modes.TRIANGLE}" class="icon-item">
+        <a (click)="createTriangle()" class="icon-link"><i class="material-icons">change_history</i></a>
+        <span> triangle </span>
+      </li>
+      <li [ngClass]="{'activeMode':options.currentMode===modes.ELLIPSE}" class="icon-item">
+        <a (click)="createEllipse()" class="icon-link"><i class="fa-regular fa-circle"></i></a>
+        <span> circle </span>
+      </li>
+      <li  class="icon-item icon-item2">
+        <a (click)="profileInput.click()" class="icon-link"><i class="fa-regular fa-image"></i></a>
+        <span> image </span>
+      </li>
+
+
+      
+    </ul>
+  </div>
+
 <!-- <input type="text" [(ngModel)]="anotherid">
 <button (click)="connect()">Connect</button>
 <button (click)="send()">send</button>
