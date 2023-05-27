@@ -31,7 +31,7 @@ export class TeacherLiveStreamComponent implements OnInit {
     agenda : '',
     start_time : '',
     duration : '',
-
+    Wboard : '-1'
   }
   haszoomtoken: boolean = false;
   constructor(
@@ -65,6 +65,7 @@ export class TeacherLiveStreamComponent implements OnInit {
     this.chosenClass = classe;
     if (classe) {
       console.log('chosenClass data', this.chosenClass.data);
+      this.getWboardNames();
     }
     // if (classe) {
     //   this.showDD = Array(classe.data.notifications.length).fill(false);
@@ -72,8 +73,24 @@ export class TeacherLiveStreamComponent implements OnInit {
     //   this.hightightnewNotif();
     // }
   }
+  getWboardNames(){
+    this.chosenClass.data.livestreams.forEach((stream:any) => {
+      console.log('stream',stream);
+      
+      if(stream.Wboard === undefined||stream.Wboard==-1){ stream.Wboard=-1; stream.WboardName = 'N/A'}
+      else { 
+        let found = this.chosenClass.data.whiteboards.find((Wb:any)=>(Wb.id==stream.Wboard))
+        if(found) stream.WboardName = found.name;
+        else {
+          stream.WboardName = 'N/A';
+          stream.Wboard=-1
+        }
+        
+      }
+    });
+  }
   addStream() {
-    this.form = {topic : '',agenda : '',start_time : '',duration : '60'}
+    this.form = {topic : '',agenda : '',start_time : '',duration : '60',Wboard : '-1'}
     // this.formInvalid = -1;
     // this.formInvalidmsg = '';
     if (this.haszoomtoken) {
@@ -134,10 +151,12 @@ export class TeacherLiveStreamComponent implements OnInit {
     window.open(url, "_blank");
   }
   CreateMeeting(data:any) {
+    data.Wboard = +data.Wboard
     this.teacherservice.CreateMeeting(this.chosenClass.uuid,data).subscribe({
       next: data => {
         console.log("CreateMeeting data ", data);
         this.events.changeTaskState({task:this.events.TASKUPDATECLASSSTREAM,data:{tasktype:1,classid:this.chosenClass.uuid,liveStream:data.meeting}});
+        this.getWboardNames();
         this.editing=false;
         this.clear();
       },

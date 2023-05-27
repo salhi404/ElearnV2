@@ -52,7 +52,6 @@ export class TeacherWhiteboardComponent implements OnInit, OnDestroy {
       setTimeout(() => {
         this.resizeCanvase(null);
       }, 500);
-
     })
     this.subscription = this.events.taskEvent.subscribe(state => {
       if (this.firstskiped) {
@@ -86,8 +85,16 @@ export class TeacherWhiteboardComponent implements OnInit, OnDestroy {
   }
   addWboard() {
     this.whiteboardComp.clearCanvas();
+    let tempName ='New Whiteboard';
+    for (let ind = 1; ind < 100; ind++) {
+      let found = this.chosenClass.data.whiteboards.find((wb:any)=>(wb.name === tempName))
+      console.log("found ",found);
+      
+      if(found) tempName ='New Whiteboard ( '+ind+' )';
+      else break
+    }
     this.form = {
-      name: 'New Whiteboard',
+      name: tempName,
       pages: [{ test:this.currentPage+1,json: this.whiteboardComp.canvas.toJSON(),svg:this.whiteboardComp.canvas.toSVG(), secSvg: this.sanitizer.bypassSecurityTrustHtml(this.whiteboardComp.canvas.toSVG())}],
       pagesCount: 1 
     }

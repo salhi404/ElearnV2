@@ -1,70 +1,74 @@
 <div class="row">
-    <div *ngIf="!chosenClass" class="d-flex justify-content-center w-100"> <span class="alert alert-info">choose a class
-        !! </span></div>
-    <div class="col-12">
-      <div class="card StreamCard" [ngClass]="{'classhidden':!chosenClass}" *ngIf="chosenClass">
-        <div class="card-header d-flex justify-content-center align-items-center">
-          <!-- TODO implement select multiple checkbox -->
-          <div [ngClass]="{'invisible2':!editing}" (click)="backToList()" class="iconBtn BtnToLeft">
-            <div class="iconBtnBack ">
-              <a data-toggle="tooltip">
-                <i class="material-icons">arrow_back</i>
-              </a>
-            </div>
-          </div>
-          <h4 class="text-center my-2">
-            <span> {{editing?addnotEdit?'New LiveStream':'Edit LiveStream':'LiveStreams'}} </span>
-          </h4>
-          <div *ngIf="!editing&&addnotEdit" (click)="addStream()" class="iconBtn BtnToRight">
-            <div class="iconBtnBack ">
-              <a data-toggle="tooltip">
-                <i class="material-icons">add</i>
-              </a>
-            </div>
+  <div *ngIf="!chosenClass" class="d-flex justify-content-center w-100"> <span class="alert alert-info">choose a class
+      !! </span></div>
+  <div class="col-12">
+    <div class="card StreamCard" [ngClass]="{'classhidden':!chosenClass}" *ngIf="chosenClass">
+      <div class="card-header d-flex justify-content-center align-items-center">
+        <!-- TODO implement select multiple checkbox -->
+        <div [ngClass]="{'invisible2':!editing}" (click)="backToList()" class="iconBtn BtnToLeft">
+          <div class="iconBtnBack ">
+            <a data-toggle="tooltip">
+              <i class="material-icons">arrow_back</i>
+            </a>
           </div>
         </div>
-        <div class="card-body">
-          <div *ngIf="!editing" class="table-responsive tablestream">
-            <table class="  table table-striped">
-              <thead> <!--class="centerColumn"-->
-                <th>topic</th>
-                <th>agenda</th>
-                <th>start_time</th>
-                <th>duration<!--<i (click)="checkschedule()" class="material-icons loop-icon">loop</i>--></th>
-                <th>host_email</th>
-                <th>status</th>
-                <th>Edit</th>
-              </thead>
-              <tbody>
-                <tr *ngFor="let livestream of chosenClass?.data.livestreams.reverse() ,index as i" >
-                  <td>{{livestream.topic}}</td>
-                  <td>{{livestream.agenda}}</td>
-                  <td>{{datepipe.transform(livestream.start_time,'dd-MM-yyyy HH:mm')}}</td>
-                  <td>{{livestream.duration}} min</td>
-                  <td>{{livestream.host_email}}</td>
-                  <td>{{livestream.status}}</td>
-                  <td><div  (click)="startMeeting(livestream)" class="btn btn-success pointer">start</div></td>
-                </tr>
-                <tr *ngIf="chosenClass?.data.livestreams.length==0">
-                  <td></td>
-                  <td></td>
-                  <td><span class="d-flex justify-content-center align-items-center">click the plus button to add a
-                      livestream</span></td>
-                  <td></td>
-                  <td></td>
-                  <td> </td>
-                </tr>
-                <tr class="invisible2">
-                  <!-- <td>this is an example as a place holder </td> -->
-                </tr>
-                <div class="spacerinTable "></div>
-              </tbody>
-            </table>
+        <h4 class="text-center my-2">
+          <span> {{editing?addnotEdit?'New LiveStream':'Edit LiveStream':'LiveStreams'}} </span>
+        </h4>
+        <div *ngIf="!editing&&addnotEdit" (click)="addStream()" class="iconBtn BtnToRight">
+          <div class="iconBtnBack ">
+            <a data-toggle="tooltip">
+              <i class="material-icons">add</i>
+            </a>
           </div>
-          <div *ngIf="editing">
-            <div></div>
-            <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
-              <!-- <fieldset *ngIf="form.status!=='3'" class="form-group">
+        </div>
+      </div>
+      <div class="card-body">
+        <div *ngIf="!editing" class="table-responsive tablestream">
+          <table class="  table table-striped">
+            <thead> <!--class="centerColumn"-->
+              <th>topic</th>
+              <!-- <th>agenda</th> -->
+              <th>Whiteboard</th>
+              <th>start_time</th>
+              <th>duration<!--<i (click)="checkschedule()" class="material-icons loop-icon">loop</i>--></th>
+              <th>host_email</th>
+              <th>status</th>
+              <th>Edit</th>
+            </thead>
+            <tbody>
+              <tr *ngFor="let livestream of chosenClass?.data.livestreams.reverse() ,index as i">
+                <td>{{livestream.topic}}</td>
+                <td>{{livestream.WboardName}}</td>
+                <!-- <td>{{livestream.agenda}}</td> -->
+                <td>{{datepipe.transform(livestream.start_time,'dd-MM-yyyy HH:mm')}}</td>
+                <td>{{livestream.duration}} min</td>
+                <td>{{livestream.host_email}}</td>
+                <td>{{livestream.status}}</td>
+                <td>
+                  <div (click)="startMeeting(livestream)" class="btn btn-success pointer">start</div>
+                </td>
+              </tr>
+              <tr *ngIf="chosenClass?.data.livestreams.length==0">
+                <td></td>
+                <td></td>
+                <td><span class="d-flex justify-content-center align-items-center">click the plus button to add a
+                    livestream</span></td>
+                <td></td>
+                <td></td>
+                <td> </td>
+              </tr>
+              <tr class="invisible2">
+                <!-- <td>this is an example as a place holder </td> -->
+              </tr>
+              <div class="spacerinTable "></div>
+            </tbody>
+          </table>
+        </div>
+        <div *ngIf="editing">
+          <div></div>
+          <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
+            <!-- <fieldset *ngIf="form.status!=='3'" class="form-group">
                 <div class="row">
                   <div class="col-form-label col-sm-2 pt-0">Date to send</div>
                   <div class="col-sm-9">
@@ -85,69 +89,81 @@
                   </div>
                 </div>
               </fieldset>-->
-              <div class="row">
-                <div class="form-group col-6">
-                  <label for="topic"> topic </label>
-                  <input id="topic" type="text" class="form-control" name="topic"
-                    [(ngModel)]="form.topic" maxlength="200" #topic="ngModel"
-                    placeholder="new topic" >
-                    <!-- <div class="invalid-feedback" *ngIf="topic.errors ">
+            <div class="row">
+              <div class="form-group col-6">
+                <label for="topic"> topic </label>
+                <input id="topic" type="text" class="form-control" name="topic" [(ngModel)]="form.topic" maxlength="200"
+                  #topic="ngModel" placeholder="new topic">
+                <!-- <div class="invalid-feedback" *ngIf="topic.errors ">
                       <div *ngIf="topic.errors['required']">Last Name is required</div>
                       <div *ngIf="topic.errors['maxlength']">
                         the topic must be at most 200 characters
                       </div>
                     </div> -->
-                </div> 
-                <div class="form-group col-6">
+              </div>
+              <div class="form-group col-6">
+                <label for="WhiteBoard"> WhiteBoard </label>
+                <select  class="custom-select" [(ngModel)]="form.Wboard"
+                  #EditSelect="ngModel" name="EditSelect">
+                  <ng-container *ngIf="chosenClass.data.whiteboards.length">
+                    <option value="-1"> no WhiteBoard is selected </option>
+                    <option *ngFor="let whiteboard of chosenClass.data.whiteboards ,index as i" [ngValue]="whiteboard.id">"{{whiteboard.name}}"</option>
+                  </ng-container>
+                  <ng-container *ngIf="!chosenClass.data.whiteboards.length">
+                    <option value="-1"> there is no WhiteBoard created </option>
+                  </ng-container>
+                </select>
+              </div>
+              <!--  <div class="form-group col-6">
                   <label for="agenda"> agenda </label>
                   <input id="agenda" type="text" class="form-control" name="agenda"
                     [(ngModel)]="form.agenda" maxlength="200" #agenda="ngModel"
                     placeholder="new agenda">
-                    <!-- <div class="invalid-feedback" *ngIf="agenda.errors ">
+                  <div class="invalid-feedback" *ngIf="agenda.errors ">
                       <div *ngIf="agenda.errors['maxlength']">
                         the agenda must be at most 200 characters
                       </div>
-                    </div> -->
+                    </div> 
+                </div>-->
+            </div>
+            <div class="row">
+              <div class="form-group col-6">
+                <label for="start_time"> starting time </label>
+                <input id="start_time" type="datetime-local" class="form-control" name="start_time"
+                  [(ngModel)]="form.start_time" #start_time="ngModel" required>
+                <!-- form.start_time :{{form.start_time}} -->
+                <div class="invalid-feedback" *ngIf="start_time.errors ">
+                  <div *ngIf="start_time.errors['required']"> starting time is required</div>
+                </div>
+                <div class="invalid-feedback"
+                  *ngIf="!formerrors.start_time.valid&&form.start_time===formerrors.start_time.oldvalue">
+                  {{formerrors.start_time.msg}}
                 </div>
               </div>
-              <div class="row">
-                <div class="form-group col-6">
-                  <label for="start_time"> starting time </label>
-                  <input id="start_time" type="datetime-local" class="form-control" name="start_time"
-                    [(ngModel)]="form.start_time" #start_time="ngModel" required >
-                    <!-- form.start_time :{{form.start_time}} -->
-                    <div class="invalid-feedback" *ngIf="start_time.errors ">
-                      <div *ngIf="start_time.errors['required']"> starting time is required</div>
-                    </div>
-                    <div class="invalid-feedback" *ngIf="!formerrors.start_time.valid&&form.start_time===formerrors.start_time.oldvalue">
-                      {{formerrors.start_time.msg}}
-                    </div>
-                </div> 
-                <div class="form-group col-6">
-                  <label for="duration"> duration (min) </label>
-                  <input id="duration" type="number" class="form-control" name="duration"
-                    [(ngModel)]="form.duration" max="180" min="10" #duration="ngModel"
-                    placeholder="60" >
-                    <div class="invalid-feedback" *ngIf="duration.errors ">
-                      <div *ngIf="duration.errors['max']">duration must be at most 180 min</div>
-                      <div *ngIf="duration.errors['min']">duration must be at least 10 min</div>
-                    </div>
-                    <!-- <div class="invalid-feedback" *ngIf="formerrors.duration.valid&&form.duration===formerrors.duration.oldvalue">
+              <div class="form-group col-6">
+                <label for="duration"> duration (min) </label>
+                <input id="duration" type="number" class="form-control" name="duration" [(ngModel)]="form.duration"
+                  max="180" min="10" #duration="ngModel" placeholder="60">
+                <div class="invalid-feedback" *ngIf="duration.errors ">
+                  <div *ngIf="duration.errors['max']">duration must be at most 180 min</div>
+                  <div *ngIf="duration.errors['min']">duration must be at least 10 min</div>
+                </div>
+                <!-- <div class="invalid-feedback" *ngIf="formerrors.duration.valid&&form.duration===formerrors.duration.oldvalue">
                         {{formerrors.duration.msg}}
                     </div> -->
-                </div>
-              </div> 
-              <button class=" registerBtn btn btn-primary ml-auto">
-                <span>{{addnotEdit?'Add':'Edit'}}</span>
-                <span *ngIf="loading" class="mx-2"></span>
-                <app-spinner *ngIf="loading" [type]="1"></app-spinner>
-              </button>
-              <!-- <div class="invalid-feedback" *ngIf="formInvalid>-1">
+              </div>
+            </div>
+            <button class=" registerBtn btn btn-primary ml-auto">
+              <span>{{addnotEdit?'Add':'Edit'}}</span>
+              <span *ngIf="loading" class="mx-2"></span>
+              <app-spinner *ngIf="loading" [type]="1"></app-spinner>
+            </button>
+            <!-- <div class="invalid-feedback" *ngIf="formInvalid>-1">
                     {{formInvalidmsg}}
                   </div> -->
-            </form>
-          </div>
+          </form>
         </div>
       </div>
     </div>
   </div>
+</div>
