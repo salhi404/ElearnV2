@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { StorageService } from './storage.service';
-// const URL_API = 'http://192.168.1.103:3000/'; 
+// const URL_API = 'http://192.168.1.2:3000/'; 
 const URL_API = 'https://frantic-colt-leather-jacket.cyclic.app/';
 // const URL_API = 'https://starter-express-api-production-816a.up.railway.app/';
 const TEACHER_API = URL_API+'api/teacher/';
@@ -78,4 +78,23 @@ export class TeacherService {
     const token = this.storageService.getTokent();
     return this.http.post(TEACHER_API + 'getsignature', {token,uuid,indd}, httpOptions);
   }
+
+  //------------- Wboard -------------//
+  getclassWboard(uuid:string): Observable<any> {
+    const token = this.storageService.getTokent();
+    return this.http.post(TEACHER_API + 'getclassWboard', {token,uuid}, httpOptions);
+  }
+addclassWboard(uuid:string,Wboard:any): Observable<any> {
+  const token = this.storageService.getTokent();
+  return this.http.post(TEACHER_API + 'addclassWboard', {token,uuid,Wboard}, httpOptions);
+}
+editclassWboard(uuid:string,Wboard:any/*,sidetask:number*/): Observable<any> {
+  const token = this.storageService.getTokent();
+  return this.http.post(TEACHER_API + 'editclassWboard', {token,uuid,Wboard}, httpOptions);
+}
+removeclassWboard(uuid:string,WboardId:any): Observable<any> {
+  const token = this.storageService.getTokent();
+  return this.http.post(TEACHER_API + 'removeclassWboard', {token,uuid,WboardId}, httpOptions);
+}
+
 }

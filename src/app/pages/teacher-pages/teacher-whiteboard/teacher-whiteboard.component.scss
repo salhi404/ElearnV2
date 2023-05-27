@@ -43,11 +43,6 @@
   position: absolute;
 }
 
-.mySwiper {
-  //  border:2px solid red
-
-}
-
 .swiperSlide {
   display: flex;
   flex-direction: column;
@@ -67,13 +62,26 @@
   width: 100px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   margin-top: 20px;
+  cursor: pointer;
 }
-
+.activeSlide{
+  .slidee{
+    border: 3px solid #7d2ae8;
+  }
+  .slideeNumber {
+    background:  #7d2ae8;
+    color: #fff;
+    padding: 0 6px;
+    border-radius: 10px;
+  }
+}
 .swiperSlide .slidee span {
   color: black;
+  font-size: larger;
 }
 
 .swiperSlide .slideeNumber {
+  margin-top: 3px;
   text-align: center;
 }
 

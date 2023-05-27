@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ViewChild, ElementRef } from '@angular/core';
 import { fabric } from 'fabric';
 @Component({
@@ -8,6 +8,7 @@ import { fabric } from 'fabric';
 })
 export class WhiteboardComponent implements OnInit {
   @ViewChild('dataContainer') dataContainer?: ElementRef;
+  @Output() wboardChange = new EventEmitter<void>();
   drawInstance: any = null;
   origX: any;
   origY: any;
@@ -21,7 +22,6 @@ export class WhiteboardComponent implements OnInit {
     fill: false,
     group: {},
   };
-
   modes = {
     Erase: 'Erase',
     SELECT: 'SELECT',
@@ -43,14 +43,36 @@ export class WhiteboardComponent implements OnInit {
   OutputContent: string = '';
   constructor() { }
   ngOnInit() {
+
     console.log("whiteboard.component");
-    
+
     this.canvas = new fabric.Canvas('canvas', {
       hoverCursor: 'pointer',
       selection: true,
       selectionBorderColor: 'blue',
       // perPixelTargetFind :true  
     });
+    this.canvas.on('object:modified', (event: any) => {
+      this.wboardChange.emit();
+    })
+    this.canvas.on('object:added', (event: any) => {
+      this.wboardChange.emit();
+      console.log('object:added');
+      
+    })
+    this.canvas.on('object:removed', (event: any) => {
+      this.wboardChange.emit();
+    })
+    this.canvas.on('path:created', (event: any) => {
+      this.wboardChange.emit();
+      if(this.options.currentMode===this.modes.PENCIL){
+        event.path.set({
+          perPixelTargetFind: true,
+          selectable: false,
+        })
+      }
+
+    })
     this.textString = '';
     // this.canvas.setWidth(this.size.width);
     // this.canvas.setHeight(this.size.height);
@@ -58,9 +80,9 @@ export class WhiteboardComponent implements OnInit {
     fabric.Object.prototype.selectable = false;
     this.OutputContent = '';
   }
-  setSize(width:number){
-    this.canvas.setDimensions({ width: width, height:Math.round(width/1.77) });
-    this.canvas.setZoom(width/1500)
+  setSize(width: number) {
+    this.canvas.setDimensions({ width: width, height: Math.round(width / 1.77) });
+    this.canvas.setZoom(width / 1500)
     // this.canvas.setWidth(width);
     // this.canvas.setHeight(height);
   }
@@ -107,21 +129,25 @@ export class WhiteboardComponent implements OnInit {
       console.log("stopDrawing => this.mouseDown :", this.mouseDown);
     }
   }
+  updateMode() {
+    if (this.options.currentMode === this.modes.SELECT) this.SelectMode();
+  }
   removeCanvasListener() {
     this.canvas.off('mouse:down');
     this.canvas.off('mouse:move');
     this.canvas.off('mouse:up');
     this.canvas.off('mouse:over');
   }
-  resetparameters(){
+  resetparameters() {
     this.removeCanvasListener();
     if (this.options.currentMode !== this.modes.Erase) {
-      this.canvas.getObjects().map((item: any) =>{
-        if(!item.path) item.set({ 
-          perPixelTargetFind :false
+      this.canvas.getObjects().map((item: any) => {
+        if (!item.path) item.set({
+          perPixelTargetFind: false
         })
-        console.log("item",item);
-      });}
+        console.log("item", item);
+      });
+    }
   }
   SelectMode() {
     this.options.currentMode = this.modes.SELECT;
@@ -129,13 +155,13 @@ export class WhiteboardComponent implements OnInit {
     this.resetparameters();
     this.canvas.selection = true;
     this.canvas.hoverCursor = 'auto';
-    this.canvas.getObjects().map((item: any) =>{
-      if(!item.path)
-       item.set({ selectable: true })
-      console.log("item",item);
-      
+    this.canvas.getObjects().map((item: any) => {
+      if (!item.path)
+        item.set({ selectable: true })
+      console.log("item", item);
+
     }
-      );
+    );
   }
   clearCanvas() {
     this.canvas.getObjects().forEach((item: any) => {
@@ -153,6 +179,8 @@ export class WhiteboardComponent implements OnInit {
         fabric.Image.fromURL(reader.result, (img) => {
           img.scaleToHeight(this.canvas.height);
           this.canvas.add(img);
+          this.SelectMode();
+          this.canvas.setActiveObject(img);
         });
       }
 
@@ -164,15 +192,15 @@ export class WhiteboardComponent implements OnInit {
   /*  ==== erase  ==== */
   erase() {
     if (this.options.currentMode !== this.modes.Erase) {
-      this.canvas.getObjects().map((item: any) =>{
+      this.canvas.getObjects().map((item: any) => {
         // if(!item.path)
-         item.set({ 
+        item.set({
           // selectable: true ,
-          perPixelTargetFind :true
+          perPixelTargetFind: true
         })
-        console.log("item",item);
+        console.log("item", item);
       }
-        );
+      );
       this.options.currentMode = this.modes.Erase;
 
       this.resetparameters();
@@ -201,7 +229,7 @@ export class WhiteboardComponent implements OnInit {
       // if(target)target.set('stroke', 'red');
 
       if (this.mouseDown && e.target) {
-         e.target.set('stroke', 'red');
+        e.target.set('stroke', 'red');
         this.objectsTOErase.push(e.target);
         // if (e.target !== this.canvas.backgroundImage) {
         //   this.canvas.remove(e.target);
@@ -235,7 +263,7 @@ export class WhiteboardComponent implements OnInit {
       this.canvas.getActiveObject()._objects.forEach((element: any) => {
         {
           // if (element !== this.canvas.backgroundImage) {
-            this.canvas.remove(element);
+          this.canvas.remove(element);
           // }
         }
       });
@@ -256,29 +284,31 @@ export class WhiteboardComponent implements OnInit {
     }
     this.canvas.getActiveObject().toGroup();
     this.canvas.requestRenderAll();
+    this.wboardChange.emit();
     this.SelectMode()
   }
-tessst(){
-  return (e: any) => {
-  console.log("e",e);
-  e.path.set({
-    perPixelTargetFind : true,
-    selectable: false,
-  })
+  tessst() {
+    return (e: any) => {
+      console.log("e", e);
+      e.path.set({
+        perPixelTargetFind: true,
+        selectable: false,
+      })
+    }
   }
-}
   /*  ==== draw  ==== */
   draw() {
     if (this.options.currentMode !== this.modes.PENCIL) {
       this.resetparameters();
-      this.canvas.on('path:created', this.tessst());
+      // this.canvas.on('path:created', this.tessst());
+
       // this.canvas.on('mouse:move', this.startDrawing());
       this.options.currentMode = this.modes.PENCIL;
       // canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
       this.canvas.freeDrawingBrush.width = this.options.currentWidth;
       // this.canvas.freeDrawingBrush.hasControls = this.canvas.freeDrawingBrush.hasBorders = false;
       // this.canvas.freeDrawingBrush.perPixelTargetFind = true;
-      console.log("this.canvas.freeDrawingBrush",this.canvas.freeDrawingBrush);
+      console.log("this.canvas.freeDrawingBrush", this.canvas.freeDrawingBrush);
 
       this.canvas.isDrawingMode = true;
     }
@@ -314,7 +344,7 @@ tessst(){
         selectable: false,
       });
       this.drawInstance.perPixelTargetFind = true;
-      this.canvas.add(this.drawInstance); 
+      this.canvas.add(this.drawInstance);
       this.canvas.requestRenderAll();
     };
   }
@@ -331,6 +361,7 @@ tessst(){
         });
         this.drawInstance.setCoords();
         this.canvas.requestRenderAll();
+        this.wboardChange.emit();
         // if (this.conn) this.conn.send(this.canvas.toSVG())
       }
     };
@@ -372,7 +403,7 @@ tessst(){
         height: 0,
         selectable: false,
       });
-      
+
       this.canvas.add(this.drawInstance);
 
       // this.drawInstance.on('this.mouseDown', (e) => {
@@ -400,6 +431,7 @@ tessst(){
         });
         this.drawInstance.setCoords();
         this.canvas.renderAll();
+        this.wboardChange.emit();
         // if (this.conn) this.conn.send(this.canvas.toSVG())
       }
     };
@@ -462,6 +494,7 @@ tessst(){
         });
         this.drawInstance.setCoords();
         this.canvas.renderAll();
+        this.wboardChange.emit();
         // if (this.conn) this.conn.send(this.canvas.toSVG())
       }
     };
@@ -469,17 +502,20 @@ tessst(){
 
   /* === triangle === */
   createTriangle() {
-    this.resetparameters();
+    if (this.options.currentMode !== this.modes.TRIANGLE) {
+      this.options.currentMode = this.modes.TRIANGLE;
+      this.resetparameters();
 
-    this.canvas.on('mouse:down', this.startAddTriangle());
-    this.canvas.on('mouse:move', this.startDrawingTriangle());
-    this.canvas.on('mouse:up', this.stopDrawing());
+      this.canvas.on('mouse:down', this.startAddTriangle());
+      this.canvas.on('mouse:move', this.startDrawingTriangle());
+      this.canvas.on('mouse:up', this.stopDrawing());
 
-    this.canvas.selection = false;
-    this.canvas.hoverCursor = 'auto';
-    this.canvas.isDrawingMode = false;
-    this.canvas.getObjects().map((item: any) => item.set({ selectable: false }));
-    this.canvas.discardActiveObject().requestRenderAll();
+      this.canvas.selection = false;
+      this.canvas.hoverCursor = 'auto';
+      this.canvas.isDrawingMode = false;
+      this.canvas.getObjects().map((item: any) => item.set({ selectable: false }));
+      this.canvas.discardActiveObject().requestRenderAll();
+    }
   }
 
   startAddTriangle() {
@@ -522,33 +558,36 @@ tessst(){
 
         this.drawInstance.setCoords();
         this.canvas.renderAll();
+        this.wboardChange.emit();
         // if (this.conn) this.conn.send(this.canvas.toSVG())
       }
     };
   }
 
-  
 
- 
-  
- 
+
+
+
+
   addText() {
-    let textString = this.textString;
+    let textString ="new Text" //this.textString;
     let text = new fabric.IText(textString, {
-      left: 10,
-      top: 10,
+      left: 120,
+      top: 120,
       fontFamily: 'helvetica',
       angle: 0,
       fill: '#000000',
-      scaleX: 0.5,
-      scaleY: 0.5,
+      scaleX: 2,
+      scaleY: 2,
       fontWeight: '',
       hasRotatingPoint: true
     });
     // this.extend(text, this.randomId());
-    this.canvas.add(text);
     this.selectItemAfterAdded(text);
+    this.canvas.add(text);
     this.textString = '';
+    this.SelectMode();
+    // this.canvas.setActiveObject(text);
   }
   copycanvas() {
     this.oldcanvas = JSON.stringify(this.canvas.toJSON());
