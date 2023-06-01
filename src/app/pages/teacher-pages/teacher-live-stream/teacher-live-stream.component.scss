@@ -36,5 +36,31 @@
     position: absolute;
     right: 20px;
   }
-  
-  
+  .accordion-header h4{
+    text-align: center;
+  }
+  // .accordion-body p{
+  //   text-align: center;
+  // }
+  .accordion-header{
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
+  .accordion-body {
+    border:1px solid #5864bd;
+    border-top: unset;
+ }
+ .boardSelect{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  h6{
+    width: 25% ;
+  }
+  select{
+    width: 60%;
+  }
+ }
+ .open-btn{
+  margin: auto !important;
+ }

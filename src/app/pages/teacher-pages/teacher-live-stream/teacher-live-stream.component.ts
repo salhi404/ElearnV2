@@ -5,7 +5,7 @@ import { EventsService } from 'app/services/events.service';
 import { TeacherService } from 'app/_services/teacher.service';
 import { StorageService } from 'app/_services/storage.service';
 import { DatePipe } from '@angular/common';
-import ZoomMtgEmbedded from '@zoomus/websdk/embedded';
+import { Peer } from "peerjs";
 // import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -16,9 +16,12 @@ import ZoomMtgEmbedded from '@zoomus/websdk/embedded';
 export class TeacherLiveStreamComponent implements OnInit {
   subscription: Subscription = new Subscription();
   subscription1: Subscription = new Subscription();
-  editing: boolean = false;
+  activeCard: number = 0;
+  activePanel: number = 0;
   loading: boolean = false;
   chosenClass: any = null;
+  chosenlivestream: any = null;
+  peer: any;
   datepipe: DatePipe = new DatePipe('en-US');
   addnotEdit: boolean = true;
   firstskiped = false;
@@ -75,8 +78,7 @@ export class TeacherLiveStreamComponent implements OnInit {
   }
   getWboardNames(){
     this.chosenClass.data.livestreams.forEach((stream:any) => {
-      console.log('stream',stream);
-      
+      // console.log('stream',stream);
       if(stream.Wboard === undefined||stream.Wboard==-1){ stream.Wboard=-1; stream.WboardName = 'N/A'}
       else { 
         let found = this.chosenClass.data.whiteboards.find((Wb:any)=>(Wb.id==stream.Wboard))
@@ -85,22 +87,22 @@ export class TeacherLiveStreamComponent implements OnInit {
           stream.WboardName = 'N/A';
           stream.Wboard=-1
         }
-        
       }
     });
   }
   addStream() {
+    this.peer = new Peer();
     this.form = {topic : '',agenda : '',start_time : '',duration : '60',Wboard : '-1'}
     // this.formInvalid = -1;
     // this.formInvalidmsg = '';
     if (this.haszoomtoken) {
-      this.editing = true;
+      this.activeCard = 1;
       this.addnotEdit = true;
     } else {
       this.haszoomtoken = this.storageService.isLoggedIn() && (this.storageService.getUser().data.hasToken);
       console.log("this.haszoomtoken", this.haszoomtoken);
       if (this.haszoomtoken) {
-        this.editing = true;
+        this.activeCard = 1;
         this.addnotEdit = true;
       } else {
         this.getToken()
@@ -110,34 +112,39 @@ export class TeacherLiveStreamComponent implements OnInit {
   backToList() {
     //this.form={user:false,teacher:false,moderator:false,admin:false}
     // this.clean();
-    this.editing = false;
+    this.activeCard = 0;
     console.log("backToList");
   }
   onSubmit() {
-    let valid =true;
-    console.log("submit add");
-    if(!this.form.agenda)this.form.agenda='new agenda';
-    if(!this.form.topic)this.form.topic='new topic';
-    if(!this.form.start_time){
-      console.log("no time privided");
-      valid=false;
-    }else{
-      console.log("temp 111 ");
-      
-      if(new Date().getTime()>new Date(this.form.start_time).getTime()){
-        console.log("temp 222");
-        this.formerrors.start_time={valid:false,msg:' time given already passed ',oldvalue:this.form.start_time};
+    if(!this.loading){
+      this.loading=true;
+      let valid =true;
+      console.log("submit add");
+      if(!this.form.agenda)this.form.agenda='new agenda';
+      if(!this.form.topic)this.form.topic='new topic';
+      if(!this.form.start_time){
+        console.log("no time privided");
+        valid=false;
+      }else{
+        console.log("temp 111 ");
+        if(new Date().getTime()>new Date(this.form.start_time).getTime()){
+          console.log("temp 222");
+          this.formerrors.start_time={valid:false,msg:' time given already passed ',oldvalue:this.form.start_time};
+        }
+      }
+      // if(+this.form.duration<10||+this.form.duration>180){
+      //   console.log('ration must be between 5 min and 180 min not ',+this.form.duration);
+      //   this.formerrors.duration = {valid:false,msg:' duration must be between 5 min and 180 min',oldvalue:this.form.duration};
+      //   valid=false;
+      // }
+      if(valid && this.peer.id){
+        console.log("CreateMeeting fired"); 
+        this.CreateMeeting({...this.form,peer:this.peer.id});
+      }else{
+        this.loading=false;
       }
     }
-    // if(+this.form.duration<10||+this.form.duration>180){
-    //   console.log('ration must be between 5 min and 180 min not ',+this.form.duration);
-    //   this.formerrors.duration = {valid:false,msg:' duration must be between 5 min and 180 min',oldvalue:this.form.duration};
-    //   valid=false;
-    // }
-    if(valid){
-      console.log("CreateMeeting fired"); 
-      this.CreateMeeting({...this.form});
-    }   
+     
   }
   clear(){
     this.formerrors={
@@ -157,17 +164,29 @@ export class TeacherLiveStreamComponent implements OnInit {
         console.log("CreateMeeting data ", data);
         this.events.changeTaskState({task:this.events.TASKUPDATECLASSSTREAM,data:{tasktype:1,classid:this.chosenClass.uuid,liveStream:data.meeting}});
         this.getWboardNames();
-        this.editing=false;
+        this.activeCard=0;
         this.clear();
+        this.loading=false;
       },
       error: err => {
         console.log('error in CreateMeeting ', err)
       }
     })
   }
-startMeeting(meeting:any){
-  const url = window.location.origin+'/teacher/meeting?uuid='+this.chosenClass.uuid+'&indd='+meeting.indd;
-    window.open(url, "_blank");
-}
+  openMeeting(meeting:any){
+    this.chosenlivestream={...meeting};
+    this.activeCard=2;
+    console.log("open meeting",meeting);
+    
+  }
+
+
+  startMeeting(mode:number){
+    let url = window.location.origin+'/teacher/meeting?uuid='+this.chosenClass.uuid+'&indd='+this.chosenlivestream.indd+'&mode='+mode;
+    if (mode==1) {
+      url+="&Wboard="+this.chosenlivestream.Wboard;
+    }
+      window.open(url, "_blank");
+  }
 
 }

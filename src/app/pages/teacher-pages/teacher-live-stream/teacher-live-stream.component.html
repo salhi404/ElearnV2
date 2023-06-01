@@ -5,7 +5,7 @@
     <div class="card StreamCard" [ngClass]="{'classhidden':!chosenClass}" *ngIf="chosenClass">
       <div class="card-header d-flex justify-content-center align-items-center">
         <!-- TODO implement select multiple checkbox -->
-        <div [ngClass]="{'invisible2':!editing}" (click)="backToList()" class="iconBtn BtnToLeft">
+        <div [ngClass]="{'invisible2':activeCard==0}" (click)="backToList()" class="iconBtn BtnToLeft">
           <div class="iconBtnBack ">
             <a data-toggle="tooltip">
               <i class="material-icons">arrow_back</i>
@@ -13,9 +13,12 @@
           </div>
         </div>
         <h4 class="text-center my-2">
-          <span> {{editing?addnotEdit?'New LiveStream':'Edit LiveStream':'LiveStreams'}} </span>
+          <span> <span *ngIf="activeCard==0">LiveStreams</span> 
+          <span *ngIf="activeCard==1">{{addnotEdit?'New LiveStream':'Edit LiveStream'}}</span> 
+          <span *ngIf="activeCard==2&&chosenlivestream" >{{chosenlivestream.topic}}</span>  
+        </span>
         </h4>
-        <div *ngIf="!editing&&addnotEdit" (click)="addStream()" class="iconBtn BtnToRight">
+        <div *ngIf="activeCard==0&&addnotEdit" (click)="addStream()" class="iconBtn BtnToRight">
           <div class="iconBtnBack ">
             <a data-toggle="tooltip">
               <i class="material-icons">add</i>
@@ -24,7 +27,7 @@
         </div>
       </div>
       <div class="card-body">
-        <div *ngIf="!editing" class="table-responsive tablestream">
+        <div *ngIf="activeCard==0" class="table-responsive tablestream">
           <table class="  table table-striped">
             <thead> <!--class="centerColumn"-->
               <th>topic</th>
@@ -46,7 +49,7 @@
                 <td>{{livestream.host_email}}</td>
                 <td>{{livestream.status}}</td>
                 <td>
-                  <div (click)="startMeeting(livestream)" class="btn btn-success pointer">start</div>
+                  <div (click)="openMeeting(livestream)" class="btn btn-success pointer">start</div>
                 </td>
               </tr>
               <tr *ngIf="chosenClass?.data.livestreams.length==0">
@@ -65,8 +68,7 @@
             </tbody>
           </table>
         </div>
-        <div *ngIf="editing">
-          <div></div>
+        <div *ngIf="activeCard==1">
           <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
             <!-- <fieldset *ngIf="form.status!=='3'" class="form-group">
                 <div class="row">
@@ -153,7 +155,7 @@
                     </div> -->
               </div>
             </div>
-            <button class=" registerBtn btn btn-primary ml-auto">
+            <button class=" registerBtn btn btn-primary d-flex  justify-content-cente align-items-center " >
               <span>{{addnotEdit?'Add':'Edit'}}</span>
               <span *ngIf="loading" class="mx-2"></span>
               <app-spinner *ngIf="loading" [type]="1"></app-spinner>
@@ -163,6 +165,55 @@
                   </div> -->
           </form>
         </div>
+        <div *ngIf="activeCard==2">
+          <div id="accordion">
+            <div class="accordion">
+              <div class="accordion-header" [ngClass]="{'accordion-header-expanded':activePanel==0}" (click)="activePanel=activePanel=activePanel!=0?0:-1" >
+                <h4>Stream WhiteBoard</h4>
+              </div>
+              <div class="accordion-body collapse " [ngClass]="{'show':activePanel==0}" id="panel-body-1" data-parent="#accordion">
+                <p class="mb-0"> in this mode you can stream a WhiteBoard slide lesson you create before or a blank one if you didn't ctreate any <br> 
+                  you can create a new lesson slide in the "whiteboards" section above 
+                </p>
+                <div class="boardSelect mt-4">
+                  <h6> choosen Board  :</h6>
+                  <select  class="custom-select" [(ngModel)]="chosenlivestream.Wboard"
+                  #EditSelect="ngModel" name="EditSelect">
+                    <option value="-1"> Blank WhiteBoard (auto created) </option>
+                    <option *ngFor="let whiteboard of chosenClass.data.whiteboards ,index as i" [ngValue]="whiteboard.id">"{{whiteboard.name}}"</option>
+                </select>
+                </div>
+                <div class="d-flex justify-content-cente mt-3 mb-2 ">
+                  <div (click)="startMeeting(1)" class=" btn btn-success pointer open-btn"> start Meeting </div>
+                </div>
+                
+              </div>
+            </div>
+            <div class="accordion">
+              <div class="accordion-header" [ngClass]="{'accordion-header-expanded':activePanel==1}" (click)="activePanel=activePanel!=1?1:-1">
+                <h4>Stream the screen</h4>
+              </div>
+              <div class="accordion-body collapse" [ngClass]="{'show':activePanel==1}">
+                <p class="mb-0"> in this mode you can stream the entire screen or a just a window etc ...</p>
+                <div class="d-flex justify-content-cente mt-3 mb-2 ">
+                  <div (click)="startMeeting(2)" class=" btn btn-success pointer open-btn"> start Meeting </div>
+                </div>
+              </div>
+            </div>
+            <div class="accordion">
+              <div class="accordion-header" [ngClass]="{'accordion-header-expanded':activePanel==2}" (click)="activePanel=activePanel=activePanel!=2?2:-1">
+                <h4>zoom meeting</h4>
+              </div>
+              <div class="accordion-body collapse" [ngClass]="{'show':activePanel==2}">
+                <p class="mb-0"> strat a zoom meeting in the browser </p>
+                <div class="d-flex justify-content-cente mt-3 mb-2 ">
+                  <div (click)="startMeeting(3)" class=" btn btn-success pointer open-btn"> start Meeting </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>

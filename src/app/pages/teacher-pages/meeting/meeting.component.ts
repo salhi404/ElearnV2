@@ -10,6 +10,9 @@ import { Peer } from "peerjs";
   styleUrls: ['./meeting.component.scss']
 })
 export class MeetingComponent implements OnInit, AfterViewInit {
+  params: any = null;
+  info: any;
+  //  ------------------ zoom ------------------  //  
   @ViewChild("meetingSDKElement") meetingSDKElement!: ElementRef;
   // sdkKey = 'Qe0zJgNzQDqU3u5tJk1sdQ'
   // meetingNumber = '74647496286'
@@ -20,18 +23,19 @@ export class MeetingComponent implements OnInit, AfterViewInit {
   // registrantToken = ''
   zakToken = ''
   client = ZoomMtgEmbedded.createClient();
-  uuid='';
-  indd:number=-1;
-  
-//  ------------------ peer ------------------  //
+
+  //  ------------------ peer ------------------  //
   conn: any;
   peer: any;
   anotherid: any;
   mypeerid: any;
   attempt: number = 0;
-  constructor( private UserService:UserService, private route: ActivatedRoute, private teacherservice: TeacherService, ) {
+  constructor(private UserService: UserService, private route: ActivatedRoute, private teacherservice: TeacherService,) {
   }
   ngAfterViewInit() {
+    this.initiateZoom()
+  }
+  initiateZoom() {
     let meetingSDKElement = this.meetingSDKElement.nativeElement as HTMLElement;
     this.client.init({
       debug: true,
@@ -55,20 +59,64 @@ export class MeetingComponent implements OnInit, AfterViewInit {
   }
   ngOnInit() {
     this.route.queryParams
-    .subscribe((params:any) => {
-      console.log(params); // { code: "price" }
-      this.uuid = params.uuid||'';
-      this.indd = params.indd||-1;
-      if(this.uuid){
-        this.getSignature();
+      .subscribe((params: any) => {
+        console.log("params", params);
+        if (params.mode && params.indd && params.uuid) {
+          this.params = this.parseParams(params)
+          // window.location.href=window.location.origin+'/teacher/meeting';
+          this.start(this.params);
+        }
       }
+      );
+  }
+  parseParams(params: any): any {
+    let params1: any = {
+      mode: +params.mode,
+      indd: +params.indd,
+      uuid: params.uuid,
     }
-  );
-
-//  ------------------ peer ------------------  //
-  this.peer = new Peer();
-    console.log('this.peer', this.peer);
-    this.getPeerId();
+    if (params.Wboard) params1.Wboard = +params.Wboard;
+    return params1;
+  }
+  start(params: any) {
+    // switch (params.mode) {
+    //   case 1:
+    //     this.startWboardStream(params)
+    //     break;
+    //   case 2:
+    //     this.startScreenStream(params)
+    //     break;
+    //   case 3:
+    //     // this.initiateZoom();
+    //     this.startZoomStream(params);
+    //     break;
+    // }
+    this.teacherservice.startStream(params).subscribe({
+      next: data => {
+        console.log("start data ", data);
+        this.info = data.info;
+        switch (this.info.mode) {
+          case 1:
+            this.startWboardStream(this.info)
+            break;
+          case 2:
+            this.startScreenStream(this.info)
+            break;
+          case 3:
+            // this.initiateZoom();
+            this.startZoomStream(this.info);
+            break;
+        }
+      },
+      error: err => {
+        console.log('error in start ', err)
+      }
+    })
+  }
+  startWboardStream(info: any) {
+    this.peer = new Peer(info.peer);//"f5c5c07e-5f07-4ff6-b629-991129d02b23"
+    console.log(' startWboardStream this.peer', this.peer);
+    // this.getPeerId();
     this.peer.on('connection', (conn: any) => {
       conn.on('data', (data: any) => {
         // Will print 'hi!'
@@ -80,17 +128,52 @@ export class MeetingComponent implements OnInit, AfterViewInit {
       });
     });
   }
-  getPeerId() {
-    setTimeout(() => {
-      if (this.peer.id || this.attempt > 25) {
-        this.mypeerid = this.peer.id;
-      } else {
-        this.attempt++;
-        this.getPeerId();
-      }
-      console.log('attempt : ' + this.attempt + '  this.peer  :', this.peer);
-    }, 500);
+  startScreenStream(info: any) {
+    this.peer = new Peer(info.peer);//"f5c5c07e-5f07-4ff6-b629-991129d02b23"
+    console.log(' startScreenStream this.peer', this.peer);
+    // this.getPeerId();
+    this.peer.on('connection', (conn: any) => {
+      conn.on('data', (data: any) => {
+        // Will print 'hi!'
+        // this.canvas.loadFromJSON(data, this.canvas.renderAll.bind(this.canvas), (o: any, object: any) => {
+        //     fabric.log(o, object);
+        //   });
+        // if (this.dataContainer) this.dataContainer.nativeElement.innerHTML = data;
+        // console.log(data);
+      });
+    });
   }
+  startZoomStream(info: any) {
+    this.getSignature(this.params.uuid, this.params.indd)
+  }
+
+  //  ------------------ peer ------------------  //
+  initiatePeer(peerId:string) {
+    this.peer = new Peer(peerId);//"f5c5c07e-5f07-4ff6-b629-991129d02b23"
+    console.log('this.peer', this.peer);
+    // this.getPeerId();
+    this.peer.on('connection', (conn: any) => {
+      conn.on('data', (data: any) => {
+        // Will print 'hi!'
+        // this.canvas.loadFromJSON(data, this.canvas.renderAll.bind(this.canvas), (o: any, object: any) => {
+        //     fabric.log(o, object);
+        //   });
+        // if (this.dataContainer) this.dataContainer.nativeElement.innerHTML = data;
+        // console.log(data);
+      });
+    });
+  }
+  // getPeerId() {
+  //   setTimeout(() => {
+  //     if (this.peer.id || this.attempt > 25) {
+  //       this.mypeerid = this.peer.id;
+  //     } else {
+  //       this.attempt++;
+  //       this.getPeerId();
+  //     }
+  //     console.log('attempt : ' + this.attempt + '  this.peer  :', this.peer);
+  //   }, 500);
+  // }
   canvasModifiedCallback(): any {
     console.log("connection", this.conn);
     return () => {
@@ -119,38 +202,33 @@ export class MeetingComponent implements OnInit, AfterViewInit {
     // this.canvas.on('object:skewing', this.canvasModifiedCallback());
     // this.canvas.on('object:resizing', this.canvasModifiedCallback());
   }
-
-
-
-
-
-
-  getSignature() {
-    this.teacherservice.getsignature(this.uuid,this.indd).subscribe({
+  getSignature(uuid: string, indd: number) {
+    this.teacherservice.getsignature(uuid, indd).subscribe({
       next: data => {
-        console.log("getSignature data ",data);
-        if(data.signature&&data.info) {
-          this.zakToken=data.info.zakToken;
+        console.log("startZoomStream data ", data);
+        if (data.signature && data.info) {
+          this.zakToken = data.info.zakToken;
           console.log(data.signature)
-          this.startMeeting(data.signature,data.info)
-          console.log("fire startMeeting with : data ",data.info);
-          console.log("and signature ",data.signature);
+          this.joinzoomMeeting(data.signature, data.info)
+          console.log("fire startMeeting with : data ", data.info);
+          console.log("and signature ", data.signature);
         } else {
           console.log(data)
         }
       },
       error: err => {
-        console.log('error in getSignature ',err)
+        console.log('error in startZoomStream ', err)
       }
     })
   }
-  startMeeting(signature: any,info:any) {
+
+  joinzoomMeeting(signature: any, info: any) {
     this.client.join({
       signature: signature,
-    	sdkKey: info.sdkKey,
-    	meetingNumber: info.id,
-    	password: info.password,
-    	userName: info.userName,
+      sdkKey: info.sdkKey,
+      meetingNumber: info.id,
+      password: info.password,
+      userName: info.userName,
       userEmail: info.host_email,
       tk: '',//info.registrantToken,
       zak: info.zakToken
