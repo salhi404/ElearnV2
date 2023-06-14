@@ -1,0 +1,61 @@
+<app-whiteboard (wboardChange)="onWboardChange()" #whiteboardComp></app-whiteboard>
+<section class="slide-section" >
+    <div class="slide-preview">
+      <swiper-container 
+      #swiperEl 
+      slides-per-view="5" 
+      slides-per-group="5" 
+      space-between="15"  
+      class=" mySwiper "
+      center-insufficient-slides="true"
+      
+        >
+        <!-- centered-slides="true"  -->
+        <swiper-slide *ngFor="let silde of form.pages,index as i"  class="swiperSlide" [ngClass]="{'activeSlide':i==currentPage}">
+          <div  class="slidee" [innerHTML]="silde.secSvg" (click)="chooseSlide(i)"><span>{{silde.test}}</span> </div>
+          <!-- [innerHTML]="silde.svg" -->
+          <div class="slideeNumber">{{i+1}}</div>
+        </swiper-slide>
+      </swiper-container>
+      <div (click)="nextslide()" class="swiper-button-next"></div>
+      <div (click)="prevtslide()" class="swiper-button-prev"></div>
+      <div class="swiper-pagination"></div>
+    </div>
+    <div class="slide-controle">
+      <ul class="icon-list">
+        <li class="icon-item icon-item2">
+          <a class="icon-link "><i class="fa-solid fa-left-long"></i></a>
+          <span> prev </span>
+        </li>
+        <li class="icon-item icon-item2">
+          <a class="icon-link "><i class="fa-solid fa-right-long"></i></a>
+          <span> next </span>
+        </li>
+        
+        <li class="icon-item icon-item2">
+          <a (click)="newSlide()" class="icon-link"><i class="fa-solid fa-plus"></i></a>
+          <span> add </span>
+        </li>
+        <li (click)="copySlide()" class="icon-item icon-item2">
+          <a class="icon-link"><i class="fa-regular fa-clipboard"></i></a>
+          <span> copy </span>
+        </li>
+        <li (click)="pasteSlide()" class="icon-item icon-item2">
+          <a class="icon-link"><i class="fa-regular fa-paste"></i></a>
+          <span> paste </span>
+        </li>
+        <li (click)="cutSlide()" class="icon-item icon-item2">
+          <a class="icon-link"><i class="fa-solid fa-scissors"></i></a>
+          <span> cut </span>
+        </li>
+        <li (click)="deleteSlide()" class="icon-item icon-item2">
+          <a class="icon-link"><i class="fa-regular fa-trash-can"></i></a>
+          <span> Delete </span>
+        </li>   
+        <!-- <li (click)="saveSlide(-1)" class="icon-item icon-item2">
+          <a class="icon-link"><i class="fa-regular fa-floppy-disk"></i></a>
+          <span> save </span>
+        </li> -->
+      </ul>
+    </div>
+  </section>

@@ -50,6 +50,7 @@ import { UserMeetingComponent } from './pages/user-meeting/user-meeting.componen
 import { TestComponent } from './pages/test/test.component';
 import { WhiteboardComponent } from './pages/whiteboard/whiteboard.component';
 import { TeacherWhiteboardComponent } from './pages/teacher-pages/teacher-whiteboard/teacher-whiteboard.component';
+import { SlideboardComponent } from './pages/teacher-pages/slideboard/slideboard.component';
 
 @NgModule({
   declarations: [
@@ -95,6 +96,7 @@ import { TeacherWhiteboardComponent } from './pages/teacher-pages/teacher-whiteb
     TestComponent,
     WhiteboardComponent,
     TeacherWhiteboardComponent,
+    SlideboardComponent,
     
   ],
   imports: [

@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, HostListener } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+
 import { Subscription } from 'rxjs';
 import { EventsService } from 'app/services/events.service';
 import { AuthService } from 'app/_services/auth.service';
 import { TeacherService } from 'app/_services/teacher.service';
 import { DatePipe } from '@angular/common';
-import { WhiteboardComponent } from 'app/pages/whiteboard/whiteboard.component';
+import { SlideboardComponent } from '../slideboard/slideboard.component';
 import { register } from 'swiper/element/bundle';
 register();
 @Component({
@@ -18,8 +18,8 @@ export class TeacherWhiteboardComponent implements OnInit, OnDestroy {
   @ViewChild("WboardnameinputBox") WboardnameinputBox!: ElementRef;
   @ViewChild("Wboardnameinput") Wboardnameinput!: ElementRef;
   @ViewChild("cardBody") cardBody!: ElementRef;
-  @ViewChild("whiteboardComp") whiteboardComp!: WhiteboardComponent;
-  @ViewChild("swiperEl") swiperEl!: ElementRef;
+  @ViewChild("SlideboardComponent") SlideComp!: SlideboardComponent;
+ 
   subscription: Subscription = new Subscription();
   subscription1: Subscription = new Subscription();
   chosenClass: any = null;
@@ -30,19 +30,14 @@ export class TeacherWhiteboardComponent implements OnInit, OnDestroy {
   addnotEdit: boolean = true;
   WboardIdToedit = -1;
   Wboardnamediting = false;
+  oldWboardname:string='';
   firstskiped = false;
-  currentPage: number = -1;
-  copiedPage: any = null;
-  iscopying = 0;
-  blockmodif:boolean=false;
-  blockSaveOnOpen:boolean=false;
-  wbIsSaved:boolean=true;
-  form: any = {
-    name: '',
-    pages: [],
-    pagesCount: 0,
-  }
-  constructor(private events: EventsService, private teacherservice: TeacherService, private authService: AuthService, private sanitizer: DomSanitizer) { }
+
+
+
+
+
+  constructor(private events: EventsService, private teacherservice: TeacherService, private authService: AuthService, ) { }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
     this.subscription1.unsubscribe();
@@ -84,7 +79,7 @@ export class TeacherWhiteboardComponent implements OnInit, OnDestroy {
     }
   }
   addWboard() {
-    this.whiteboardComp.clearCanvas();
+    this.SlideComp.whiteboardComp.clearCanvas();
     let tempName ='New Whiteboard';
     for (let ind = 1; ind < 100; ind++) {
       let found = this.chosenClass.data.whiteboards.find((wb:any)=>(wb.name === tempName))
@@ -93,14 +88,14 @@ export class TeacherWhiteboardComponent implements OnInit, OnDestroy {
       if(found) tempName ='New Whiteboard ( '+ind+' )';
       else break
     }
-    this.form = {
+    this.SlideComp.form = {
       name: tempName,
-      pages: [{ test:this.currentPage+1,json: this.whiteboardComp.canvas.toJSON(),svg:this.whiteboardComp.canvas.toSVG(), secSvg: this.sanitizer.bypassSecurityTrustHtml(this.whiteboardComp.canvas.toSVG())}],
+      pages: [{ test:this.SlideComp.currentPage+1,json: this.SlideComp.whiteboardComp.canvas.toJSON(),svg:this.SlideComp.whiteboardComp.canvas.toSVG(), secSvg: this.SlideComp.sanitizer.bypassSecurityTrustHtml(this.SlideComp.whiteboardComp.canvas.toSVG())}],
       pagesCount: 1 
     }
-    this.currentPage = 0;
+    this.SlideComp.currentPage = 0;
     // this.chooseSlide(0);
-    let WboardTosend: any = { name:this.form.name,pages:this.onlySvgFromPages(this.form.pages),pagesCount:this.form.pagesCount };
+    let WboardTosend: any = { name:this.SlideComp.form.name,pages:this.onlySvgFromPages(this.SlideComp.form.pages),pagesCount:this.SlideComp.form.pagesCount };
       this.teacherservice.addclassWboard(this.chosenClass.uuid, WboardTosend).subscribe({
         next: data => {
           console.log("addclassWboard 11 : ", data);
@@ -117,50 +112,50 @@ export class TeacherWhiteboardComponent implements OnInit, OnDestroy {
       });
     this.openWhitboard(true);
   }
-  chooseSlide(ind: number) {
-    this.currentPage = ind;
-    this.loadcanvas(ind);
-  }
+
   openWhitboard(editting: boolean) {
     this.editing = true;
     this.addnotEdit = editting;
-    this.blockSaveOnOpen=true;
+    this.SlideComp.blockSaveOnOpen=true;
     console.log("card width: ", this.cardBody.nativeElement.offsetWidth);
     const width = this.cardBody.nativeElement.offsetWidth - 50;
-    this.whiteboardComp.setSize(width);
-    this.wbIsSaved=true;
+    this.SlideComp.whiteboardComp.setSize(width);
+    this.SlideComp.wbIsSaved=true;
     console.log("to true 3");
   }
   editName() {
     this.Wboardnamediting = true;
+    this.oldWboardname = this.SlideComp.form.name;
     setTimeout(() => { // this will make the execution after the above boolean has changed
       this.Wboardnameinput.nativeElement.focus();
     }, 0);
   }
   editWboard(ind: number) {
+    this.SlideComp.blockmodif=true;
     const Notlength = this.chosenClass.data.whiteboards.length;
     console.log("edit whiteboard", this.chosenClass.data.whiteboards[Notlength - 1 - ind]);
     
-    this.form = {
+    this.SlideComp.form = {
       name: this.chosenClass.data.whiteboards[Notlength - 1 - ind].name,
       pages: this.addSecSvgToPages(this.chosenClass.data.whiteboards[Notlength - 1 - ind].pages),//2023-03-22T00:31
       pagesCount: this.chosenClass.data.whiteboards[Notlength - 1 - ind].pagesCount
     }
-    // this.form.pages.forEach((page:any) => {
-    //   page.svg=this.sanitizer.bypassSecurityTrustHtml(this.whiteboardComp.canvas.toSVG())
+    // this.SlideComp.form.pages.forEach((page:any) => {
+    //   page.svg=this.sanitizer.bypassSecurityTrustHtml(this.SlideComp.whiteboardComp.canvas.toSVG())
     // });
     // console.log("this.chosenClass.data.whiteboards[ind]", this.chosenClass.data.whiteboards[Notlength-1-ind]);
     this.WboardIdToedit = this.chosenClass.data.whiteboards[Notlength - 1 - ind].id;
-    // this.formInvalid = -1;
-    // this.formInvalidmsg = '';
+    // this.SlideComp.formInvalid = -1;
+    // this.SlideComp.formInvalidmsg = '';
     this.openWhitboard(false);
-    this.currentPage = 0;
-    this.chooseSlide(0);
+    this.SlideComp.currentPage = 0;
+    this.SlideComp.chooseSlide(0);
     // this.toggleDD(this.openedDD);
+    this.SlideComp.blockmodif=false;
   }
   saveBoard(){
     console.log("save changes");
-    let WboardTosend: any = { name:this.form.name,pages:this.onlySvgFromPages(this.form.pages),pagesCount:this.form.pagesCount ,id:this.WboardIdToedit}; 
+    let WboardTosend: any = { name:this.SlideComp.form.name,pages:this.onlySvgFromPages(this.SlideComp.form.pages),pagesCount:this.SlideComp.form.pagesCount ,id:this.WboardIdToedit}; 
       this.teacherservice.editclassWboard(this.chosenClass.uuid, WboardTosend).subscribe({
       next: data => {
         console.log("editclassWboard : ", data);
@@ -197,13 +192,14 @@ export class TeacherWhiteboardComponent implements OnInit, OnDestroy {
     });
   }
   clean() {
-    this.form = { name: '', pages: [], pagesCount: 0 };
+    this.SlideComp.form = { name: '', pages: [], pagesCount: 0 };
   }
   backToList() {
-    //this.form={user:false,teacher:false,moderator:false,admin:false}
+    //this.SlideComp.form={user:false,teacher:false,moderator:false,admin:false}
     this.clean();
     this.editing = false;
     this.WboardIdToedit=-1;
+    this.SlideComp.wbIsSaved=true;
     console.log("backToList");
   }
   @HostListener('document:click', ['$event'])
@@ -211,6 +207,7 @@ export class TeacherWhiteboardComponent implements OnInit, OnDestroy {
     if (this.Wboardnamediting) {
       if (!this.WboardnameinputBox?.nativeElement.contains(event.target)) {
         this.Wboardnamediting = false;
+        if(this.oldWboardname!== this.SlideComp.form.name )this.SlideComp.wbIsSaved=false;
       }
     }
 
@@ -219,105 +216,23 @@ export class TeacherWhiteboardComponent implements OnInit, OnDestroy {
   resizeCanvase(event: any) {
     if (this.editing) {
 
-      // this.whiteboardComp.setSize(width,height);
+      // this.SlideComp.whiteboardComp.setSize(width,height);
       setTimeout(() => {
         const width = this.cardBody.nativeElement.offsetWidth - 50;
-        this.whiteboardComp.setSize(width);
+        this.SlideComp.whiteboardComp.setSize(width);
       }, 500);
 
     }
   }
 
-  // ----------------------------- slider ----------------------------- //
-  nextslide() {
-    this.swiperEl.nativeElement.swiper.slideNext();
-  }
-  prevtslide() {
-    this.swiperEl.nativeElement.swiper.slidePrev();
-  }
-  newSlide() {
-    console.log("newSlide");
-    this.blockmodif=true;
-    this.whiteboardComp.clearCanvas();
-    this.blockmodif=false;
-    this.form.pages.splice(++this.currentPage, 0, {test:this.currentPage+1, json: this.whiteboardComp.canvas.toJSON(),svg:this.whiteboardComp.canvas.toSVG(), secSvg: this.sanitizer.bypassSecurityTrustHtml(this.whiteboardComp.canvas.toSVG()) });
-    this.form.pagesCount++;
-    this.wbIsSaved=false;
-    console.log("to false 2");
-    setTimeout(() => {
-      console.log("swiper.activeIndex = ", this.swiperEl.nativeElement.swiper.activeIndex);
 
-      this.swiperEl.nativeElement.swiper.update();
-      // this.swiperEl.nativeElement.swiper.slideNext();
-    }, 10);
 
-  }
-  copySlide() {
-    if (this.currentPage > -1) {
-      this.copiedPage = { ...this.form.pages[this.currentPage] };
-      this.iscopying = 1;
-    }
 
-  }
-  pasteSlide() {
-    if (this.iscopying) {
-      this.form.pages.splice(++this.currentPage, 0, this.copiedPage);
-      this.form.pagesCount++;
-      setTimeout(() => {
-        // console.log("swiper.activeIndex = ",this.swiperEl.nativeElement.swiper.activeIndex);
-        this.swiperEl.nativeElement.swiper.update();
-        // this.swiperEl.nativeElement.swiper.slideNext();
-      }, 10);
 
-    }
-  }
-  cutSlide() {
-    if (this.currentPage > -1) {
-      this.copiedPage = { ...this.form.pages[this.currentPage] };
-      this.iscopying = 2;
-      this.deleteSlide()
-    }
-    console.log("cutSlide");
-  }
-  deleteSlide() {
-    console.log("deleteSlide");
-    if (this.currentPage > -1) {
-      this.form.pages.splice(this.currentPage, 1);
-      this.form.pagesCount--;
-      if(this.currentPage==this.form.pages.length)this.currentPage--;
-      setTimeout(() => {
-        // console.log("swiper.activeIndex = ",this.swiperEl.nativeElement.swiper.activeIndex);
-        this.swiperEl.nativeElement.swiper.update();
-        // this.swiperEl.nativeElement.swiper.slideNext();
-      }, 10);
-    }
-  }
-  loadcanvas(ind: number) {
-    this.whiteboardComp.canvas.loadFromJSON(this.form.pages[ind].json)
-    this.whiteboardComp.updateMode();
-  }
-  saveSlide(ind:number){
-    console.log("saveSlide ind ",ind);
-    console.log("saveSlide ",this.form.pages[ind]);
-    if(ind==-1)ind=this.currentPage;
-    if(this.form.pages[ind]){
-      this.form.pages[ind].svg=this.whiteboardComp.canvas.toSVG();
-      this.form.pages[ind].secSvg=this.sanitizer.bypassSecurityTrustHtml(this.whiteboardComp.canvas.toSVG());
-      this.form.pages[ind].json=this.whiteboardComp.canvas.toJSON();
-      if(!this.blockSaveOnOpen) this.wbIsSaved=false;
-      else this.blockSaveOnOpen=false ;
-      console.log("to false 1");
-      
-    }
-
-  }
-  onWboardChange(){
-    if(!this.blockmodif)this.saveSlide(-1);
-  }
   onlySvgFromPages(Pages:any):any{
     return Pages.map((elem:any)=>{return {json:elem.json,svg:elem.svg}});
   }
   addSecSvgToPages(Pages:any):any{
-    return Pages.map((elem:any)=>{return {json:elem.json,svg:elem.svg,secSvg:this.sanitizer.bypassSecurityTrustHtml(elem.svg)}});
+    return Pages.map((elem:any)=>{return {json:elem.json,svg:elem.svg,secSvg:this.SlideComp.sanitizer.bypassSecurityTrustHtml(elem.svg)}});
   }
 }
