@@ -13,11 +13,9 @@
           </div>
         </div>
         <h4 class="text-center my-2">
-          <span *ngIf="SlideComp" >{{SlideComp!.wbIsSaved}}</span>
-          
           <span *ngIf="!editing"> Whiteboards </span>
           <span *ngIf="editing" #WboardnameinputBox>
-            <span (dblclick)="editName()" *ngIf="!Wboardnamediting"> {{SlideComp.form.name}} ({{WboardIdToedit}})</span>
+            <span (dblclick)="editName()" *ngIf="!Wboardnamediting"> {{SlideComp.form.name}}  </span>
             <span *ngIf="Wboardnamediting">
               <input type="text" [(ngModel)]="SlideComp.form.name" class="Wboardnameinput" #Wboardnameinput />
             </span>

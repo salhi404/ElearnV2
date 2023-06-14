@@ -1,2 +1,6 @@
-<div id="meetingSDKElement" #meetingSDKElement>
+
+<div [ngClass]="{'invisible2':params.mode !=3}" id="meetingSDKElement" #meetingSDKElement>
+</div>
+<div [ngClass]="{'invisible2':params.mode !=1}" id="slideContainer" #slideContainer>
+    <app-slideboard #SlideboardComponent></app-slideboard>
 </div>
