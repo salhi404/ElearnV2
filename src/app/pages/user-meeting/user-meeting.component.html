@@ -1,2 +1,13 @@
-<div id="meetingSDKElement" #meetingSDKElement>
+<div [ngClass]="{'invisible2':streamStatus!=1}">
+    show
+    <div [ngClass]="{'invisible2':params.mode !=3}" id="meetingSDKElement" #meetingSDKElement>
+    </div>
+    <div [ngClass]="{'invisible2':params.mode !=1}" >
+        <div id="streamcontent" #streamcontent></div>
+        <video id="streamVideo" #streamVideo></video>
+    </div>
 </div>
+<div *ngIf="streamStatus==0">
+    <h1 class="full-center">stream didn't start yet</h1>
+</div>
+

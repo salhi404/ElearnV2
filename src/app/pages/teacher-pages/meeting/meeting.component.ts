@@ -1,9 +1,9 @@
-import { Component, OnInit, AfterViewInit, Inject, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Inject, ViewChild, ElementRef, HostListener, PLATFORM_ID } from '@angular/core';
 import { UserService } from 'app/_services/user.service';
 import ZoomMtgEmbedded from '@zoomus/websdk/embedded';
 import { ActivatedRoute } from '@angular/router';
 import { TeacherService } from 'app/_services/teacher.service';
-import { Peer } from "peerjs";
+import { DataConnection, Peer } from "peerjs";
 import { SlideboardComponent } from '../slideboard/slideboard.component';
 @Component({
   selector: 'app-meeting',
@@ -12,6 +12,7 @@ import { SlideboardComponent } from '../slideboard/slideboard.component';
 })
 export class MeetingComponent implements OnInit, AfterViewInit {
   params = {mode: -1,indd: -1,uuid:""};
+  mediaConnection1: any ;
   info: any;
   //  ------------------ zoom ------------------  //  
   @ViewChild("meetingSDKElement") meetingSDKElement!: ElementRef;
@@ -33,7 +34,13 @@ export class MeetingComponent implements OnInit, AfterViewInit {
   anotherid: any;
   mypeerid: any;
   attempt: number = 0;
-  constructor(private UserService: UserService, private route: ActivatedRoute, private teacherservice: TeacherService,) {
+  eventsLog:string="";
+  dataRecieved:string="";
+  constructor(
+    @Inject(PLATFORM_ID) private _platform: Object,
+    private UserService: UserService, 
+    private route: ActivatedRoute, 
+    private teacherservice: TeacherService,) {
   }
   ngAfterViewInit() {
     this.initiateZoom();
@@ -126,18 +133,33 @@ export class MeetingComponent implements OnInit, AfterViewInit {
         pages: this.addSecSvgToPages(info.whiteboard.pages),//2023-03-22T00:31
         pagesCount: info.whiteboard.pagesCount
       }
-      this.SlideComp.currentPage = 0;
-      this.SlideComp.chooseSlide(0);
+
     }
+    else{
+      this.SlideComp.form ={
+        name: 'New',
+        pages: [{
+          json: this.SlideComp.whiteboardComp.canvas.toJSON(), svg: this.SlideComp.whiteboardComp.canvas.toSVG(),
+          secSvg: this.SlideComp.sanitizer.bypassSecurityTrustHtml(this.SlideComp.whiteboardComp.canvas.toSVG()),
+        }],
+        pagesCount: 1,
+      }
+    }
+    this.SlideComp.currentPage = 0;
+    this.SlideComp.chooseSlide(0);
     // this.getPeerId();
-    this.peer.on('connection', (conn: any) => {
+    this.peer.on('connection', (conn: DataConnection) => {
+      console.log("connection recieaved ",conn);
+      this.eventsLog+=" ...  connection recieaved with metadata : "+conn.metadata
+      
       conn.on('data', (data: any) => {
+        this.dataRecieved+=data
         // Will print 'hi!'
         // this.canvas.loadFromJSON(data, this.canvas.renderAll.bind(this.canvas), (o: any, object: any) => {
         //     fabric.log(o, object);
         //   });
         // if (this.dataContainer) this.dataContainer.nativeElement.innerHTML = data;
-        // console.log(data);
+        console.log("data recieved",data);
       });
     });
   }
