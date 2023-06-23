@@ -47,7 +47,7 @@ export class TestComponent implements OnInit,OnDestroy {
     setTimeout(() => {
       this.mypeerid = this.peer.id;
       console.log('this.peer',this.peer);
-    },0);
+    },3000);
     
     this.peer.on('connection', (conn:any)=> {
   conn.on('data', (data:any)=>{
@@ -95,10 +95,11 @@ export class TestComponent implements OnInit,OnDestroy {
     if(this.conn) this.conn.send('send test ');
   }
   connect(){
+    console.log(' trying to connenct to ', this.anotherid);
     this.conn = this.peer.connect(this.anotherid);
     this.conn.on('open', ()=>{
     this.conn.send('Message from that id');
-});
+    });
   }
   
   videoconnect(){

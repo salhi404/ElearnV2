@@ -1,13 +1,33 @@
 <div [ngClass]="{'invisible2':streamStatus!=1}">
-    show
     <div [ngClass]="{'invisible2':params.mode !=3}" id="meetingSDKElement" #meetingSDKElement>
     </div>
-    <div [ngClass]="{'invisible2':params.mode !=1}" >
-        <div id="streamcontent" #streamcontent></div>
-        <video id="streamVideo" #streamVideo></video>
+    <div [ngClass]="{'invisible2':connectionstatus!=0}" >
+        <h1 class="full-center"> starting ....</h1>
     </div>
+    <div [ngClass]="{'invisible2':connectionstatus!=1}">
+        <h1 class="full-center"> finding Host ....</h1>
+    </div>
+    <div [ngClass]="{'invisible2':connectionstatus!=3}">
+        <h1 class="full-center"> Host is not connected Retry <div (click)="connect()" class=" btn btn-success pointer open-btn my-auto"> connect </div> </h1>
+    </div>
+    <div [ngClass]="{'invisible2':connectionstatus!=4}">
+        <h1 class="full-center"> <span *ngIf="disconnectType==1" >you were disconnected</span> <span *ngIf="disconnectType==2" >connection was established elswere </span>  <div (click)="connect()" class=" btn btn-success pointer open-btn my-auto"> connect </div> </h1>
+    </div>
+
+    <div [ngClass]="{'invisible2':connectionstatus!=2}">
+        <h1 class="full-center" *ngIf="!call.media"> Calling ... </h1>
+
+        <div  [ngClass]="{'invisible2':params.mode !=1}" >
+            Media Recieved
+            <div id="streamcontent" #streamcontent></div>
+            <video id="video" #video></video>
+        </div>
+    </div>
+
 </div>
+
 <div *ngIf="streamStatus==0">
     <h1 class="full-center">stream didn't start yet</h1>
 </div>
 
+params.mode{{params.mode}}

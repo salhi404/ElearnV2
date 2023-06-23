@@ -8,6 +8,8 @@ import { fabric } from 'fabric';
 })
 export class WhiteboardComponent implements OnInit {
   @ViewChild('dataContainer') dataContainer?: ElementRef;
+  @ViewChild('canvasElement') canvasElement?: ElementRef;
+  
   @Output() wboardChange = new EventEmitter<void>();
   drawInstance: any = null;
   origX: any;

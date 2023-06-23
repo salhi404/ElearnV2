@@ -21,14 +21,21 @@ export class UserMeetingComponent implements OnInit, AfterViewInit {
   ) {
   }
   @ViewChild("meetingSDKElement") meetingSDKElement!: ElementRef;
+  @ViewChild('video', {static: true}) video!: ElementRef<HTMLVideoElement>;
   client = ZoomMtgEmbedded.createClient();
   uuid = '';
+  conn: any;
   indd: number = -1;
   params = { mode: -1, indd: -1, uuid: "" };
   info: any;
   peer: any;
   streamStatus: number = -1;
-  call = { mediaConnection: undefined as any, media: undefined as any, dataConnection: undefined as DataConnection | undefined };
+  connectionstatus: number = 0;
+  disconnectType = 1;
+  connectingTimeOut: any;
+  call = { mediaConnection: undefined as any, media: null as any,myMedia: null as any, dataConnection: undefined as DataConnection | undefined };
+
+
   ngOnInit() {
     this.route.queryParams
       .subscribe((params: any) => {
@@ -66,24 +73,41 @@ export class UserMeetingComponent implements OnInit, AfterViewInit {
     //     this.startZoomStream(params);
     //     break;
     // }
+    this.connectionstatus = 0;
     this.StudentService.startStream(params).subscribe({
       next: data => {
         console.log("start data ", data);
         this.info = data.info;
         this.streamStatus = this.info.status
         if (this.info.status == 1) {
-          switch (this.info.mode) {
-            case 1:
-              this.startWboardStream(this.info)
-              break;
-            case 2:
-              this.startScreenStream(this.info)
-              break;
-            case 3:
-              // this.initiateZoom();
-              this.startZoomStream(this.info);
-              break;
-          }
+          this.params.mode = this.info.mode;
+          this.peer = new Peer();
+          console.log(' startWboardStream this.peer', this.peer);
+          this.peer.on('open', (id: any) => {
+            if (this.info.peer) {
+              //   console.log(' trying to connenct to ', info.peer);
+              //   this.conn = this.peer.connect(info.peer);
+              // this.conn.on('open', ()=>{
+              // this.conn.send('Message from that id');
+              // console.log(" this.conn open");
+              this.connect()
+              // });
+            }//, { metadata: info.user }
+            else { console.log("peer recieved is empty"); }
+          });
+
+          // switch (this.info.mode) {
+          //   case 1:
+          //     this.startWboardStream(this.info)
+          //     break;
+          //   case 2:
+          //     this.startScreenStream(this.info)
+          //     break;
+          //   case 3:
+          //     // this.initiateZoom();
+          //     this.startZoomStream(this.info);
+          //     break;
+          // }
         } else {
           this.waitStream();
         }
@@ -94,7 +118,90 @@ export class UserMeetingComponent implements OnInit, AfterViewInit {
       }
     })
   }
+  connect() {
+    this.call.dataConnection = this.peer.connect(this.info.peer, { metadata: this.info.user });
+    this.connectionstatus = 1;
+    // this.connectingTimeOut = setTimeout(() => {
+    //   if (!this.call.dataConnection!.open) {
+    //     this.connectionstatus = 3;
+    //   }
+    // }, 10000);
+    this.call.dataConnection!.on('open', () => {
+      this.connectionstatus = 2;
+      clearTimeout(this.connectingTimeOut)
+      this.call.dataConnection!.on('data', (data) => {
+        console.log("resieved Data ", data);
+        this.processConnData(data)
+      });
+      this.callHost()
+    });
+    this.call.dataConnection!.on('close', () => {
+      console.log('close');
+      this.disconnect()
+    });
+  }
+  callHost(){
+    if(isPlatformBrowser(this._platform) && 'mediaDevices' in navigator) {
+      // navigator.mediaDevices.getUserMedia({video: true, audio: true}).
+      navigator.mediaDevices.getUserMedia({
+        audio: true, 
+        video: false, //{ mediaSource: "screen"}
+    }).
+      then((ms: MediaStream) => {
+        console.log("media stream ",ms);
+        this.call.myMedia=ms;
+        this.call.mediaConnection = this.peer.call(this.info.peer,this.call.myMedia, { metadata: {...this.info.user,connectionId:this.call.dataConnection?.connectionId} });
+        // const _video = this.video.nativeElement;
+        // _video.srcObject = ms;
+        // _video.play();
+        this.call.mediaConnection.on('stream', (remotestream:any) =>{
+          this.call.media =remotestream;
+          const _video = this.video.nativeElement;
+          _video.srcObject = remotestream;
+          
+          var playPromise = _video.play();
+  
+          if (playPromise !== undefined) {
+            playPromise.then(_ => {
+              // Automatic playback started!
+              // Show playing UI.
+            })
+            .catch((error:any) => {
+              // Auto-play was prevented
+              // Show paused UI.
+            });
+          }
+        
+        console.log("Media Recieved this.call.media =",this.call.media);
+        
+        })
+        
+      }).catch(function(err) {
+       console.log("media permission error ",err);
+       
+    });
+    }else{
+      console.log("isPlatformBrowser is false");
+      
+    }
+    
+  }
+  processConnData(data: any) {
+    switch (data.task) {
+      case 1:
 
+        break;
+      case 5:
+        this.disconnectType = 2;
+        break;
+      default:
+        break;
+    }
+  }
+  disconnect() {
+    clearTimeout(this.connectingTimeOut);
+    this.connectionstatus = 4;
+  }
   waitStream() {
     console.log("stream didn't start yet");
     this.streamStatus = 0;
@@ -102,13 +209,27 @@ export class UserMeetingComponent implements OnInit, AfterViewInit {
   startWboardStream(info: any) {
     this.peer = new Peer();
     console.log(' startWboardStream this.peer', this.peer);
-    console.log(' trying to connenct to ', info.peer);
-    this.call.dataConnection = this.peer.connect(info.peer);//, { metadata: info.user }
-    this.call.dataConnection!.on('open', () => {
-      console.log('connection established 1');
-      this.call.dataConnection!.on('data', (data) => {
-        console.log('Received', data);
-      });
+    this.peer.on('open', (id: any) => {
+      if (info.peer) {
+        //   console.log(' trying to connenct to ', info.peer);
+        //   this.conn = this.peer.connect(info.peer);
+        // this.conn.on('open', ()=>{
+        // this.conn.send('Message from that id');
+        // console.log(" this.conn open");
+
+        // });
+        this.call.dataConnection = this.peer.connect(info.peer, { metadata: info.user });
+        console.log("this.call.dataConnection.on('open')");
+        this.call.dataConnection!.on('open', () => {
+          console.log('connection established 1');
+          console.log("this.call.dataConnection.on('data')");
+          this.call.dataConnection!.on('data', (data) => {
+            console.log('Received', data);
+          });
+        });
+
+      }//, { metadata: info.user }
+      else { console.log("peer recieved is empty"); }
     });
 
 

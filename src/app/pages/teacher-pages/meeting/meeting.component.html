@@ -1,9 +1,16 @@
 
 <div [ngClass]="{'invisible2':params.mode !=3}" id="meetingSDKElement" #meetingSDKElement>
 </div>
-<div [ngClass]="{'invisible2':params.mode !=1}" id="slideContainer" #slideContainer>
-    <app-slideboard #SlideboardComponent></app-slideboard>
+<div class="d-flex " id="streamcontainer">
+    <section [ngClass]="{'invisible2':params.mode !=1}" id="slideContainer" #slideContainer>
+        <app-slideboard #SlideboardComponent></app-slideboard>
+    </section>
+    <section id="connectedUserList">
+        <div (click)="sendDataTo(i)"  *ngFor="let user of students ; index as i ">
+            {{user.info.username}}
+        </div>
+    </section>
 </div>
-
-<h1> eventsLog : {{eventsLog}}</h1>
-<h1> dataRecieved : {{dataRecieved}}</h1>
+<video id="video" #video></video> srcObject 
+<!-- <h1> eventsLog : {{eventsLog}}</h1>
+<h1> dataRecieved : {{dataRecieved}}</h1> -->
