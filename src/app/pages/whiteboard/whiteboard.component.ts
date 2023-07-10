@@ -46,7 +46,7 @@ export class WhiteboardComponent implements OnInit {
   constructor() { }
   ngOnInit() {
 
-    console.log("whiteboard.component");
+    // console.log("whiteboard.component");
 
     this.canvas = new fabric.Canvas('canvas', {
       hoverCursor: 'pointer',
@@ -59,7 +59,7 @@ export class WhiteboardComponent implements OnInit {
     })
     this.canvas.on('object:added', (event: any) => {
       this.wboardChange.emit();
-      console.log('object:added');
+      // console.log('object:added');
       
     })
     this.canvas.on('object:removed', (event: any) => {
@@ -94,7 +94,7 @@ export class WhiteboardComponent implements OnInit {
       this.canvas.requestRenderAll();
       this.canvas.renderAll();
       // if (this.conn) this.conn.send(this.canvas.toSVG())
-      console.log("Drawing");
+      // console.log("Drawing");
 
       // switch (this.options.currentMode) {
       //   case this.modes.SELECT:
@@ -125,10 +125,10 @@ export class WhiteboardComponent implements OnInit {
   }
   stopDrawing() {
     return () => {
-      console.log("stopDrawing");
+      // console.log("stopDrawing");
       this.mouseDown = false;
       // this.send();
-      console.log("stopDrawing => this.mouseDown :", this.mouseDown);
+      // console.log("stopDrawing => this.mouseDown :", this.mouseDown);
     }
   }
   updateMode() {
@@ -147,7 +147,7 @@ export class WhiteboardComponent implements OnInit {
         if (!item.path) item.set({
           perPixelTargetFind: false
         })
-        console.log("item", item);
+        // console.log("item", item);
       });
     }
   }
@@ -160,7 +160,7 @@ export class WhiteboardComponent implements OnInit {
     this.canvas.getObjects().map((item: any) => {
       if (!item.path)
         item.set({ selectable: true })
-      console.log("item", item);
+      // console.log("item", item);
 
     }
     );
@@ -200,7 +200,7 @@ export class WhiteboardComponent implements OnInit {
           // selectable: true ,
           perPixelTargetFind: true
         })
-        console.log("item", item);
+        // console.log("item", item);
       }
       );
       this.options.currentMode = this.modes.Erase;
@@ -255,12 +255,12 @@ export class WhiteboardComponent implements OnInit {
     }
   }
   deleteselected() {
-    console.log('deleteselected getActiveObject .', this.canvas.getActiveObject());
+    // console.log('deleteselected getActiveObject .', this.canvas.getActiveObject());
     if (!this.canvas.getActiveObject()) {
-      console.log('falsy getActiveObject');
+      // console.log('falsy getActiveObject');
       return;
     }
-    console.log('deleteselected getActiveObject 2 ', this.canvas.getActiveObject()._objects);
+    // console.log('deleteselected getActiveObject 2 ', this.canvas.getActiveObject()._objects);
     if (this.canvas.getActiveObject()._objects) {
       this.canvas.getActiveObject()._objects.forEach((element: any) => {
         {
@@ -291,7 +291,7 @@ export class WhiteboardComponent implements OnInit {
   }
   tessst() {
     return (e: any) => {
-      console.log("e", e);
+      // console.log("e", e);
       e.path.set({
         perPixelTargetFind: true,
         selectable: false,
@@ -310,7 +310,7 @@ export class WhiteboardComponent implements OnInit {
       this.canvas.freeDrawingBrush.width = this.options.currentWidth;
       // this.canvas.freeDrawingBrush.hasControls = this.canvas.freeDrawingBrush.hasBorders = false;
       // this.canvas.freeDrawingBrush.perPixelTargetFind = true;
-      console.log("this.canvas.freeDrawingBrush", this.canvas.freeDrawingBrush);
+      // console.log("this.canvas.freeDrawingBrush", this.canvas.freeDrawingBrush);
 
       this.canvas.isDrawingMode = true;
     }
@@ -335,7 +335,7 @@ export class WhiteboardComponent implements OnInit {
 
   startAddLine() {
     return (e: any) => {
-      console.log('e:any :', e);
+      // console.log('e:any :', e);
 
       this.mouseDown = true;
 
@@ -353,7 +353,7 @@ export class WhiteboardComponent implements OnInit {
 
   startDrawingLine() {
     return (e: any) => {
-      console.log("startDrawingLine => this.mouseDown :", this.mouseDown);
+      // console.log("startDrawingLine => this.mouseDown :", this.mouseDown);
 
       if (this.mouseDown) {
         const pointer = this.canvas.getPointer(e);
@@ -597,7 +597,7 @@ export class WhiteboardComponent implements OnInit {
   pastcanvas() {
     // this.canvas=this.oldcanvas;
     this.canvas.loadFromJSON(this.oldcanvas, this.canvas.renderAll.bind(this.canvas), (o: any, object: any) => {
-      fabric.log(o, object);
+      // fabric.log(o, object);
     });
   }
   extend(obj: any, id: any) {
@@ -651,7 +651,7 @@ export class WhiteboardComponent implements OnInit {
   ExportToContent(input: string) {
     if (input == 'json') {
       // this.OutputContent = JSON.stringify(this.canvas.toJSON());
-      console.log("this.canvas.toJSON()", this.canvas.toJSON());
+      // console.log("this.canvas.toJSON()", this.canvas.toJSON());
 
     } else if (input == 'svg') {
       this.OutputContent = this.canvas.toSVG();

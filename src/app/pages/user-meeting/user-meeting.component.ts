@@ -119,6 +119,8 @@ export class UserMeetingComponent implements OnInit, AfterViewInit {
     })
   }
   connect() {
+    console.log("connect() to ",this.info.peer);
+    
     this.call.dataConnection = this.peer.connect(this.info.peer, { metadata: this.info.user });
     this.connectionstatus = 1;
     // this.connectingTimeOut = setTimeout(() => {
@@ -141,6 +143,7 @@ export class UserMeetingComponent implements OnInit, AfterViewInit {
     });
   }
   callHost(){
+    console.log("calling Host");
     if(isPlatformBrowser(this._platform) && 'mediaDevices' in navigator) {
       // navigator.mediaDevices.getUserMedia({video: true, audio: true}).
       navigator.mediaDevices.getUserMedia({
@@ -155,6 +158,7 @@ export class UserMeetingComponent implements OnInit, AfterViewInit {
         // _video.srcObject = ms;
         // _video.play();
         this.call.mediaConnection.on('stream', (remotestream:any) =>{
+          console.log("stream Recieved");
           this.call.media =remotestream;
           const _video = this.video.nativeElement;
           _video.srcObject = remotestream;
@@ -181,10 +185,36 @@ export class UserMeetingComponent implements OnInit, AfterViewInit {
        
     });
     }else{
-      console.log("isPlatformBrowser is false");
-      
+      console.log("isPlatformBrowser is false"); 
     }
+    // var media = new MediaStream();
+    // this.call.mediaConnection = this.peer.call(this.info.peer,media, { metadata: {...this.info.user,connectionId:this.call.dataConnection?.connectionId} });
+    // // const _video = this.video.nativeElement;
+    // // _video.srcObject = ms;
+    // // _video.play();
+    // this.call.mediaConnection.on('stream', (remotestream:any) =>{
+    //   console.log("stream Recieved");
+    //   this.call.media =remotestream;
+    //   const _video = this.video.nativeElement;
+    //   _video.srcObject = remotestream;
+      
+    //   var playPromise = _video.play();
+
+    //   if (playPromise !== undefined) {
+    //     playPromise.then(_ => {
+    //       // Automatic playback started!
+    //       // Show playing UI.
+    //     })
+    //     .catch((error:any) => {
+    //       // Auto-play was prevented
+    //       // Show paused UI.
+    //     });
+    //   }
     
+    // console.log("Media Recieved this.call.media =",this.call.media);
+    
+    // })
+   
   }
   processConnData(data: any) {
     switch (data.task) {
