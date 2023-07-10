@@ -19,7 +19,8 @@ export class MeetingComponent implements OnInit, AfterViewInit {
   @ViewChild("meetingSDKElement") meetingSDKElement!: ElementRef;
   @ViewChild("SlideboardComponent") SlideComp!: SlideboardComponent;
   @ViewChild("slideContainer") slideContainer!: ElementRef;
-  @ViewChild('video', {static: true}) video!: ElementRef<HTMLVideoElement>;
+  @ViewChild('video', { static: true }) video!: ElementRef<HTMLVideoElement>;
+  @ViewChild('canvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
   // sdkKey = 'Qe0zJgNzQDqU3u5tJk1sdQ'
   // meetingNumber = '74647496286'
   // passWord = '123456'
@@ -36,12 +37,12 @@ export class MeetingComponent implements OnInit, AfterViewInit {
   anotherid: any;
   mypeerid: any;
   attempt: number = 0;
-  students:any[]=[];
+  students: any[] = [];
   eventsLog: string = "";
   dataRecieved: string = "";
-  stream={
-    video:undefined as MediaStream | undefined,
-    audio:undefined as MediaStream | undefined,
+  stream = {
+    video: undefined as MediaStream | undefined,
+    audio: undefined as MediaStream | undefined,
   }
   constructor(
     @Inject(PLATFORM_ID) private _platform: Object,
@@ -52,7 +53,7 @@ export class MeetingComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.initiateZoom();
     this.resizeCanvase(null);
-    
+
   }
 
   initiateZoom() {
@@ -88,6 +89,7 @@ export class MeetingComponent implements OnInit, AfterViewInit {
         }
       }
       );
+
   }
   parseParams(params: any): any {
     let params1: any = {
@@ -134,37 +136,53 @@ export class MeetingComponent implements OnInit, AfterViewInit {
     })
 
   }
-  getStreams(type:number) {
+  getRandomInt(max: number) {
+    return Math.floor(Math.random() * max);
+  }
+  drawcircle() {
+    var ctx = this.canvas.nativeElement.getContext("2d");
+    ctx!.beginPath();
+    ctx!.arc(this.getRandomInt(500), this.getRandomInt(200), this.getRandomInt(100), 0, 2 * Math.PI);
+    ctx!.stroke();
+  }
+  getStreams(type: number) {
 
-    this.stream.video=this.SlideComp.whiteboardComp.canvasElement?.nativeElement.captureStream(25);
-    console.log("this.stream.video",this.stream.video);
-    
-    const _video = this.video.nativeElement;
-          _video.srcObject = this.stream.video as MediaProvider;
-         _video.srcObject =  this.SlideComp.whiteboardComp.canvasElement?.nativeElement.captureStream(25);
-          var playPromise = _video.play();
-    if(isPlatformBrowser(this._platform) && 'mediaDevices' in navigator) {
+    // this.stream.video = this.canvas.nativeElement.captureStream(25);
+    // setInterval(() => {
+    //   this.drawcircle();
+    // }, 1500);
+    // console.log("this.stream.video!.getTracks()[0]", this.stream.video!.getTracks()[0]);
+
+    // console.log("this.stream.video", this.stream.video);
+
+    // const _video = this.video.nativeElement;
+    // _video.srcObject = this.stream.video as MediaProvider;
+    // //  _video.srcObject =  this.SlideComp.whiteboardComp.canvasElement?.nativeElement.captureStream(25);
+    // var playPromise = _video.play();
+    if (isPlatformBrowser(this._platform) && 'mediaDevices' in navigator) {
       navigator.mediaDevices.getUserMedia({
-        audio: true, 
-        video: false, 
-    }).
-      then((ms: MediaStream) => {
-        console.log("media stream ",ms);
-        this.stream.audio=ms;
-        this.stream.video!.addTrack(this.stream.audio.getTracks()[0])
-      }).catch(function(err) {
-       console.log("media permission error ",err);
-       
-    });
-    }else{
+        audio: true,
+        video: true,
+      }).
+        then((ms: MediaStream) => {
+          console.log("media stream ", ms);
+          this.stream.video = ms;
+          const _video = this.video.nativeElement;
+          _video.srcObject = this.stream.video as MediaProvider;
+          var playPromise = _video.play();
+          // this.stream.video!.addTrack(this.stream.audio.getTracks()[0])
+        }).catch(function (err) {
+          console.log("media permission error ", err);
+        });
+    } else {
       console.log("isPlatformBrowser is false");
-      
+
     }
- 
-}
+
+  }
   startWboardStream(info: any) {
     //"f5c5c07e-5f07-4ff6-b629-991129d02b23"
-    this.getStreams(1);
+    // this.getStreams(1);
 
     console.log(' startWboardStream this.peer', this.peer);
     if (info.whiteboard) {
@@ -193,7 +211,7 @@ export class MeetingComponent implements OnInit, AfterViewInit {
       console.log("id recieved is : ", id);
       this.peer.on('connection', (conn: DataConnection) => {
         console.log("connection recieaved ", conn);
-        this.connectUser({info:conn.metadata,connection:conn})
+        this.connectUser({ info: conn.metadata, connection: conn })
         // this.eventsLog += " ...  connection recieaved  : " + conn
         conn.on('data', (data: any) => {
           // this.dataRecieved += data
@@ -207,17 +225,87 @@ export class MeetingComponent implements OnInit, AfterViewInit {
       });
       this.peer.on('call', (Mediaconn: any) => {
         console.log("call recieaved ", Mediaconn);
-        this.answerUser(Mediaconn);
+
+        if (isPlatformBrowser(this._platform) && 'mediaDevices' in navigator) {
+          navigator.mediaDevices.getUserMedia({
+            audio: false,
+            video: true,
+          }).
+            then((ms: MediaStream) => {
+              console.log("media stream ", ms);
+              Mediaconn.answer(ms) // /*(this.SlideComp.whiteboardComp.canvasElement?.nativeElement.captureStream(25))*/(this.stream.video);
+            }).catch(function (err) {
+              console.log("media permission error ", err);
+            });
+        } else {
+          console.log("isPlatformBrowser is false");
+        }
+        Mediaconn.on('stream', (remotestream: any) => {
+          const _video = this.video.nativeElement;
+          _video.srcObject = remotestream;
+          var playPromise = _video.play();
+          if (playPromise !== undefined) {
+            playPromise.then(_ => {
+              // Automatic playback started!
+              // Show playing UI.
+            })
+            .catch((error:any) => {
+              // Auto-play was prevented
+              // Show paused UI.
+            });
+          }
+        })
+        // this.answerUser(Mediaconn);
       });
     });
 
   }
   answerUser(Mediaconn: any) {
-    if(Mediaconn.metadata){
-      const findUser = this.students.find((item:any)=>item.info.email===Mediaconn.metadata.email&&item.connection.connectionId===Mediaconn.metadata.connectionId);
-      if(findUser){
+    if (Mediaconn.metadata) {
+      const findUser = this.students.find((item: any) => item.info.email === Mediaconn.metadata.email && item.connection.connectionId === Mediaconn.metadata.connectionId);
+      if (findUser) {
         findUser.Mediaconn = Mediaconn;
-        findUser.Mediaconn.answer(this.stream.video);
+        if (isPlatformBrowser(this._platform) && 'mediaDevices' in navigator) {
+          navigator.mediaDevices.getUserMedia({
+            audio: false,
+            video: true,
+          }).
+            then((ms: MediaStream) => {
+              console.log("media stream ", ms);
+              findUser.Mediaconn.answer(ms) // /*(this.SlideComp.whiteboardComp.canvasElement?.nativeElement.captureStream(25))*/(this.stream.video);
+              const _video = this.video.nativeElement;
+              _video.srcObject = ms as MediaProvider;
+              var playPromise = _video.play();
+              // this.stream.video!.addTrack(this.stream.audio.getTracks()[0])
+            }).catch(function (err) {
+              console.log("media permission error ", err);
+            });
+        } else {
+          console.log("isPlatformBrowser is false");
+        }
+        // const _video = this.video.nativeElement;
+        // _video.srcObject = this.canvas.nativeElement.captureStream(25) as MediaProvider;
+        // //  _video.srcObject =  this.SlideComp.whiteboardComp.canvasElement?.nativeElement.captureStream(25);
+        // var playPromise = _video.play();
+        // setInterval(() => {
+        //   this.drawcircle();
+        // }, 1500);
+        findUser.Mediaconn.on('stream', (remotestream: any) => {
+          // const _video = this.video.nativeElement;
+          // _video.srcObject = remotestream;
+          // var playPromise = _video.play();
+          // if (playPromise !== undefined) {
+          //   playPromise.then(_ => {
+          //     // Automatic playback started!
+          //     // Show playing UI.
+          //   })
+          //   .catch((error:any) => {
+          //     // Auto-play was prevented
+          //     // Show paused UI.
+          //   });
+          // }
+        })
+        console.log("answerUser", findUser);
       }
     }
 
@@ -240,36 +328,36 @@ export class MeetingComponent implements OnInit, AfterViewInit {
   startZoomStream(info: any) {
     this.getSignature(this.params.uuid, this.params.indd)
   }
-connectUser(user:any){
-  console.log("connectUser :",user);
-  // if(test_user){
-  //   user.connection.close()
-  // }else{
+  connectUser(user: any) {
+    console.log("connectUser :", user);
+    // if(test_user){
+    //   user.connection.close()
+    // }else{
 
-  // }
-  const tempitem = this.students.find((item:any)=>item.info.email===user.info.email)
-  if(tempitem){
-    tempitem.connection.close()
-  }
-  this.students.push({...user});
-  user.connection.send({
-    task:1,
-  })
-  user.connection.on('close', () => {
-    this.disconnectUser(user.info.email+"",user.connection.connectionId+"")
-  });
+    // }
+    const tempitem = this.students.find((item: any) => item.info.email === user.info.email)
+    if (tempitem) {
+      tempitem.connection.close()
+    }
+    this.students.push({ ...user });
+    user.connection.send({
+      task: 1,
+    })
+    user.connection.on('close', () => {
+      this.disconnectUser(user.info.email + "", user.connection.connectionId + "")
+    });
 
-}
-disconnectUser(email:string,connectionId:string){
-  const tempind = this.students.findIndex((item:any)=>item.info.email===email&&item.connection.connectionId===connectionId)
-  if(tempind!=-1){
-    console.log("user disconnected : ",this.students[tempind]);
-    this.students.splice(tempind,1)
   }
-}
-sendDataTo(ind:number){
-  this.students[ind].connection.send("daaaaaaaaaaata") 
-}
+  disconnectUser(email: string, connectionId: string) {
+    const tempind = this.students.findIndex((item: any) => item.info.email === email && item.connection.connectionId === connectionId)
+    if (tempind != -1) {
+      console.log("user disconnected : ", this.students[tempind]);
+      this.students.splice(tempind, 1)
+    }
+  }
+  sendDataTo(ind: number) {
+    this.students[ind].connection.send("daaaaaaaaaaata")
+  }
   //  ------------------ peer ------------------  //
   initiatePeer(peerId: string) {
     this.peer = new Peer(peerId);//"f5c5c07e-5f07-4ff6-b629-991129d02b23"
