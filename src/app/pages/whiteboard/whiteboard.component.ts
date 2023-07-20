@@ -52,6 +52,7 @@ export class WhiteboardComponent implements OnInit {
       hoverCursor: 'pointer',
       selection: true,
       selectionBorderColor: 'blue',
+      backgroundColor: "white",
       // perPixelTargetFind :true  
     });
     this.canvas.on('object:modified', (event: any) => {

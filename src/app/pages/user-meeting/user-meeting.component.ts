@@ -21,7 +21,9 @@ export class UserMeetingComponent implements OnInit, AfterViewInit {
   ) {
   }
   @ViewChild("meetingSDKElement") meetingSDKElement!: ElementRef;
-  @ViewChild('video', {static: true}) video!: ElementRef<HTMLVideoElement>;
+  @ViewChild('boardvideo', {static: true}) boardvideo!: ElementRef<HTMLVideoElement>;
+  @ViewChild('audio', {static: true}) audio!: ElementRef<HTMLVideoElement>;
+  @ViewChild('canvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
   client = ZoomMtgEmbedded.createClient();
   uuid = '';
   conn: any;
@@ -33,9 +35,7 @@ export class UserMeetingComponent implements OnInit, AfterViewInit {
   connectionstatus: number = 0;
   disconnectType = 1;
   connectingTimeOut: any;
-  call = { mediaConnection: undefined as any, media: null as any,myMedia: null as any, dataConnection: undefined as DataConnection | undefined };
-
-
+  call = { boardConnection: undefined as any,boardMedia:null as any, audioConnection: undefined as any,audioMedia:null as any, myMedia: null as any, dataConnection: undefined as DataConnection | undefined };
   ngOnInit() {
     this.route.queryParams
       .subscribe((params: any) => {
@@ -120,8 +120,7 @@ export class UserMeetingComponent implements OnInit, AfterViewInit {
   }
   connect() {
     console.log("connect() to ",this.info.peer);
-    
-    this.call.dataConnection = this.peer.connect(this.info.peer, { metadata: this.info.user });
+    this.call.dataConnection = this.peer.connect(this.info.peer, { metadata:{ ...this.info.user,peer:this.peer.id} });
     this.connectionstatus = 1;
     // this.connectingTimeOut = setTimeout(() => {
     //   if (!this.call.dataConnection!.open) {
@@ -135,86 +134,144 @@ export class UserMeetingComponent implements OnInit, AfterViewInit {
         console.log("resieved Data ", data);
         this.processConnData(data)
       });
-      this.callHost()
+      this.resieveHostCall()
     });
     this.call.dataConnection!.on('close', () => {
       console.log('close');
       this.disconnect()
     });
   }
-  callHost(){
-    console.log("calling Host");
-    if(isPlatformBrowser(this._platform) && 'mediaDevices' in navigator) {
-      // navigator.mediaDevices.getUserMedia({video: true, audio: true}).
-      navigator.mediaDevices.getUserMedia({
-        audio: true, 
-        video: false, //{ mediaSource: "screen"}
-    }).
-      then((ms: MediaStream) => {
-        console.log("media stream ",ms);
-        this.call.myMedia=ms;
-        this.call.mediaConnection = this.peer.call(this.info.peer,this.call.myMedia, { metadata: {...this.info.user,connectionId:this.call.dataConnection?.connectionId} });
-        // const _video = this.video.nativeElement;
-        // _video.srcObject = ms;
-        // _video.play();
-        this.call.mediaConnection.on('stream', (remotestream:any) =>{
-          console.log("stream Recieved");
-          this.call.media =remotestream;
-          const _video = this.video.nativeElement;
-          _video.srcObject = remotestream;
-          
-          var playPromise = _video.play();
-  
-          if (playPromise !== undefined) {
-            playPromise.then(_ => {
-              // Automatic playback started!
-              // Show playing UI.
-            })
-            .catch((error:any) => {
-              // Auto-play was prevented
-              // Show paused UI.
-            });
-          }
-        
-        console.log("Media Recieved this.call.media =",this.call.media);
-        
-        })
-        
-      }).catch(function(err) {
-       console.log("media permission error ",err);
-       
-    });
-    }else{
-      console.log("isPlatformBrowser is false"); 
-    }
-    // var media = new MediaStream();
-    // this.call.mediaConnection = this.peer.call(this.info.peer,media, { metadata: {...this.info.user,connectionId:this.call.dataConnection?.connectionId} });
-    // // const _video = this.video.nativeElement;
-    // // _video.srcObject = ms;
-    // // _video.play();
-    // this.call.mediaConnection.on('stream', (remotestream:any) =>{
-    //   console.log("stream Recieved");
-    //   this.call.media =remotestream;
-    //   const _video = this.video.nativeElement;
-    //   _video.srcObject = remotestream;
-      
-    //   var playPromise = _video.play();
 
-    //   if (playPromise !== undefined) {
-    //     playPromise.then(_ => {
-    //       // Automatic playback started!
-    //       // Show playing UI.
-    //     })
-    //     .catch((error:any) => {
-    //       // Auto-play was prevented
-    //       // Show paused UI.
-    //     });
-    //   }
+  getRandomInt(max: number) {
+    return Math.floor(Math.random() * max);
+  }
+  drawcircle() {
+    var ctx = this.canvas.nativeElement.getContext("2d");
+    ctx!.beginPath();
+    ctx!.arc(this.getRandomInt(500), this.getRandomInt(200), this.getRandomInt(100), 0, 2 * Math.PI);
+    ctx!.stroke();
+  }
+  // callHost(){
+  //   console.log("calling Host");
+  //   if(isPlatformBrowser(this._platform) && 'mediaDevices' in navigator) {
+  //     // navigator.mediaDevices.getUserMedia({video: true, audio: true}).
+  //     navigator.mediaDevices.getUserMedia({
+  //       audio: true, 
+  //       video: true, //{ mediaSource: "screen"}
+  //   }).
+  //     then((ms: MediaStream) => {
+  //       console.log("media stream ",ms);
+  //       this.call.myMedia=ms;
+  //       this.call.mediaConnection = this.peer.call(this.info.peer,this.call.myMedia, { metadata: {...this.info.user,connectionId:this.call.dataConnection?.connectionId} });
+  //       // const _video = this.video.nativeElement;
+  //       // _video.srcObject = ms;
+  //       // _video.play();
+  //       this.call.mediaConnection.on('stream', (remotestream:any) =>{
+  //         console.log("stream Recieved");
+  //         this.call.media =remotestream;
+  //         const _video = this.boardvideo.nativeElement;
+  //         _video.srcObject = remotestream;
+          
+  //         var playPromise = _video.play();
+  
+  //         if (playPromise !== undefined) {
+  //           playPromise.then(_ => {
+  //             // Automatic playback started!
+  //             // Show playing UI.
+  //           })
+  //           .catch((error:any) => {
+  //             // Auto-play was prevented
+  //             // Show paused UI.
+  //           });
+  //         }
+        
+  //       console.log("Media Recieved this.call.media =",this.call.media);
+        
+  //       })
+        
+  //     }).catch(function(err) {
+  //      console.log("media permission error ",err);
+       
+  //   });
+  //   }else{
+  //     console.log("isPlatformBrowser is false"); 
+  //   }
+  //   // var ctx = this.canvas.nativeElement.getContext("2d");
+  //   // ctx!.fillStyle = "white";
+  //   // ctx!.fillRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+  //   // let media = this.canvas.nativeElement.captureStream(25);
+  //   // setInterval(() => {
+  //   //   this.drawcircle();
+  //   // }, 1500);
+  //   // this.call.mediaConnection = this.peer.call(this.info.peer,media, { metadata: {...this.info.user,connectionId:this.call.dataConnection?.connectionId} });
+  //   // this.call.mediaConnection.on('stream', (remotestream:any) =>{
+  //   //   // console.log("stream Recieved with tracks : ",remotestream.getTracks());
+  //   //   this.call.media =remotestream;
+  //   //   let _video = this.video.nativeElement;
+  //   //   _video.srcObject = remotestream as MediaProvider;
+  //   //   var playPromise = _video.play();
     
-    // console.log("Media Recieved this.call.media =",this.call.media);
+  //   // console.log("Media Recieved this.call.media =",this.call.media);
     
-    // })
+  //   // })
    
+  // }
+  resieveHostCall(){
+    this.peer.on('call', (Mediaconn: any) => {
+      console.log("call recieaved ", Mediaconn);
+      var ctx = this.canvas.nativeElement.getContext("2d");
+      ctx!.fillStyle = "white";
+      ctx!.fillRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+      let media = this.canvas.nativeElement.captureStream(25);
+      setInterval(() => {
+        this.drawcircle();
+      }, 1500);
+      if(Mediaconn.metadata.type==1){
+        this.call.boardConnection=Mediaconn;
+        Mediaconn.on('stream', (remotestream: any) => {
+          console.log("on stream remotestream",remotestream);
+          console.log("on stream remotestream.get tracks",remotestream.getTracks());
+          this.connectionstatus = 5;
+          this.call.boardMedia=remotestream;
+          const _video = this.boardvideo.nativeElement;
+          _video.srcObject = this.call.boardMedia;
+           _video.play();
+        })
+      }
+      if(Mediaconn.metadata.type==2){
+        this.call.audioConnection=Mediaconn;
+        Mediaconn.on('stream', (remotestream: any) => {
+          console.log("on stream remotestream",remotestream);
+          console.log("on stream remotestream.get tracks",remotestream.getTracks());
+          this.connectionstatus = 5;
+          this.call.audioMedia=remotestream;
+          const _video = this.audio.nativeElement;
+          _video.srcObject = this.call.audioMedia;
+          _video.play();
+        })
+      }
+      Mediaconn.answer(media)
+
+
+      // if (isPlatformBrowser(this._platform) && 'mediaDevices' in navigator) {
+      //   navigator.mediaDevices.getUserMedia({
+      //     audio: true,
+      //     video: false,
+      //   }).
+      //     then((ms: MediaStream) => {
+      //       console.log("media stream ", ms);
+      //       Mediaconn.answer(ms) 
+      //     }).catch(function (err) {
+      //       console.log("media permission error ", err);
+      //     });
+      // } else {
+      //   console.log("isPlatformBrowser is false");
+      // }
+
+      
+
+      
+    });
   }
   processConnData(data: any) {
     switch (data.task) {

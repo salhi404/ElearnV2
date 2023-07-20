@@ -15,13 +15,7 @@
     </div>
 
     <div [ngClass]="{'invisible2':connectionstatus!=2}">
-        <h1 class="full-center" *ngIf="!call.media"> Calling ... </h1>
-
-        <div  [ngClass]="{'invisible2':params.mode !=1}" >
-            Media Recieved
-            <div id="streamcontent" #streamcontent></div>
-            <video id="video" #video></video>
-        </div>
+        <h1 class="full-center" *ngIf="!call.boardMedia">waiting Call ... </h1>
     </div>
 
 </div>
@@ -29,5 +23,12 @@
 <div *ngIf="streamStatus==0">
     <h1 class="full-center">stream didn't start yet</h1>
 </div>
-
+<canvas #canvas width="600" height="300"></canvas>
 params.mode{{params.mode}}
+
+<div>
+    Media Recieved
+    <div id="streamcontent" #streamcontent></div>
+    <video id="boardvideo" #boardvideo></video>
+    <video id="audio" #audio></video>
+</div>

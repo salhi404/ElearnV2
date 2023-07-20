@@ -20,6 +20,7 @@ export class MeetingComponent implements OnInit, AfterViewInit {
   @ViewChild("SlideboardComponent") SlideComp!: SlideboardComponent;
   @ViewChild("slideContainer") slideContainer!: ElementRef;
   @ViewChild('video', { static: true }) video!: ElementRef<HTMLVideoElement>;
+  @ViewChild('video2', { static: true }) video2!: ElementRef<HTMLVideoElement>;
   @ViewChild('canvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
   // sdkKey = 'Qe0zJgNzQDqU3u5tJk1sdQ'
   // meetingNumber = '74647496286'
@@ -40,10 +41,14 @@ export class MeetingComponent implements OnInit, AfterViewInit {
   students: any[] = [];
   eventsLog: string = "";
   dataRecieved: string = "";
-  stream = {
+  streamTracks = {
     video: undefined as MediaStream | undefined,
     audio: undefined as MediaStream | undefined,
+    stream: undefined as MediaStream | undefined,
+    board: undefined as MediaStream | undefined,
+    loaded:false,
   }
+  testPromise: Promise<void> | undefined;
   constructor(
     @Inject(PLATFORM_ID) private _platform: Object,
     private UserService: UserService,
@@ -54,29 +59,6 @@ export class MeetingComponent implements OnInit, AfterViewInit {
     this.initiateZoom();
     this.resizeCanvase(null);
 
-  }
-
-  initiateZoom() {
-    let meetingSDKElement = this.meetingSDKElement.nativeElement as HTMLElement;
-    this.client.init({
-      debug: true,
-      zoomAppRoot: meetingSDKElement!,
-      language: 'en-US',
-      customize: {
-        meetingInfo: ['topic', 'host', 'mn', 'pwd', 'telPwd', 'invite', 'participant', 'dc', 'enctype'],
-        toolbar: {
-          buttons: [
-            {
-              text: 'Custom Button',
-              className: 'CustomButton',
-              onClick: () => {
-                console.log('custom button');
-              }
-            }
-          ]
-        }
-      }
-    });
   }
   ngOnInit() {
     this.route.queryParams
@@ -101,18 +83,6 @@ export class MeetingComponent implements OnInit, AfterViewInit {
     return params1;
   }
   start(params: any) {
-    // switch (params.mode) {
-    //   case 1:
-    //     this.startWboardStream(params)
-    //     break;
-    //   case 2:
-    //     this.startScreenStream(params)
-    //     break;
-    //   case 3:
-    //     // this.initiateZoom();
-    //     this.startZoomStream(params);
-    //     break;
-    // }
     this.teacherservice.startStream(/*{ ..., peer: id }*/params).subscribe({
       next: data => {
         console.log("start data ", data);
@@ -136,17 +106,40 @@ export class MeetingComponent implements OnInit, AfterViewInit {
     })
 
   }
-  getRandomInt(max: number) {
-    return Math.floor(Math.random() * max);
-  }
-  drawcircle() {
-    var ctx = this.canvas.nativeElement.getContext("2d");
-    ctx!.beginPath();
-    ctx!.arc(this.getRandomInt(500), this.getRandomInt(200), this.getRandomInt(100), 0, 2 * Math.PI);
-    ctx!.stroke();
-  }
-  getStreams(type: number) {
-
+  async getStreams(type: number) {
+    this.streamTracks.loaded=false;
+    if (isPlatformBrowser(this._platform) && 'mediaDevices' in navigator) {
+      this.streamTracks.board = this.SlideComp.whiteboardComp.canvasElement?.nativeElement.captureStream(25);
+      this.streamTracks.video = await navigator.mediaDevices.getUserMedia({ audio: false, video: true, });
+      this.streamTracks.audio = await navigator.mediaDevices.getUserMedia({ audio: true, video: false, });
+      console.log("video ",this.streamTracks.video);
+      console.log("audio ",this.streamTracks.audio);
+      console.log("board ",this.streamTracks.board);
+      this.streamTracks.loaded=true;
+      // this.streamTracks.video = this.streamTracks.stream.getVideoTracks()[0];
+      // this.streamTracks.audio = this.streamTracks.stream.getAudioTracks()[0];
+      
+      // .then((ms: MediaStream) => {
+      //     myResolve(); // when successful
+      //     // ms.addTrack(media.getTracks()[0]);
+      //     // console.log(" media before ", media.getTracks());
+      //     // ms.addTrack(media.getTracks()[0]);
+      //     // console.log(" media after ", media.getTracks());
+      //     // let _video = this.video2.nativeElement;
+      //     // _video.srcObject = ms as MediaProvider;
+      //     // var playPromise = _video.play();
+      //     // findUser.Mediaconn.answer(ms) // /*(this.SlideComp.whiteboardComp.canvasElement?.nativeElement.captureStream(25))*/(this.stream.video);
+      //     // const _video = this.video2.nativeElement;
+      //     // _video.srcObject = media as MediaProvider;
+      //     // var playPromise = _video.play();
+      //     // this.stream.video!.addTrack(this.stream.audio.getTracks()[0]);
+      //   })
+      //   // .catch(function (err) {
+      //   //   console.log("media permission error ", err);
+      //   // });
+    } else {
+      console.log("isPlatformBrowser is false");
+    }
     // this.stream.video = this.canvas.nativeElement.captureStream(25);
     // setInterval(() => {
     //   this.drawcircle();
@@ -159,31 +152,29 @@ export class MeetingComponent implements OnInit, AfterViewInit {
     // _video.srcObject = this.stream.video as MediaProvider;
     // //  _video.srcObject =  this.SlideComp.whiteboardComp.canvasElement?.nativeElement.captureStream(25);
     // var playPromise = _video.play();
-    if (isPlatformBrowser(this._platform) && 'mediaDevices' in navigator) {
-      navigator.mediaDevices.getUserMedia({
-        audio: true,
-        video: true,
-      }).
-        then((ms: MediaStream) => {
-          console.log("media stream ", ms);
-          this.stream.video = ms;
-          const _video = this.video.nativeElement;
-          _video.srcObject = this.stream.video as MediaProvider;
-          var playPromise = _video.play();
-          // this.stream.video!.addTrack(this.stream.audio.getTracks()[0])
-        }).catch(function (err) {
-          console.log("media permission error ", err);
-        });
-    } else {
-      console.log("isPlatformBrowser is false");
+    // if (isPlatformBrowser(this._platform) && 'mediaDevices' in navigator) {
+    //   navigator.mediaDevices.getUserMedia({
+    //     audio: true,
+    //     video: true,
+    //   }).
+    //     then((ms: MediaStream) => {
+    //       console.log("media stream ", ms);
+    //       this.streamTracks.video = ms.getVideoTracks()[0];
+    //       this.streamTracks.audio = ms.getAudioTracks()[0];
+    //       this.streamTracks.board = this.SlideComp.whiteboardComp.canvasElement?.nativeElement.captureStream(25);
 
-    }
+    //       // this.stream.video!.addTrack(this.stream.audio.getTracks()[0])
+    //     }).catch(function (err) {
+    //       console.log("media permission error ", err);
+    //     });
+    // } else {
+    //   console.log("isPlatformBrowser is false");
+    // }
 
   }
   startWboardStream(info: any) {
     //"f5c5c07e-5f07-4ff6-b629-991129d02b23"
-    // this.getStreams(1);
-
+    this.getStreams(1);
     console.log(' startWboardStream this.peer', this.peer);
     if (info.whiteboard) {
       this.SlideComp.form = {
@@ -191,7 +182,6 @@ export class MeetingComponent implements OnInit, AfterViewInit {
         pages: this.addSecSvgToPages(info.whiteboard.pages),//2023-03-22T00:31
         pagesCount: info.whiteboard.pagesCount
       }
-
     }
     else {
       this.SlideComp.form = {
@@ -223,91 +213,53 @@ export class MeetingComponent implements OnInit, AfterViewInit {
           console.log("data recieved", data);
         });
       });
-      this.peer.on('call', (Mediaconn: any) => {
-        console.log("call recieaved ", Mediaconn);
+      // this.peer.on('call', (Mediaconn: any) => {
+      //   console.log("call recieaved ", Mediaconn);
+      //   // var ctx = this.canvas.nativeElement.getContext("2d");
+      //   // ctx!.fillStyle = "green";
+      //   // ctx!.fillRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+      //   // let media = this.SlideComp.whiteboardComp.canvasElement?.nativeElement.captureStream(25);
+      //   // setInterval(() => {
+      //   //   this.drawcircle();
+      //   // }, 1500);
+      //   // Mediaconn.answer(media)
 
-        if (isPlatformBrowser(this._platform) && 'mediaDevices' in navigator) {
-          navigator.mediaDevices.getUserMedia({
-            audio: false,
-            video: true,
-          }).
-            then((ms: MediaStream) => {
-              console.log("media stream ", ms);
-              Mediaconn.answer(ms) // /*(this.SlideComp.whiteboardComp.canvasElement?.nativeElement.captureStream(25))*/(this.stream.video);
-            }).catch(function (err) {
-              console.log("media permission error ", err);
-            });
-        } else {
-          console.log("isPlatformBrowser is false");
-        }
-        Mediaconn.on('stream', (remotestream: any) => {
-          const _video = this.video.nativeElement;
-          _video.srcObject = remotestream;
-          var playPromise = _video.play();
-          if (playPromise !== undefined) {
-            playPromise.then(_ => {
-              // Automatic playback started!
-              // Show playing UI.
-            })
-            .catch((error:any) => {
-              // Auto-play was prevented
-              // Show paused UI.
-            });
-          }
-        })
-        // this.answerUser(Mediaconn);
-      });
+
+      //   // if (isPlatformBrowser(this._platform) && 'mediaDevices' in navigator) {
+      //   //   navigator.mediaDevices.getUserMedia({
+      //   //     audio: true,
+      //   //     video: true,
+      //   //   }).
+      //   //     then((ms: MediaStream) => {
+      //   //       console.log("media stream ", ms);
+      //   //       Mediaconn.answer(ms) // /*(this.SlideComp.whiteboardComp.canvasElement?.nativeElement.captureStream(25))*/(this.stream.video);
+      //   //     }).catch(function (err) {
+      //   //       console.log("media permission error ", err);
+      //   //     });
+      //   // } else {
+      //   //   console.log("isPlatformBrowser is false");
+      //   // }
+      //   this.answerUser(Mediaconn);
+      //   Mediaconn.on('stream', (remotestream: any) => {
+      //     console.log("on stream remotestream",remotestream);
+      //     console.log("on stream remotestream.get tracks",remotestream.getTracks());
+      //     const _video = this.video.nativeElement;
+      //     _video.srcObject = remotestream;
+      //     var playPromise = _video.play();
+      //     if (playPromise !== undefined) {
+      //       playPromise.then(_ => {
+      //         // Automatic playback started!
+      //         // Show playing UI.
+      //       })
+      //         .catch((error: any) => {
+      //           // Auto-play was prevented
+      //           // Show paused UI.
+      //         });
+      //     }
+      //   })
+
+      // });
     });
-
-  }
-  answerUser(Mediaconn: any) {
-    if (Mediaconn.metadata) {
-      const findUser = this.students.find((item: any) => item.info.email === Mediaconn.metadata.email && item.connection.connectionId === Mediaconn.metadata.connectionId);
-      if (findUser) {
-        findUser.Mediaconn = Mediaconn;
-        if (isPlatformBrowser(this._platform) && 'mediaDevices' in navigator) {
-          navigator.mediaDevices.getUserMedia({
-            audio: false,
-            video: true,
-          }).
-            then((ms: MediaStream) => {
-              console.log("media stream ", ms);
-              findUser.Mediaconn.answer(ms) // /*(this.SlideComp.whiteboardComp.canvasElement?.nativeElement.captureStream(25))*/(this.stream.video);
-              const _video = this.video.nativeElement;
-              _video.srcObject = ms as MediaProvider;
-              var playPromise = _video.play();
-              // this.stream.video!.addTrack(this.stream.audio.getTracks()[0])
-            }).catch(function (err) {
-              console.log("media permission error ", err);
-            });
-        } else {
-          console.log("isPlatformBrowser is false");
-        }
-        // const _video = this.video.nativeElement;
-        // _video.srcObject = this.canvas.nativeElement.captureStream(25) as MediaProvider;
-        // //  _video.srcObject =  this.SlideComp.whiteboardComp.canvasElement?.nativeElement.captureStream(25);
-        // var playPromise = _video.play();
-        // setInterval(() => {
-        //   this.drawcircle();
-        // }, 1500);
-        findUser.Mediaconn.on('stream', (remotestream: any) => {
-          // const _video = this.video.nativeElement;
-          // _video.srcObject = remotestream;
-          // var playPromise = _video.play();
-          // if (playPromise !== undefined) {
-          //   playPromise.then(_ => {
-          //     // Automatic playback started!
-          //     // Show playing UI.
-          //   })
-          //   .catch((error:any) => {
-          //     // Auto-play was prevented
-          //     // Show paused UI.
-          //   });
-          // }
-        })
-        console.log("answerUser", findUser);
-      }
-    }
 
   }
   startScreenStream(info: any) {
@@ -324,6 +276,95 @@ export class MeetingComponent implements OnInit, AfterViewInit {
         // console.log(data);
       });
     });
+  }
+  answerUser(Mediaconn: any) {
+    if (Mediaconn.metadata) {
+      const findUser = this.students.find((item: any) => item.info.email === Mediaconn.metadata.email && item.connection.connectionId === Mediaconn.metadata.connectionId);
+      if (findUser) {
+        findUser.Mediaconn = Mediaconn;
+        // if (isPlatformBrowser(this._platform) && 'mediaDevices' in navigator) {
+        //   navigator.mediaDevices.getUserMedia({
+        //     audio:true ,
+        //     video: true,
+        //   }).
+        //     then((ms: MediaStream) => {
+        //       let media = this.SlideComp.whiteboardComp.canvasElement?.nativeElement.captureStream(25);
+        //       // console.log(" media before ", media.getTracks())
+        //       // ms.addTrack(media.getTracks()[0])
+        //       // console.log(" media after ", media.getTracks())
+        //       // let _video = this.video2.nativeElement;
+        //       // _video.srcObject = ms as MediaProvider;
+        //       // var playPromise = _video.play();
+        //       findUser.Mediaconn.answer(ms) // /*(this.SlideComp.whiteboardComp.canvasElement?.nativeElement.captureStream(25))*/(this.stream.video);
+        //       // const _video = this.video2.nativeElement;
+        //       // _video.srcObject = media as MediaProvider;
+        //       // var playPromise = _video.play();
+        //       // this.stream.video!.addTrack(this.stream.audio.getTracks()[0])
+        //     }).catch(function (err) {
+        //       console.log("media permission error ", err);
+        //     });
+        // } else {
+        //   console.log("isPlatformBrowser is false");
+        // }
+        // const _video = this.video.nativeElement;
+        // _video.srcObject = this.canvas.nativeElement.captureStream(25) as MediaProvider;
+        // //  _video.srcObject =  this.SlideComp.whiteboardComp.canvasElement?.nativeElement.captureStream(25);
+        // var playPromise = _video.play();
+        // setInterval(() => {
+        //   this.drawcircle();
+        // }, 1500);
+
+
+
+        // findUser.Mediaconn.on('stream', (remotestream: any) => {
+        // const _video = this.video.nativeElement;
+        // _video.srcObject = remotestream;
+        // var playPromise = _video.play();
+        // if (playPromise !== undefined) {
+        //   playPromise.then(_ => {
+        //     // Automatic playback started!
+        //     // Show playing UI.
+        //   })
+        //   .catch((error:any) => {
+        //     // Auto-play was prevented
+        //     // Show paused UI.
+        //   });
+        // }
+        // })
+        let media = this.SlideComp.whiteboardComp.canvasElement?.nativeElement.captureStream(25);
+        findUser.Mediaconn.answer(media)
+        console.log("answerUser", findUser);
+      }
+    }
+
+  }
+  callUser(user: any) {
+    // this.streamTracks.board = this.SlideComp.whiteboardComp.canvasElement?.nativeElement.captureStream(25);
+      // const _video = this.video2.nativeElement;
+      // _video.srcObject = this.streamTracks.stream;
+      // _video.play();
+      // console.log("user.Mediaconn before",user.Mediaconn);
+      setTimeout(() => {
+        user.boardconn = this.peer.call(user.info.peer,this.streamTracks.board,{metadata:{type:1}});
+        user.boardconnected=false;
+        user.boardconn.on('stream', (remotestream: any) => {
+          user.boardconnected=true;
+          console.log(user.info.username+" board is connected with stream :", remotestream);
+          // const _video = this.video.nativeElement;
+          // _video.srcObject = remotestream;
+          // _video.play();
+        })
+        user.audioconn = this.peer.call(user.info.peer,this.streamTracks.audio,{metadata:{type:2}});
+        user.audioconnected=false;
+        user.audioconn.on('stream', (remotestream: any) => {
+          user.audioconnected=true;
+          console.log(user.info.username+" audio is connected with stream :", remotestream);
+          // const _video = this.video.nativeElement;
+          // _video.srcObject = remotestream;
+          // _video.play();
+        })
+      }, 100);
+      
   }
   startZoomStream(info: any) {
     this.getSignature(this.params.uuid, this.params.indd)
@@ -343,6 +384,7 @@ export class MeetingComponent implements OnInit, AfterViewInit {
     user.connection.send({
       task: 1,
     })
+    this.callUser(user)
     user.connection.on('close', () => {
       this.disconnectUser(user.info.email + "", user.connection.connectionId + "")
     });
@@ -358,33 +400,7 @@ export class MeetingComponent implements OnInit, AfterViewInit {
   sendDataTo(ind: number) {
     this.students[ind].connection.send("daaaaaaaaaaata")
   }
-  //  ------------------ peer ------------------  //
-  initiatePeer(peerId: string) {
-    this.peer = new Peer(peerId);//"f5c5c07e-5f07-4ff6-b629-991129d02b23"
-    console.log('this.peer', this.peer);
-    // this.getPeerId();
-    this.peer.on('connection', (conn: any) => {
-      conn.on('data', (data: any) => {
-        // Will print 'hi!'
-        // this.canvas.loadFromJSON(data, this.canvas.renderAll.bind(this.canvas), (o: any, object: any) => {
-        //     fabric.log(o, object);
-        //   });
-        // if (this.dataContainer) this.dataContainer.nativeElement.innerHTML = data;
-        // console.log(data);
-      });
-    });
-  }
-  // getPeerId() {
-  //   setTimeout(() => {
-  //     if (this.peer.id || this.attempt > 25) {
-  //       this.mypeerid = this.peer.id;
-  //     } else {
-  //       this.attempt++;
-  //       this.getPeerId();
-  //     }
-  //     console.log('attempt : ' + this.attempt + '  this.peer  :', this.peer);
-  //   }, 500);
-  // }
+//--------------------  CANVAS -----------------------//
   canvasModifiedCallback(): any {
     console.log("connection", this.conn);
     return () => {
@@ -399,19 +415,39 @@ export class MeetingComponent implements OnInit, AfterViewInit {
     console.log('canvas modified!', this.conn);
     // if (this.conn) this.conn.send(this.canvas.toSVG())
   }
-  connect() {
-    this.conn = this.peer.connect(this.anotherid);
-    this.conn.on('open', () => {
-      // this.conn.send('Message from that id');
+//--------------------  TEMP -----------------------//
+  getRandomInt(max: number) {
+    return Math.floor(Math.random() * max);
+  }
+  drawcircle() {
+    var ctx = this.canvas.nativeElement.getContext("2d");
+    ctx!.beginPath();
+    ctx!.arc(this.getRandomInt(500), this.getRandomInt(200), this.getRandomInt(100), 0, 2 * Math.PI);
+    ctx!.stroke();
+  }
+
+//--------------------  Zoom -----------------------//
+  initiateZoom() {
+    let meetingSDKElement = this.meetingSDKElement.nativeElement as HTMLElement;
+    this.client.init({
+      debug: true,
+      zoomAppRoot: meetingSDKElement!,
+      language: 'en-US',
+      customize: {
+        meetingInfo: ['topic', 'host', 'mn', 'pwd', 'telPwd', 'invite', 'participant', 'dc', 'enctype'],
+        toolbar: {
+          buttons: [
+            {
+              text: 'Custom Button',
+              className: 'CustomButton',
+              onClick: () => {
+                console.log('custom button');
+              }
+            }
+          ]
+        }
+      }
     });
-    // this.canvas.on('object:added', this.canvasModifiedCallback());
-    // this.canvas.on('object:removed', this.canvasModifiedCallback());
-    // this.canvas.on('object:modified', this.canvasModifiedCallback());
-    // this.canvas.on('object:moving', this.canvasModifiedCallback());
-    // this.canvas.on('object:scaling', this.canvasModifiedCallback());
-    // this.canvas.on('object:rotating', this.canvasModifiedCallback());
-    // this.canvas.on('object:skewing', this.canvasModifiedCallback());
-    // this.canvas.on('object:resizing', this.canvasModifiedCallback());
   }
   getSignature(uuid: string, indd: number) {
     this.teacherservice.getsignature(uuid, indd).subscribe({
