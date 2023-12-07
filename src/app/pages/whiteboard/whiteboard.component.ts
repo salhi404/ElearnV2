@@ -48,13 +48,15 @@ export class WhiteboardComponent implements OnInit {
 
     // console.log("whiteboard.component");
 
-    this.canvas = new fabric.Canvas('canvas', {
+    this.canvas = new fabric.Canvas('canvasElement', {
       hoverCursor: 'pointer',
       selection: true,
       selectionBorderColor: 'blue',
       backgroundColor: "white",
       // perPixelTargetFind :true  
     });
+    this.canvas.backgroundColor="white";
+    this.canvas.renderTop();
     this.canvas.on('object:modified', (event: any) => {
       this.wboardChange.emit();
     })

@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 import { StorageService } from './storage.service';
 import { Mail } from '../Interfaces/Mail';
 import { Pref } from '../Interfaces/user';
-// const URL_API = 'http://192.168.1.103:3000/'; 
-const URL_API = 'https://frantic-colt-leather-jacket.cyclic.app/';
+const URL_API = 'http://192.168.100.2:3000/'; 
+// const URL_API = 'https://frantic-colt-leather-jacket.cyclic.app/';
 // const URL_API = 'https://starter-express-api-production-816a.up.railway.app/';
 const MOD_API = URL_API+'api/mod/';
 //mod service

@@ -353,7 +353,7 @@ export class MeetingComponent implements OnInit, AfterViewInit {
           // const _video = this.video.nativeElement;
           // _video.srcObject = remotestream;
           // _video.play();
-        })
+        });
         user.audioconn = this.peer.call(user.info.peer,this.streamTracks.audio,{metadata:{type:2}});
         user.audioconnected=false;
         user.audioconn.on('stream', (remotestream: any) => {
@@ -362,7 +362,16 @@ export class MeetingComponent implements OnInit, AfterViewInit {
           // const _video = this.video.nativeElement;
           // _video.srcObject = remotestream;
           // _video.play();
-        })
+        });
+        user.videoconn = this.peer.call(user.info.peer,this.streamTracks.video,{metadata:{type:3}});
+        user.videoconnected=false;
+        user.videoconn.on('stream', (remotestream: any) => {
+          user.videoconnected=true;
+          console.log(user.info.username+" video is connected with stream :", remotestream);
+          // const _video = this.video.nativeElement;
+          // _video.srcObject = remotestream;
+          // _video.play();
+        });
       }, 100);
       
   }
@@ -378,7 +387,7 @@ export class MeetingComponent implements OnInit, AfterViewInit {
     // }
     const tempitem = this.students.find((item: any) => item.info.email === user.info.email)
     if (tempitem) {
-      tempitem.connection.close()
+      tempitem.connection.close()//triggers user.connection.on('close') then disconnectUser 'prevent tow connections last one stays'
     }
     this.students.push({ ...user });
     user.connection.send({

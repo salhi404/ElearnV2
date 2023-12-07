@@ -99,7 +99,7 @@ export class SlideboardComponent {
   }
   saveSlide(ind: number) {
     // console.log("saveSlide ind ",ind);
-    // console.log("saveSlide ",this.form.pages[ind]);
+    // cogonsole.l("saveSlide ",this.form.pages[ind]);
     if (ind == -1) ind = this.currentPage;
     if (this.form.pages[ind]) {
       this.form.pages[ind].svg = this.whiteboardComp.canvas.toSVG();

@@ -23,6 +23,7 @@ export class UserMeetingComponent implements OnInit, AfterViewInit {
   @ViewChild("meetingSDKElement") meetingSDKElement!: ElementRef;
   @ViewChild('boardvideo', {static: true}) boardvideo!: ElementRef<HTMLVideoElement>;
   @ViewChild('audio', {static: true}) audio!: ElementRef<HTMLVideoElement>;
+  @ViewChild('camvideo', {static: true}) camvideo!: ElementRef<HTMLVideoElement>;
   @ViewChild('canvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
   client = ZoomMtgEmbedded.createClient();
   uuid = '';
@@ -35,7 +36,7 @@ export class UserMeetingComponent implements OnInit, AfterViewInit {
   connectionstatus: number = 0;
   disconnectType = 1;
   connectingTimeOut: any;
-  call = { boardConnection: undefined as any,boardMedia:null as any, audioConnection: undefined as any,audioMedia:null as any, myMedia: null as any, dataConnection: undefined as DataConnection | undefined };
+  call = { boardConnection: undefined as any,boardMedia:null as any, audioConnection: undefined as any,audioMedia:null as any,videoConnection: undefined as any,videoMedia:null as any, dataConnection: undefined as DataConnection | undefined };
   ngOnInit() {
     this.route.queryParams
       .subscribe((params: any) => {
@@ -229,8 +230,7 @@ export class UserMeetingComponent implements OnInit, AfterViewInit {
       if(Mediaconn.metadata.type==1){
         this.call.boardConnection=Mediaconn;
         Mediaconn.on('stream', (remotestream: any) => {
-          console.log("on stream remotestream",remotestream);
-          console.log("on stream remotestream.get tracks",remotestream.getTracks());
+          console.log("boardConnection remotestream",remotestream);
           this.connectionstatus = 5;
           this.call.boardMedia=remotestream;
           const _video = this.boardvideo.nativeElement;
@@ -241,12 +241,22 @@ export class UserMeetingComponent implements OnInit, AfterViewInit {
       if(Mediaconn.metadata.type==2){
         this.call.audioConnection=Mediaconn;
         Mediaconn.on('stream', (remotestream: any) => {
-          console.log("on stream remotestream",remotestream);
-          console.log("on stream remotestream.get tracks",remotestream.getTracks());
+          console.log("audioConnection remotestream",remotestream);
           this.connectionstatus = 5;
           this.call.audioMedia=remotestream;
           const _video = this.audio.nativeElement;
           _video.srcObject = this.call.audioMedia;
+          _video.play();
+        })
+      }
+      if(Mediaconn.metadata.type==3){
+        this.call.videoConnection=Mediaconn;
+        Mediaconn.on('stream', (remotestream: any) => {
+          console.log("videoConnection remotestream",remotestream);
+          this.connectionstatus = 5;
+          this.call.videoMedia=remotestream;
+          const _video = this.camvideo.nativeElement;
+          _video.srcObject = this.call.videoMedia;
           _video.play();
         })
       }
